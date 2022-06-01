@@ -1,9 +1,30 @@
 html,
 body {
+  --breakpoints-lg: 1400px;
+  --breakpoints-md: 1280px;
+  --breakpoints-sm: 960px;
+  --breakpoints-xs: 650px;
+  --background: #20232a;
+  --background-secondary: #282c34;
+  --text: #eaeaeb;
+  --text-secondary: #bfc0c2;
+  --accent100: #4c1b1b;
+  --accent200: #662424;
+  --accent300: #993636;
+  --accent400: #cc4848;
+  --accent500: #ff5a5a;
+  --accent600: #ff6b6b;
+  --accent700: #ff7b7b;
+  --accent800: #ff9c9c;
+  --accent900: #ffcece;
+
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans,
+    Helvetica Neue, sans-serif;
+
+  background-color: var(--background);
+  color: var(--text);
 }
 
 a {
