@@ -3,7 +3,7 @@ import styles from "./Layout.module.scss";
 
 const Layout = ({ children }) => {
   return (
-    <div className={styles.container}>
+    <>
       <Head>
         <title>Volunteerish - We always help and helping everyone</title>
         <meta
@@ -12,8 +12,8 @@ const Layout = ({ children }) => {
         />
         <meta name="viewport" content="width=device-width,initial-scale=1.0" />
       </Head>
-      {children}
-    </div>
+      <div className={styles.container}>{children}</div>
+    </>
   );
 };
 
