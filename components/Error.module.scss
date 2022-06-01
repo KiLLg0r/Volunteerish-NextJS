@@ -1,0 +1,16 @@
+.errorMessage {
+  border: 2px solid var(--accent500);
+  width: 100%;
+  padding: 1rem 2rem;
+  border-radius: 0.625rem;
+  color: var(--accent500);
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+
+  .secondary {
+    border: none;
+    padding: 0;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+  }
+}

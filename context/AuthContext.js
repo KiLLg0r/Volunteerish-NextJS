@@ -1,6 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
 import {
-  getAuth,
   onAuthStateChanged,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -10,8 +9,8 @@ import {
   updatePassword,
   sendPasswordResetEmail,
 } from "firebase/auth";
-import { doc, onSnapshot, getFirestore, getDoc } from "firebase/firestore";
-import app from "../config/firebase";
+import { doc, getFirestore, getDoc } from "firebase/firestore";
+import auth, { app } from "../config/firebase";
 
 const AuthContext = React.createContext();
 
@@ -22,9 +21,8 @@ export function useAuth() {
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState();
   const [userData, setUserData] = useState();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [db, setDB] = useState(getFirestore(app));
-  const auth = getAuth(app);
 
   function register(email, password) {
     return createUserWithEmailAndPassword(auth, email, password);
@@ -58,36 +56,34 @@ export function AuthProvider({ children }) {
     sendPasswordResetEmail(auth, email);
   }
 
-  useEffect(() => {
-    const getData = async (uid) => {
-      const userDoc = doc(db, "users", uid);
-      const userDocSnap = await getDoc(userDoc);
+  // useEffect(() => {
+  //   const getData = async (uid) => {
+  //     const userDoc = doc(db, "users", uid);
+  //     const userDocSnap = await getDoc(userDoc);
 
-      if (userDocSnap.exists()) return userDocSnap.data();
-    };
+  //     if (userDocSnap.exists()) return userDocSnap.data();
+  //   };
 
-    const unsubscribe = () => {
-      onAuthStateChanged(auth, (user) => {
-        setCurrentUser(user);
-        if (typeof user != "undefined")
-          getData(user.uid).then((result) => {
-            setUserData(result);
-          });
-        setLoading(false);
-      });
-      if (typeof currentUser != "undefined")
-        onSnapshot(doc(db, "users", currentUser.uid), (doc) => {
-          setUserData(doc.data());
-        });
-    };
-
-    return unsubscribe;
-  }, [auth, currentUser, db]);
+  //   return onAuthStateChanged(auth, (user) => {
+  //     if (user) {
+  //       console.log("Changed state" + user);
+  //       setCurrentUser(user);
+  //       getData(user.uid).then((result) => {
+  //         setUserData(result);
+  //       });
+  //     }
+  //     setLoading(false);
+  //   });
+  // }, [currentUser, db]);
 
   const value = {
     currentUser,
     userData,
     db,
+    loading,
+    setCurrentUser,
+    setUserData,
+    setLoading,
     register,
     login,
     logout,

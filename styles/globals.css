@@ -1,9 +1,10 @@
+@import url("https://fonts.googleapis.com/css2?family=Love+Light&display=swap");
+
 html,
 body {
-  --breakpoints-lg: 1400px;
-  --breakpoints-md: 1280px;
-  --breakpoints-sm: 960px;
-  --breakpoints-xs: 650px;
+  --breakpoints-lg: 1280px;
+  --breakpoints-md: 960px;
+  --breakpoints-sm: 650px;
   --background: #20232a;
   --background-secondary: #282c34;
   --text: #eaeaeb;
