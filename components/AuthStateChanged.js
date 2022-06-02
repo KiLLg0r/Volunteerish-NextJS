@@ -3,7 +3,7 @@ import { useAuth } from "../context/AuthContext";
 
 import auth from "../config/firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import Loading from "../components/Loading";
+import Loading from "./Loading";
 
 const AuthStateChanged = ({ children }) => {
   const { setCurrentUser } = useAuth();

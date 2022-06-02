@@ -1,7 +1,7 @@
 import "../styles/globals.css";
 import { AuthProvider } from "../context/AuthContext";
 import Layout from "../components/layout";
-import AuthStateChanged from "./AuthStateChanged";
+import AuthStateChanged from "../components/AuthStateChanged";
 
 import { NextUIProvider, createTheme } from "@nextui-org/react";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
