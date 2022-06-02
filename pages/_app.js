@@ -70,11 +70,11 @@ function MyApp({ Component, pageProps }) {
     >
       <NextUIProvider>
         <AuthProvider>
-          <AuthStateChanged>
-            <Layout>
+          <Layout>
+            <AuthStateChanged>
               <Component {...pageProps} />
-            </Layout>
-          </AuthStateChanged>
+            </AuthStateChanged>
+          </Layout>
         </AuthProvider>
       </NextUIProvider>
     </NextThemesProvider>
