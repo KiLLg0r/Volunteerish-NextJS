@@ -3,6 +3,7 @@ import { useAuth } from "../context/AuthContext";
 
 import auth from "../config/firebase";
 import { onAuthStateChanged } from "firebase/auth";
+import Loading from "../components/Loading";
 
 const AuthStateChanged = ({ children }) => {
   const { setCurrentUser } = useAuth();
@@ -16,7 +17,7 @@ const AuthStateChanged = ({ children }) => {
     //eslint-disable-next-line
   }, []);
 
-  if (loading) return <p>Loading ...</p>;
+  if (loading) return <Loading />;
 
   return children;
 };
