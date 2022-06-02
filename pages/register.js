@@ -42,7 +42,7 @@ const Register = () => {
         passwordConfirm: "",
       });
       setLoading(true);
-      await login(email, password);
+      await register(email, password);
       router.push("/");
     } catch (error) {
       const errorValidated = validateError(error.code);
