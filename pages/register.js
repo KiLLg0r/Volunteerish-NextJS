@@ -1,7 +1,6 @@
 import RegisterSvg from "../public/svg/register.svg";
-import Error from "../components/Error";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useRouter } from "next/router";
 import Link from "next/link";
