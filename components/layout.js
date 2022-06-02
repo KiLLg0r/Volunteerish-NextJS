@@ -1,9 +1,8 @@
 import Head from "next/head";
-import { useTheme, Container } from "@nextui-org/react";
+import { Container, useTheme } from "@nextui-org/react";
 
 const Layout = ({ children }) => {
   const { theme } = useTheme();
-
   return (
     <>
       <Head>
@@ -14,7 +13,7 @@ const Layout = ({ children }) => {
         />
         <meta name="viewport" content="width=device-width,initial-scale=1.0" />
       </Head>
-      <Container css={{ backgroundColor: "$background", minHeight: "100vh" }}>{children}</Container>
+      <Container css={{ backgroundColor: theme.colors.background.value, minHeight: "100vh" }}>{children}</Container>
     </>
   );
 };

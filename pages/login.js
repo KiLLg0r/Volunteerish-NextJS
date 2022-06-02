@@ -55,13 +55,14 @@ const Login = ({ auth }) => {
       gap={0}
       css={{
         flexDirection: "column",
-        paddingInline: "1rem",
-        paddingBlock: "2rem",
+        padding: "0",
         alignItems: "center",
         justifyContent: "center",
         minHeight: "100vh",
         "@sm": {
           flexDirection: "row",
+          paddingInline: "1rem",
+          paddingBlock: "2rem",
         },
       }}
     >
@@ -124,8 +125,8 @@ const Login = ({ auth }) => {
               helperColor={error.password.length > 0 && "error"}
               required
             />
-            <Spacer />
-            <Button disabled={loading} color="error" type="submit" css={{ width: "100%" }}>
+            <Spacer y={2} />
+            <Button disabled={loading} type="submit" css={{ width: "100%", backgroundColor: "$red500" }}>
               Log in
             </Button>
           </form>

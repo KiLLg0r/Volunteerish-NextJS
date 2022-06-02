@@ -11,9 +11,9 @@ function MyApp({ Component, pageProps }) {
     type: "light",
     theme: {
       colors: {
-        background: "#aeaeaeb",
+        background: "#eaeaeb",
         backgroundSecondary: "#bfc0c2",
-        text: "#20232",
+        text: "#20232a",
         textSecondary: "#282c34",
         red50: "#4c1b1b",
         red100: "#4c1b1b",

@@ -4,9 +4,10 @@ import { useAuth } from "../context/AuthContext";
 import auth from "../config/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import Loading from "./Loading";
+import Navigation from "./Navigation";
 
 const AuthStateChanged = ({ children }) => {
-  const { setCurrentUser } = useAuth();
+  const { currentUser, setCurrentUser } = useAuth();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -19,7 +20,12 @@ const AuthStateChanged = ({ children }) => {
 
   if (loading) return <Loading />;
 
-  return children;
+  return (
+    <>
+      {currentUser && <Navigation />}
+      {children}
+    </>
+  );
 };
 
 export default AuthStateChanged;

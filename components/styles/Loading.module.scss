@@ -1,5 +1,4 @@
 .wrapper {
-  background-color: var(--background);
   position: absolute;
   inset: 0;
 }
@@ -10,7 +9,8 @@
   inset: 0;
   animation-duration: 5s;
   animation-iteration-count: infinite;
-  border: 3px solid var(--accent500);
+  border-width: 3px;
+  border-style: solid;
   margin: auto;
   height: 20rem;
   width: 20rem;

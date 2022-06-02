@@ -1,0 +1,36 @@
+.primaryNavigation {
+  width: 100%;
+  height: 5rem;
+  display: flex;
+  justify-content: center;
+
+  .navigationLinks {
+    height: 100%;
+    width: auto;
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+
+    .link {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      transition: transform 0.25s linear;
+      font-weight: 600;
+
+      span {
+        display: block;
+      }
+
+      &.active {
+        gap: 1rem;
+        span {
+          transform: scale(1.25);
+        }
+        svg {
+          transform: scale(1.5);
+        }
+      }
+    }
+  }
+}
