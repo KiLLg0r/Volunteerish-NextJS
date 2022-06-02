@@ -9,6 +9,7 @@ function Index({ auth }) {
       <h1>{currentUser?.uid}</h1>
       <button onClick={logout}>Log out</button>
       <button onClick={() => console.log(currentUser)}>Show current user</button>
+      <Loading />
     </>
   );
 }
