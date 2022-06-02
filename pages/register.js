@@ -1,5 +1,4 @@
 import RegisterSvg from "../public/svg/register.svg";
-import Input from "../components/Input";
 import Error from "../components/Error";
 
 import { useRef, useState } from "react";
@@ -10,91 +9,167 @@ import Link from "next/link";
 import { validateError } from "../utilities/functions";
 
 import styles from "./Auth.module.scss";
-import auth from "../config/firebase";
-
-// export async function getServerSideProps() {
-//   const currentUser = auth.currentUser;
-
-//   if (currentUser) {
-//     return {
-//       redirect: {
-//         destination: "/",
-//         permanent: false,
-//       },
-//     };
-//   }
-
-//   return {
-//     props: {},
-//   };
-// }
+import { Row, Col, Button, Input, Spacer } from "@nextui-org/react";
 
 const Register = () => {
-  const emailRef = useRef();
-  const passwordRef = useRef();
-  const passwordConfirmRef = useRef();
   const { register } = useAuth();
-  const [error, setError] = useState("");
+  const [error, setError] = useState({
+    email: "",
+    password: "",
+    passwordConfirm: "",
+  });
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
 
   async function handleSubmit(e) {
     e.preventDefault();
 
-    if (passwordRef.current.value !== passwordConfirmRef.current.value) {
-      return setError("Passwords do not match");
+    if (password !== passwordConfirm) {
+      return setError({
+        email: "",
+        password: "",
+        passwordConfirm: "Passwords do not match",
+      });
     }
+
     try {
-      setError("");
+      setError({
+        email: "",
+        password: "",
+        passwordConfirm: "",
+      });
       setLoading(true);
-      await register(emailRef.current.value, passwordRef.current.value);
+      await login(email, password);
       router.push("/");
     } catch (error) {
-      setError(validateError(error.code));
+      const errorValidated = validateError(error.code);
+      if (errorValidated.type === "password")
+        setError({
+          email: "",
+          password: errorValidated.error,
+          passwordConfirm: "",
+        });
+      if (errorValidated.type === "email")
+        setError({
+          email: errorValidated.error,
+          password: "",
+          passwordConfirm: "",
+        });
     }
     setLoading(false);
   }
 
-  const changed = (status) => {
-    if (status) setError("");
-  };
-
   return (
-    <div className={styles.login}>
-      <div className={styles.authHeader}>
-        <h1 className={`${styles.title} ${styles.appName} `}>Volunteerish</h1>
-        <RegisterSvg />
-      </div>
-      <div className={styles.authContent}>
-        <h1 className={styles.title}>Create new account</h1>
-        {error && <Error error={error} />}
-        <form className="contact-form" onSubmit={handleSubmit}>
-          <Input type="email" ref={emailRef} name="Email" icon="email" waitForChanges={true} changed={changed} />
-          <Input
-            type="password"
-            ref={passwordRef}
-            name="Password"
-            icon="password"
-            waitForChanges={true}
-            changed={changed}
-          />
-          <Input
-            type="password"
-            ref={passwordConfirmRef}
-            name="Confirm password"
-            icon="password"
-            waitForChanges={true}
-            changed={changed}
-          />
-          <button type="submit" className={styles.btn} disabled={loading}>
-            Create account
-          </button>
-        </form>
-        <div className={styles.linkText}>
-          Already have an account? <Link href="/login">Log in</Link>
+    <Row
+      fluid
+      gap={0}
+      css={{
+        flexDirection: "column",
+        paddingInline: "1rem",
+        paddingBlock: "2rem",
+        alignItems: "center",
+        justifyContent: "center",
+        minHeight: "100vh",
+        "@sm": {
+          flexDirection: "row",
+        },
+      }}
+    >
+      <Col
+        css={{
+          backgroundColor: "$background",
+          borderRadius: "0.625rem",
+          "@sm": {
+            backgroundColor: "$backgroundSecondary",
+          },
+        }}
+      >
+        <div style={{ padding: "1rem" }}>
+          <h1 className={`${styles.title} ${styles.appName} `}>Volunteerish</h1>
+          <RegisterSvg style={{ width: "80%", aspectRatio: "1", display: "block", marginInline: "auto" }} />
         </div>
-      </div>
-    </div>
+      </Col>
+      <Col>
+        <div
+          style={{
+            padding: "2rem",
+          }}
+        >
+          <h1 className={styles.title}>Create new account</h1>
+          <form className="contact-form" onSubmit={handleSubmit}>
+            <Input
+              clearable
+              label="Email"
+              placeholder="Enter your email"
+              fullWidth
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setError({
+                  email: "",
+                  password: "",
+                  passwordConfirm: "",
+                });
+              }}
+              size="lg"
+              status={error.email.length > 0 && "error"}
+              helperText={error.email.length > 0 && error.email}
+              helperColor={error.email.length > 0 && "error"}
+              required
+            />
+            <Spacer />
+            <Input.Password
+              clearable
+              label="Password"
+              placeholder="Enter your password"
+              fullWidth
+              onChange={(e) => {
+                setPassword(e.target.value);
+                setError({
+                  email: "",
+                  password: "",
+                  passwordConfirm: "",
+                });
+              }}
+              size="lg"
+              status={error.password.length > 0 && "error"}
+              helperText={error.password.length > 0 && error.password}
+              helperColor={error.password.length > 0 && "error"}
+              required
+            />
+            <Spacer />
+            <Input.Password
+              clearable
+              label="Confirm password"
+              placeholder="Enter your password again"
+              fullWidth
+              onChange={(e) => {
+                setPassword(e.target.value);
+                setError({
+                  email: "",
+                  password: "",
+                  passwordConfirm: "",
+                });
+              }}
+              size="lg"
+              status={error.passwordConfirm.length > 0 && "error"}
+              helperText={error.passwordConfirm.length > 0 && error.passwordConfirm}
+              helperColor={error.passwordConfirm.length > 0 && "error"}
+              required
+            />
+            <Spacer />
+            <Button disabled={loading} color="error" type="submit" css={{ width: "100%" }}>
+              Create account
+            </Button>
+          </form>
+          <div className={styles.linkText}>
+            Already have an account? <Link href="/login">Log in</Link>
+          </div>
+        </div>
+      </Col>
+    </Row>
   );
 };
 

@@ -1,8 +1,6 @@
 import LoginSvg from "../public/svg/login.svg";
-import Error from "../components/Error";
-import Input from "../components/Input";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 
@@ -11,60 +9,132 @@ import styles from "./Auth.module.scss";
 import { validateError } from "../utilities/functions";
 import { withPublic } from "../utilities/routes";
 
+import { Row, Col, Button, Input, Spacer } from "@nextui-org/react";
+
 const Login = ({ auth }) => {
-  const emailRef = useRef();
-  const passwordRef = useRef();
   const { login } = auth;
-  const [error, setError] = useState("");
+  const [error, setError] = useState({
+    email: "",
+    password: "",
+  });
   const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const router = useRouter();
 
   async function handleSubmit(e) {
     e.preventDefault();
 
     try {
-      setError("");
+      setError({
+        email: "",
+        password: "",
+      });
       setLoading(true);
-      await login(emailRef.current.value, passwordRef.current.value);
-      router.push("/dashboard");
+      await login(email, password);
+      router.push("/");
     } catch (error) {
-      setError(validateError(error.code));
+      const errorValidated = validateError(error.code);
+      if (errorValidated.type === "password")
+        setError({
+          email: "",
+          password: errorValidated.error,
+        });
+      if (errorValidated.type === "email")
+        setError({
+          email: errorValidated.error,
+          password: "",
+        });
     }
     setLoading(false);
   }
 
-  const changed = (status) => {
-    if (status) setError("");
-  };
-
   return (
-    <div className={styles.login}>
-      <div className={styles.authHeader}>
-        <h1 className={`${styles.title} ${styles.appName} `}>Volunteerish</h1>
-        <LoginSvg />
-      </div>
-      <div className={styles.authContent}>
-        <h1 className={styles.title}>Log in</h1>
-        {error && <Error error={error} />}
-        <form className="contact-form" onSubmit={handleSubmit}>
-          <Input type="email" ref={emailRef} name="Email" icon="email" waitForChanges={true} changed={changed} />
-          <Input
-            type="password"
-            ref={passwordRef}
-            name="Password"
-            icon="password"
-            waitForChanges={true}
-            changed={changed}
-          />
-          <button type="submit" className={styles.btn} disabled={loading}>
-            Log in
-          </button>
-        </form>
-        <div className={styles.linkText}>
-          Need an account? <Link href="/register">Sign up</Link>
+    <Row
+      fluid
+      gap={0}
+      css={{
+        flexDirection: "column",
+        paddingInline: "1rem",
+        paddingBlock: "2rem",
+        alignItems: "center",
+        justifyContent: "center",
+        minHeight: "100vh",
+        "@sm": {
+          flexDirection: "row",
+        },
+      }}
+    >
+      <Col
+        css={{
+          backgroundColor: "$background",
+          borderRadius: "0.625rem",
+          "@sm": {
+            backgroundColor: "$backgroundSecondary",
+          },
+        }}
+      >
+        <div style={{ padding: "1rem" }}>
+          <h1 className={`${styles.title} ${styles.appName} `}>Volunteerish</h1>
+          <LoginSvg style={{ width: "80%", aspectRatio: "1", display: "block", marginInline: "auto" }} />
         </div>
-      </div>
-    </div>
+      </Col>
+      <Col>
+        <div
+          style={{
+            padding: "2rem",
+          }}
+        >
+          <h1 className={styles.title}>Log in</h1>
+          <form className="contact-form" onSubmit={handleSubmit}>
+            <Input
+              clearable
+              label="Email"
+              placeholder="Email"
+              fullWidth
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setError({
+                  email: "",
+                  password: "",
+                });
+              }}
+              size="lg"
+              status={error.email.length > 0 && "error"}
+              helperText={error.email.length > 0 && error.email}
+              helperColor={error.email.length > 0 && "error"}
+              required
+            />
+            <Spacer />
+            <Input.Password
+              clearable
+              label="Password"
+              placeholder="Password"
+              fullWidth
+              onChange={(e) => {
+                setPassword(e.target.value);
+                setError({
+                  email: "",
+                  password: "",
+                });
+              }}
+              size="lg"
+              status={error.password.length > 0 && "error"}
+              helperText={error.password.length > 0 && error.password}
+              helperColor={error.password.length > 0 && "error"}
+              required
+            />
+            <Spacer />
+            <Button disabled={loading} color="error" type="submit" css={{ width: "100%" }}>
+              Log in
+            </Button>
+          </form>
+          <div className={styles.linkText}>
+            Need an account? <Link href="/register">Sign up</Link>
+          </div>
+        </div>
+      </Col>
+    </Row>
   );
 };
 

@@ -1,87 +1,24 @@
-.login,
-.register {
-  min-height: calc(100vh - 2rem);
-  height: 100%;
-  width: 100%;
-  padding-inline: 1rem;
-  padding-block: 2rem;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
+.linkText {
+  text-align: center;
+  margin-block: 1.5rem;
+  color: var(--text-secondary);
 
-  svg {
-    width: 80%;
-    aspect-ratio: 1;
-    display: block;
-    margin-inline: auto;
-  }
-
-  .title {
-    font-size: 2rem;
-    text-align: center;
+  a {
     color: var(--accent500);
-    font-weight: 800;
-    margin-block: 1rem;
-  }
-
-  .appName {
-    font-family: "Love Light", cursive;
-    letter-spacing: 2px;
-    font-size: 4rem;
-    margin-block: 0;
-  }
-
-  .linkText {
-    text-align: center;
-    margin-block: 1.5rem;
-    color: var(--text-secondary);
-
-    a {
-      color: var(--accent500);
-    }
-  }
-
-  .btn {
-    color: var(--text);
-    height: 4rem;
-    width: 100%;
-    background-color: var(--accent400);
-    border: none;
-    border-radius: 0.5rem;
-    font-size: 1.25rem;
-    transition: all 0.35s;
-    cursor: pointer;
-    &:hover {
-      background-color: var(--accent200);
-      color: var(--text);
-    }
   }
 }
 
-@media only screen and(min-width: 525px) {
-  .login,
-  .register {
-    .authContent,
-    .authHeader {
-      padding: 2rem;
-      width: 100%;
-      height: 100%;
-    }
-  }
+.title {
+  font-size: 2rem;
+  text-align: center;
+  color: var(--accent500);
+  font-weight: 800;
+  margin-block: 1rem;
 }
 
-@media only screen and (min-width: 960px) {
-  .login,
-  .register {
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    gap: 2rem;
-
-    .authHeader {
-      background-color: var(--background-secondary);
-      border-radius: 0.625rem;
-    }
-  }
+.appName {
+  font-family: "Love Light", cursive;
+  letter-spacing: 2px;
+  font-size: 4rem;
+  margin-block: 0;
 }
