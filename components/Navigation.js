@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { Link } from "@nextui-org/react";
+import { Link, Row } from "@nextui-org/react";
 import styles from "./styles/Navigation.module.scss";
 import { BsFillHouseFill, BsFillChatDotsFill, BsBagFill } from "react-icons/bs";
 import { FaCog, FaClipboard } from "react-icons/fa";
@@ -21,7 +21,7 @@ const ActiveLink = ({ href, children }) => {
         flexDirection: "column",
         "@xs": {
           flexDirection: "row",
-          gap: "0",
+          gap: "0.25rem",
         },
       }}
       onClick={handleClick}
@@ -34,7 +34,16 @@ const ActiveLink = ({ href, children }) => {
 
 const Navigation = () => {
   return (
-    <header className={styles.primaryNavigation}>
+    <Row
+      fluid
+      className={styles.primaryNavigation}
+      css={{
+        "@xs": {
+          width: "100%",
+          position: "static !important",
+        },
+      }}
+    >
       <ul className={styles.navigationLinks}>
         <li className={styles.link}>
           <ActiveLink href="/">
@@ -67,7 +76,7 @@ const Navigation = () => {
           </ActiveLink>
         </li>
       </ul>
-    </header>
+    </Row>
   );
 };
 

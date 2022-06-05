@@ -13,7 +13,9 @@ const Layout = ({ children }) => {
         />
         <meta name="viewport" content="width=device-width,initial-scale=1.0" />
       </Head>
-      <Container css={{ backgroundColor: theme.colors.background.value, minHeight: "100vh" }}>{children}</Container>
+      <Container css={{ backgroundColor: theme.colors.background.value, minHeight: "100vh", width: "auto" }}>
+        {children}
+      </Container>
     </>
   );
 };
