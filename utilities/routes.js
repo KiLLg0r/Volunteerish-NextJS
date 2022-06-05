@@ -2,6 +2,7 @@ import { useAuth } from "../context/AuthContext";
 import { useRouter } from "next/router";
 import Loading from "../components/Loading";
 import Navigation from "../components/Navigation";
+import { useWindowSize } from "./hooks";
 
 export const withPublic = (Component) => {
   return function WithPublic(props) {
@@ -42,6 +43,20 @@ export const withNavigation = (Component) => {
           <Component {...props} />
         </>
       );
+    }
+
+    return <Component {...props} />;
+  };
+};
+
+export const closeLinkOnDesktop = (Component) => {
+  return function CloseLinkOnDesktop(props) {
+    const size = useWindowSize();
+    const router = useRouter();
+
+    if (size.width >= 650) {
+      router.push("/");
+      return <Loading />;
     }
 
     return <Component {...props} />;

@@ -1,5 +1,4 @@
-import { useTheme as useNextTheme } from "next-themes";
-import { useTheme, Spacer, Row, Col, Button } from "@nextui-org/react";
+import { Spacer, Row, Col, Button } from "@nextui-org/react";
 import {
   BsChevronRight,
   BsFillPhoneFill,
@@ -7,15 +6,16 @@ import {
   BsFillInfoCircleFill,
   BsFillQuestionCircleFill,
 } from "react-icons/bs";
-import { withProtected, withNavigation } from "../../utilities/routes";
+import { withProtected, withNavigation, closeLinkOnDesktop } from "../../utilities/routes";
 
 import styles from "../styles/Settings.module.scss";
 import Link from "next/link";
+import { useAuth } from "../../context/AuthContext";
 
 const SettingRow = ({ icon, title, subtitle, href }) => {
   return (
     <>
-      <Link href={href} replace>
+      <Link href={href}>
         <a>
           <Row align="center" justify="flex-start">
             <Col span={2}>
@@ -23,7 +23,7 @@ const SettingRow = ({ icon, title, subtitle, href }) => {
                 {icon}
               </Row>
             </Col>
-            <Col span={10}>
+            <Col span={8}>
               <Row>
                 <div className={styles.settingTitle}>{title}</div>
               </Row>
@@ -45,42 +45,48 @@ const SettingRow = ({ icon, title, subtitle, href }) => {
   );
 };
 
-function Settings({ auth }) {
-  const { logout } = auth;
-
+export const SettingsMenu = () => {
+  const { logout } = useAuth;
   return (
-    <section className={styles.settings}>
-      <h1 className={styles.title}>Settings</h1>
+    <>
       <SettingRow
-        icon={<BsFillPhoneFill />}
+        icon={<BsFillPhoneFill className={styles.settingSVG} />}
         title="App settings"
-        subtitle="Settings on language, dark way and font size"
+        subtitle="Settings on language, dark mode ..."
         href="/settings/app"
       />
       <SettingRow
-        icon={<BsFillFilePersonFill />}
+        icon={<BsFillFilePersonFill className={styles.settingSVG} />}
         title="Account"
-        subtitle="Settings on name, email, address"
+        subtitle="Settings on name, email, address ..."
         href="/settings/account"
       />
       <SettingRow
-        icon={<BsFillInfoCircleFill />}
+        icon={<BsFillInfoCircleFill className={styles.settingSVG} />}
         title="About"
         subtitle="Information about platform"
         href="/settings/about"
       />
       <SettingRow
-        icon={<BsFillQuestionCircleFill />}
+        icon={<BsFillQuestionCircleFill className={styles.settingSVG} />}
         title="Help and Support"
         subtitle="FAQ and support information"
         href="/settings/help"
       />
-      <Spacer />
-      <Button onPress={logout} color="error" bordered css={{ width: "100%" }}>
+      <Button onPress={logout} color="error" bordered css={{ width: "100%" }} size="lg">
         Log out
       </Button>
+    </>
+  );
+};
+
+function Settings({ auth }) {
+  return (
+    <section className={styles.settings}>
+      <h1 className={styles.title}>Settings</h1>
+      <SettingsMenu auth={auth} />
     </section>
   );
 }
 
-export default withProtected(withNavigation(Settings));
+export default closeLinkOnDesktop(withProtected(withNavigation(Settings)));
