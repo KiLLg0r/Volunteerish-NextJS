@@ -1,4 +1,4 @@
-import { withPublic } from "../../utilities/routes";
+import { withPublic } from "../utilities/routes";
 
 const Help = () => {
   return <></>;
