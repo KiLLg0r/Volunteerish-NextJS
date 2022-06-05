@@ -23,6 +23,7 @@ export function AuthProvider({ children }) {
   const [userData, setUserData] = useState();
   const [loading, setLoading] = useState(false);
   const [db, setDB] = useState(getFirestore(app));
+  const [FontSize, setFontSize] = useState("");
 
   function register(email, password) {
     return createUserWithEmailAndPassword(auth, email, password);
@@ -56,31 +57,18 @@ export function AuthProvider({ children }) {
     sendPasswordResetEmail(auth, email);
   }
 
-  // useEffect(() => {
-  //   const getData = async (uid) => {
-  //     const userDoc = doc(db, "users", uid);
-  //     const userDocSnap = await getDoc(userDoc);
-
-  //     if (userDocSnap.exists()) return userDocSnap.data();
-  //   };
-
-  //   return onAuthStateChanged(auth, (user) => {
-  //     if (user) {
-  //       console.log("Changed state" + user);
-  //       setCurrentUser(user);
-  //       getData(user.uid).then((result) => {
-  //         setUserData(result);
-  //       });
-  //     }
-  //     setLoading(false);
-  //   });
-  // }, [currentUser, db]);
+  useEffect(() => {
+    setFontSize(localStorage.getItem("fontSize"));
+    if (FontSize === null) document.documentElement.style.fontSize = FontSize;
+  }, [FontSize]);
 
   const value = {
     currentUser,
     userData,
     db,
     loading,
+    FontSize,
+    setFontSize,
     setCurrentUser,
     setUserData,
     setLoading,

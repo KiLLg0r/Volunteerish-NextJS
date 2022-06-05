@@ -22,11 +22,11 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: transform 0.25s ease-in, color 0.25s ease-in;
+      transition: all 0.25s ease-in;
       font-weight: 600;
       gap: 0.25rem;
       font-size: 0.875rem;
-      color: var(--nextui-colors-textSecondary);
+      // color: var(--nextui-colors-textSecondary);
 
       span {
         display: block;
@@ -37,7 +37,6 @@
       }
 
       &.active {
-        color: var(--nextui-colors-red500);
         span {
           transform: scale(1.25);
         }
@@ -52,10 +51,6 @@
 
       &.open {
         color: var(--nextui-colors-red500);
-      }
-
-      &:hover {
-        color: var(--);
       }
     }
   }

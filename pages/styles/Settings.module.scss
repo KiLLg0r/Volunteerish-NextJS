@@ -14,3 +14,22 @@
 .settingSVG {
   font-size: 1.5rem;
 }
+
+.darkMode {
+  font-size: 1.125rem;
+}
+
+.fontSize,
+.languages {
+  width: min(100%, 500px);
+  gap: 1rem;
+
+  label {
+    display: block;
+    white-space: nowrap;
+  }
+
+  select {
+    width: 100%;
+  }
+}

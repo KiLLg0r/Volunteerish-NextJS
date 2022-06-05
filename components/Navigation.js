@@ -11,6 +11,7 @@ import styles from "./styles/Navigation.module.scss";
 const ActiveLink = ({ href, children }) => {
   const router = useRouter();
   const condition = router.asPath === href;
+  const secondCondition = router.asPath === "/settings/app" || router.asPath === "/settings/account";
 
   const [popoverOpen, setPopoverOpen] = useState(false);
 
@@ -23,12 +24,14 @@ const ActiveLink = ({ href, children }) => {
 
   if (href === "/settings" && size.width > 650)
     return (
-      <Link className={`${styles.link} ${condition && styles.active}`}>
+      <Link
+        className={`${styles.link} ${condition && styles.active}`}
+        css={{ color: secondCondition ? "$red500" : "$textSecondary" }}
+      >
         <Popover
           triggerType="menu"
           onOpenChange={(isOpen) => {
             setPopoverOpen(isOpen);
-            console.log(isOpen);
           }}
         >
           <Popover.Trigger>
@@ -47,6 +50,7 @@ const ActiveLink = ({ href, children }) => {
     <Link
       css={{
         flexDirection: "column",
+        color: condition ? "$red500" : "$textSecondary",
         "@xs": {
           flexDirection: "row",
           gap: "0.25rem",
