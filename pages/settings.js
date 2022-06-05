@@ -1,6 +1,6 @@
-import Link from "next/link";
 import { useTheme as useNextTheme } from "next-themes";
-import { Switch, useTheme, Link as NextUILink, Text, Row } from "@nextui-org/react";
+import { Switch, useTheme, Text, Row } from "@nextui-org/react";
+import { BsFillSunFill, BsMoonFill } from "react-icons/bs";
 
 export default function Home() {
   const { setTheme } = useNextTheme();
@@ -19,13 +19,10 @@ export default function Home() {
             setTheme(e.target.checked ? "dark" : "light");
           }}
           color="error"
+          iconOn={<BsMoonFill />}
+          iconOff={<BsFillSunFill />}
         />
       </Row>
-      <Text size={24}>
-        <Link href="/">
-          <NextUILink color="error">Go back to home</NextUILink>
-        </Link>
-      </Text>
     </div>
   );
 }

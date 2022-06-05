@@ -5,19 +5,6 @@ body {
   --breakpoints-lg: 1280px;
   --breakpoints-md: 960px;
   --breakpoints-sm: 650px;
-  --background: #20232a;
-  --background-secondary: #282c34;
-  --text: #eaeaeb;
-  --text-secondary: #bfc0c2;
-  --accent100: #4c1b1b;
-  --accent200: #662424;
-  --accent300: #993636;
-  --accent400: #cc4848;
-  --accent500: #ff5a5a;
-  --accent600: #ff6b6b;
-  --accent700: #ff7b7b;
-  --accent800: #ff9c9c;
-  --accent900: #ffcece;
 
   padding: 0;
   margin: 0;

@@ -1,6 +1,7 @@
 .wrapper {
   position: absolute;
   inset: 0;
+  background-color: var(--nextui-colors-background);
 }
 
 .square {
@@ -9,8 +10,7 @@
   inset: 0;
   animation-duration: 5s;
   animation-iteration-count: infinite;
-  border-width: 3px;
-  border-style: solid;
+  border: 3px solid var(--nextui-colors-red500);
   margin: auto;
   height: 20rem;
   width: 20rem;

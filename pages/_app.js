@@ -11,8 +11,8 @@ function MyApp({ Component, pageProps }) {
     type: "light",
     theme: {
       colors: {
-        background: "#eaeaeb",
-        backgroundSecondary: "#bfc0c2",
+        background: "#ffffff",
+        backgroundSecondary: "#eaeaeb",
         text: "#20232a",
         textSecondary: "#282c34",
         red50: "#4c1b1b",
@@ -25,10 +25,12 @@ function MyApp({ Component, pageProps }) {
         red700: "#ff7b7b",
         red800: "#ff9c9c",
         red900: "#ffcece",
-        accents0: "#bfc0c2",
+        accents0: "#eaeaeb",
         accents2: "#d4d5d6",
       },
-      space: {},
+      space: {
+        5: "1rem",
+      },
       fonts: {},
     },
   });
@@ -54,7 +56,9 @@ function MyApp({ Component, pageProps }) {
         accents0: "#282c34",
         accents2: "#d4d5d6",
       },
-      space: {},
+      space: {
+        5: "1rem",
+      },
       fonts: {},
     },
   });

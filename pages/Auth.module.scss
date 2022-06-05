@@ -1,17 +1,17 @@
 .linkText {
   text-align: center;
   margin-block: 1.5rem;
-  color: var(--text-secondary);
+  color: var(--nextui-colors-textSecondary);
 
   a {
-    color: var(--accent500);
+    color: var(--nextui-colors-red500);
   }
 }
 
 .title {
   font-size: 2rem;
   text-align: center;
-  color: var(--accent500);
+  color: var(--nextui-colors-red500);
   font-weight: 800;
   margin-block: 1rem;
 }
@@ -21,4 +21,25 @@
   letter-spacing: 2px;
   font-size: 4rem;
   margin-block: 0;
+}
+
+.authLeftContainer {
+  padding: 1rem;
+}
+
+.authSVG {
+  width: 80%;
+  aspect-ratio: 1;
+  display: block;
+  margin-inline: auto;
+}
+
+.authRightContainer {
+  padding: 2rem;
+}
+
+@media screen and (max-width: 550px) {
+  .authRightContainer {
+    padding: 0;
+  }
 }
