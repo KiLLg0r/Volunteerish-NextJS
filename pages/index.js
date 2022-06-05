@@ -1,5 +1,5 @@
 import { useAuth } from "../context/AuthContext";
-import { withProtected } from "../utilities/routes";
+import { withProtected, withNavigation } from "../utilities/routes";
 import Loading from "../components/Loading";
 
 function Index({ auth }) {
@@ -14,4 +14,4 @@ function Index({ auth }) {
   );
 }
 
-export default withProtected(Index);
+export default withProtected(withNavigation(Index));

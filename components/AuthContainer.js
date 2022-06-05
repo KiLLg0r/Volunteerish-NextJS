@@ -2,7 +2,7 @@ import { Row, Col, Switch, useTheme, Container, Spacer } from "@nextui-org/react
 import { useTheme as useNextTheme } from "next-themes";
 import { BsFillSunFill, BsMoonFill } from "react-icons/bs";
 
-import styles from "../pages/Auth.module.scss";
+import styles from "../pages/styles/Auth.module.scss";
 
 export const AuthLeftSide = ({ children }) => {
   return (

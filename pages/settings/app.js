@@ -1,18 +1,17 @@
+import { withProtected } from "../../utilities/routes";
 import { useTheme as useNextTheme } from "next-themes";
-import { Switch, useTheme, Text, Row } from "@nextui-org/react";
+import { useTheme, Switch, Spacer, Row } from "@nextui-org/react";
 import { BsFillSunFill, BsMoonFill } from "react-icons/bs";
 
-export default function Home() {
+const App = () => {
   const { setTheme } = useNextTheme();
-  const { isDark, type, theme } = useTheme();
+  const { isDark } = useTheme();
 
   return (
-    <div>
-      <h1 style={{ color: theme.colors.red500.value }}>Change theme</h1>
+    <>
       <Row align="center" gap={1}>
-        <Text size={18}>
-          The current theme is: <span style={{ color: theme.colors.cyan700.value }}>{type}</span>
-        </Text>
+        <span>Dark mode: </span>
+        <Spacer x={0.5} />
         <Switch
           checked={isDark}
           onChange={(e) => {
@@ -23,6 +22,8 @@ export default function Home() {
           iconOff={<BsFillSunFill />}
         />
       </Row>
-    </div>
+    </>
   );
-}
+};
+
+export default withProtected(App);

@@ -1,6 +1,7 @@
 import { useAuth } from "../context/AuthContext";
 import { useRouter } from "next/router";
 import Loading from "../components/Loading";
+import Navigation from "../components/Navigation";
 
 export const withPublic = (Component) => {
   return function WithPublic(props) {
@@ -27,5 +28,22 @@ export const withProtected = (Component) => {
     }
 
     return <Component {...props} auth={auth} />;
+  };
+};
+
+export const withNavigation = (Component) => {
+  return function WithNavigation(props) {
+    const auth = useAuth();
+
+    if (auth.currentUser) {
+      return (
+        <>
+          <Navigation />
+          <Component {...props} />
+        </>
+      );
+    }
+
+    return <Component {...props} />;
   };
 };

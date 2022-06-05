@@ -1,0 +1,23 @@
+.fourOhFourSection {
+  width: 100%;
+  padding: 2rem;
+  height: calc(100vh - 5rem);
+  display: grid;
+  place-items: center;
+
+  svg {
+    height: 100%;
+    aspect-ratio: 1;
+  }
+
+  a {
+    color: var(--nextui-colors-red500);
+    font-weight: 600;
+    font-size: 1.5rem;
+    transition: color 0.25s ease-in;
+
+    &:hover {
+      color: var(--nextui-colors-red300);
+    }
+  }
+}

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 
-import styles from "./Auth.module.scss";
+import styles from "./styles/Auth.module.scss";
 
 import { validateError } from "../utilities/functions";
 import { withPublic } from "../utilities/routes";

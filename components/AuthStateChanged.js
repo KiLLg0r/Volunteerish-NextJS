@@ -20,12 +20,7 @@ const AuthStateChanged = ({ children }) => {
 
   if (loading) return <Loading />;
 
-  return (
-    <>
-      {currentUser && <Navigation />}
-      {children}
-    </>
-  );
+  return children;
 };
 
 export default AuthStateChanged;

@@ -5,9 +5,10 @@ import { useAuth } from "../context/AuthContext";
 import { useRouter } from "next/router";
 import Link from "next/link";
 
+import { withProtected } from "../../utilities/routes";
 import { validateError } from "../utilities/functions";
 
-import styles from "./Auth.module.scss";
+import styles from "./styles/Auth.module.scss";
 import { Button, Input, Spacer } from "@nextui-org/react";
 import AuthContainer, { AuthLeftSide, AuthRightSide } from "../components/AuthContainer";
 
@@ -145,4 +146,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default withProtected(Register);

@@ -1,8 +1,9 @@
 import Head from "next/head";
-import { Container, useTheme } from "@nextui-org/react";
+import { Container } from "@nextui-org/react";
+import { useAuth } from "../context/AuthContext";
 
 const Layout = ({ children }) => {
-  const { theme } = useTheme();
+  const { currentUser } = useAuth();
   return (
     <>
       <Head>
@@ -13,7 +14,18 @@ const Layout = ({ children }) => {
         />
         <meta name="viewport" content="width=device-width,initial-scale=1.0" />
       </Head>
-      <Container css={{ backgroundColor: theme.colors.background.value, minHeight: "100vh", width: "auto" }}>
+      <Container
+        css={{
+          backgroundColor: "$background",
+          minHeight: "100vh",
+          width: "auto",
+          paddingTop: currentUser && "1rem",
+          paddingBottom: currentUser && "5rem",
+          "@xs": {
+            paddingTop: currentUser && "5rem",
+          },
+        }}
+      >
         {children}
       </Container>
     </>

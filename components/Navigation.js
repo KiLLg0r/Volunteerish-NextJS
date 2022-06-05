@@ -10,7 +10,6 @@ const ActiveLink = ({ href, children }) => {
 
   const handleClick = (e) => {
     e.preventDefault;
-    console.log(router.asPath);
     router.replace(href);
   };
 
@@ -40,7 +39,8 @@ const Navigation = () => {
       css={{
         "@xs": {
           width: "100%",
-          position: "static !important",
+          bottom: "initial",
+          top: "0",
         },
       }}
     >
