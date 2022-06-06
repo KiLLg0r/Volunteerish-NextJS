@@ -27,6 +27,7 @@ function MyApp({ Component, pageProps }) {
         red900: "#ffcece",
         accents0: "#eaeaeb",
         accents2: "#d4d5d6",
+        gradient: "linear-gradient(to top left, $red200, $red400)",
       },
       space: {
         5: "1rem",
@@ -55,6 +56,7 @@ function MyApp({ Component, pageProps }) {
         red900: "#ffcece",
         accents0: "#282c34",
         accents2: "#d4d5d6",
+        gradient: "linear-gradient(to top left, $red200, $red400)",
       },
       space: {
         5: "1rem",
