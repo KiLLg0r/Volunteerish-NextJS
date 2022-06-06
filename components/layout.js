@@ -23,6 +23,7 @@ const Layout = ({ children }) => {
           paddingBottom: currentUser && "5rem",
           "@xs": {
             paddingTop: currentUser && "5rem",
+            paddingBottom: "0",
           },
         }}
       >

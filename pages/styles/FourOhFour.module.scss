@@ -1,7 +1,6 @@
 .fourOhFourSection {
   width: 100%;
-  padding: 2rem;
-  height: calc(100vh - 5rem);
+  height: calc(100vh - 10rem);
   display: grid;
   place-items: center;
 
@@ -19,5 +18,11 @@
     &:hover {
       color: var(--nextui-colors-red300);
     }
+  }
+}
+
+@media screen and (max-width: 650px) {
+  .fourOhFourSection svg {
+    width: 100%;
   }
 }

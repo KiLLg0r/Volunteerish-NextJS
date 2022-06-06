@@ -50,14 +50,14 @@ const ActiveLink = ({ href, children }) => {
     <Link
       css={{
         flexDirection: "column",
-        color: condition ? "$red500" : "$textSecondary",
+        color: condition || (href === "/settings" && secondCondition) ? "$red500" : "$textSecondary",
         "@xs": {
           flexDirection: "row",
           gap: "0.25rem",
         },
       }}
       onClick={handleClick}
-      className={`${styles.link} ${condition && styles.active}`}
+      className={`${styles.link} ${condition || (href === "/settings" && secondCondition) ? styles.active : ""}`}
     >
       {children}
     </Link>

@@ -1,0 +1,47 @@
+{
+    "en": {
+        "nav": {
+            "home": "Home",
+            "announces": "Announces",
+            "shop": "Shop",
+            "messages": "Messages",
+            "settings": "Settings"
+        },
+        "settings": {
+            "settingsTitle": "Settings",
+            "app": {
+                "title": "App settings",
+                "subtitle": "Settings on language, dark mode ..."
+            },
+            "account": {
+                "title": "Account",
+                "subtitle": "Settings on name, email, address ..."
+            },
+            "about": {
+                "title": "About",
+                "subtitle": "Information about platform"
+            },
+            "help": {
+                "title": "Help and Support",
+                "subtitle": "FAQ and support information"
+            }
+        },
+        "appSettings": {
+            "title": "App settings",
+            "darkMode": "Dark mode",
+            "fontSize": {
+                "small": "Small",
+                "normal": "Normal",
+                "big": "Big",
+                "veryBig": "Very big"
+            },
+            "language": {
+                "english": "English",
+                "romanian": "Romanian"
+            }
+        },
+        "logout": "Log out",
+        "login": "Log in",
+        "register": "Register"
+    }
+}
