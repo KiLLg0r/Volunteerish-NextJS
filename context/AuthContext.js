@@ -22,7 +22,7 @@ export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState();
   const [userData, setUserData] = useState();
   const [loading, setLoading] = useState(false);
-  const [db, setDB] = useState(getFirestore(app));
+  const db = getFirestore(app);
   const [FontSize, setFontSize] = useState("");
 
   function register(email, password) {
@@ -59,7 +59,7 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     setFontSize(localStorage.getItem("fontSize"));
-    if (FontSize === null) document.documentElement.style.fontSize = FontSize;
+    if (FontSize.length > 0) document.documentElement.style.fontSize = FontSize;
   }, [FontSize]);
 
   const value = {

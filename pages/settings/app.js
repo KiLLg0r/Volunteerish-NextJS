@@ -11,22 +11,18 @@ const App = () => {
   const { setTheme } = useNextTheme();
   const { isDark } = useTheme();
 
-  const { FontSize, setFontSize } = useAuth();
+  const { setFontSize, FontSize } = useAuth();
   const selectFontSizeRef = useRef(null);
 
   const changeFontSize = (e) => {
-    e.preventDefault();
-
-    const selectedValue = selectFontSizeRef.current.value;
-    localStorage.setItem("fontSize", selectedValue);
+    localStorage.setItem("fontSize", selectFontSizeRef.current.value);
+    setFontSize(selectFontSizeRef.current.value);
   };
 
   useEffect(() => {
-    const unsubscribe = window.addEventListener("storage", () => {
+    return window.addEventListener("storage", () => {
       setFontSize(localStorage.getItem("fontSize"));
     });
-
-    return unsubscribe;
   }, [setFontSize]);
 
   return (
@@ -56,19 +52,11 @@ const App = () => {
       <Spacer />
       <Row align="center" className={styles.fontSize}>
         <label>Font size: </label>
-        <select name="fontSize" onChange={changeFontSize} ref={selectFontSizeRef}>
-          <option value="14px" onClick={(e) => console.log(e.target.value)}>
-            Small
-          </option>
-          <option value="16px" onClick={(e) => console.log(e.target.value)}>
-            Normal
-          </option>
-          <option value="18px" onClick={(e) => console.log(e.target.value)}>
-            Big
-          </option>
-          <option value="20px" onClick={(e) => console.log(e.target.value)}>
-            Very big
-          </option>
+        <select name="fontSize" onChange={changeFontSize} ref={selectFontSizeRef} defaultValue={FontSize}>
+          <option value="14px">Small</option>
+          <option value="16px">Normal</option>
+          <option value="18px">Big</option>
+          <option value="20px">Very big</option>
         </select>
       </Row>
     </Container>
