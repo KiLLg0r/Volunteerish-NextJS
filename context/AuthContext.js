@@ -1,6 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
 import {
-  onAuthStateChanged,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
@@ -9,10 +8,11 @@ import {
   updatePassword,
   sendPasswordResetEmail,
 } from "firebase/auth";
-import { doc, getFirestore, getDoc } from "firebase/firestore";
+import { doc, getDoc, getFirestore } from "firebase/firestore";
 import auth, { app } from "../config/firebase";
 
 const AuthContext = React.createContext();
+const db = getFirestore(app);
 
 export function useAuth() {
   return useContext(AuthContext);
@@ -20,9 +20,8 @@ export function useAuth() {
 
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState();
-  const [userData, setUserData] = useState();
   const [loading, setLoading] = useState(false);
-  const db = getFirestore(app);
+  const [userData, setUserData] = useState(null);
   const [FontSize, setFontSize] = useState("");
 
   function register(email, password) {
@@ -57,10 +56,21 @@ export function AuthProvider({ children }) {
     sendPasswordResetEmail(auth, email);
   }
 
+  async function getUserData(uid) {
+    if (uid) {
+      const userRef = doc(db, "users", uid);
+      const userSnap = await getDoc(userRef);
+      if (userSnap.exists()) return userSnap.data();
+    }
+    return null;
+  }
+
   useEffect(() => {
     setFontSize(localStorage.getItem("fontSize"));
     if (FontSize.length > 0) document.documentElement.style.fontSize = FontSize;
-  }, [FontSize]);
+
+    if (!userData) getUserData(currentUser?.uid).then((result) => setUserData(result));
+  }, [FontSize, currentUser, userData]);
 
   const value = {
     currentUser,
@@ -68,9 +78,9 @@ export function AuthProvider({ children }) {
     db,
     loading,
     FontSize,
+    setUserData,
     setFontSize,
     setCurrentUser,
-    setUserData,
     setLoading,
     register,
     login,

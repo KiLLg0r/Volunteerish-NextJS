@@ -1,0 +1,126 @@
+.title,
+.subtitle {
+  color: var(--nextui-colors-red500);
+}
+
+.userHeader {
+  .imageCol {
+    width: 100%;
+    height: 100%;
+    padding: 1rem;
+
+    img {
+      height: 100%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+    }
+  }
+
+  .textGrid {
+    font-size: 1.125rem;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .coloredBorder {
+    padding: 0.25rem;
+    border: 3px solid var(--nextui-colors-red700);
+    border-radius: 50%;
+    border-top: transparent;
+    transform: rotate(-45deg);
+
+    img {
+      transform: rotate(45deg);
+    }
+  }
+
+  .textCol {
+    font-size: 1.25rem;
+    span {
+      font-style: normal;
+      font-weight: 800;
+    }
+  }
+
+  .label {
+    font-size: 2rem;
+  }
+
+  .bar {
+    width: 3px;
+    height: 70%;
+    background-color: var(--nextui-colors-red700);
+    border-radius: 3px;
+  }
+}
+
+.firstName,
+.lastName {
+  font-size: 2.5rem;
+  line-height: 1;
+}
+
+.lastName {
+  color: var(--nextui-colors-textSecondary);
+}
+
+.horizontalScrollContainer {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: min(110%, 500px);
+  overflow-x: auto;
+  gap: 1.5rem;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
+}
+
+.cardDescription {
+  line-height: 33px;
+  height: calc(3 * 33px);
+  position: relative;
+  overflow: hidden;
+  padding-left: 1rem;
+
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    height: 33px;
+    width: 75%;
+    background: linear-gradient(90deg, transparent, var(--nextui-colors-red200));
+    border-top-right-radius: 33px;
+    border-bottom-right-radius: 33px;
+  }
+}
+
+.imgWrapper {
+  border-radius: var(--nextui-radii-lg);
+  overflow: hidden;
+  margin-inline: auto;
+}
+
+.difficulty,
+.category {
+  font-size: 1.25rem;
+
+  &.Easy {
+    color: var(--nextui-colors-green700);
+  }
+  &.Medium {
+    color: var(--nextui-colors-yellow700);
+  }
+  &.Hard {
+    color: var(--nextui-colors-red800);
+  }
+}
+
+.leftSide,
+.rightSide {
+  width: 100%;
+}
