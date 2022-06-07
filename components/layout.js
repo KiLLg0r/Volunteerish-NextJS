@@ -1,9 +1,12 @@
 import Head from "next/head";
 import { Container } from "@nextui-org/react";
 import { useAuth } from "../context/AuthContext";
+import { useRouter } from "next/router";
 
 const Layout = ({ children }) => {
   const { currentUser } = useAuth();
+  const router = useRouter();
+
   return (
     <>
       <Head>
@@ -21,8 +24,10 @@ const Layout = ({ children }) => {
           width: "auto",
           paddingTop: currentUser && "1rem",
           paddingBottom: currentUser && "5rem",
+
           "@xs": {
             paddingTop: currentUser && "5rem",
+            paddingTop: router.asPath === "/help" || router.asPath === "/about" ? "1rem" : "5rem",
             paddingBottom: "0",
           },
         }}

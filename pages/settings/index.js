@@ -65,13 +65,13 @@ export const SettingsMenu = () => {
         icon={<BsFillInfoCircleFill className={styles.settingSVG} />}
         title="About"
         subtitle="Information about platform"
-        href="/settings/about"
+        href="/about"
       />
       <SettingRow
         icon={<BsFillQuestionCircleFill className={styles.settingSVG} />}
         title="Help and Support"
         subtitle="FAQ and support information"
-        href="/settings/help"
+        href="/help"
       />
       <Button onPress={logout} color="error" bordered css={{ width: "100%" }} size="lg">
         Log out

@@ -1,0 +1,43 @@
+.title,
+.subtitle {
+  color: var(--nextui-colors-red500);
+  text-align: center;
+  margin-block: 2rem;
+}
+
+.header {
+  font-size: 2rem;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  width: fit-content;
+  cursor: pointer;
+
+  svg {
+    font-size: 2.5rem;
+  }
+}
+
+.helpAndSupport {
+  .FAQ {
+    svg {
+      width: 100%;
+    }
+  }
+}
+
+.category {
+  color: var(--nextui-colors-cyan600);
+}
+
+.easy {
+  color: var(--nextui-colors-green500);
+}
+
+.medium {
+  color: var(--nextui-colors-yellow600);
+}
+
+.hard {
+  color: var(--nextui-colors-red500);
+}
