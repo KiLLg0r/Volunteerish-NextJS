@@ -1,0 +1,40 @@
+.cardDescription {
+  line-height: 33px;
+  height: calc(3 * 33px);
+  position: relative;
+  overflow: hidden;
+  padding-left: 1rem;
+
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    height: 33px;
+    width: 75%;
+    background: linear-gradient(90deg, transparent, var(--nextui-colors-red200));
+    border-top-right-radius: 33px;
+    border-bottom-right-radius: 33px;
+  }
+}
+
+.imgWrapper {
+  border-radius: var(--nextui-radii-lg);
+  overflow: hidden;
+  margin-inline: auto;
+}
+
+.difficulty,
+.category {
+  font-size: 1.25rem;
+
+  &.Easy {
+    color: var(--nextui-colors-green700);
+  }
+  &.Medium {
+    color: var(--nextui-colors-yellow700);
+  }
+  &.Hard {
+    color: var(--nextui-colors-red800);
+  }
+}
