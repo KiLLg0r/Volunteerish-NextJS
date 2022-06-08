@@ -46,7 +46,7 @@ const SettingRow = ({ icon, title, subtitle, href }) => {
 };
 
 export const SettingsMenu = () => {
-  const { logout } = useAuth;
+  const { logout } = useAuth();
   return (
     <>
       <SettingRow
