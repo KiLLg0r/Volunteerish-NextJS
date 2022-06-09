@@ -81,6 +81,7 @@
   margin-bottom: 1rem;
   font-size: 1.25rem;
   font-weight: 500;
+  cursor: pointer;
 
   &.active {
     font-weight: 600;
@@ -95,4 +96,53 @@
   svg {
     font-size: 1.5rem;
   }
+}
+
+.header {
+  font-size: 2rem;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  width: fit-content;
+  cursor: pointer;
+
+  svg {
+    font-size: 2.5rem;
+  }
+}
+
+.imageEdit {
+  position: relative;
+  margin-inline: auto;
+  width: fit-content;
+  height: fit-content;
+  padding-inline: 0.25rem;
+  padding-top: 0.25rem;
+  border: 2px solid var(--nextui-colors-red500);
+  border-radius: 50%;
+  cursor: pointer;
+
+  img {
+    border-radius: 50%;
+  }
+
+  .imageEditSVG {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background-color: var(--nextui-colors-red500);
+    height: 48px;
+    aspect-ratio: 1;
+    padding: 12px;
+    border-radius: 50%;
+
+    svg {
+      font-size: 1.5rem;
+    }
+  }
+}
+
+.imageEditLabel {
+  text-align: center;
+  margin-block: 1rem;
 }

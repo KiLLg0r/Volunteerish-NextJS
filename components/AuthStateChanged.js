@@ -13,7 +13,7 @@ const AuthStateChanged = ({ children }) => {
     onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
       setLoading(false);
-      if (!user.photoURL)
+      if (user && !user.photoURL)
         updateProfile(user, {
           photoURL:
             "https://firebasestorage.googleapis.com/v0/b/volunteerish-ed549.appspot.com/o/placeholder.jpg?alt=media&token=8960960f-36a2-4a20-8115-c692d95e9fda",

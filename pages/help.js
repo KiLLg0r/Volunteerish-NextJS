@@ -17,7 +17,7 @@ export const Help = () => {
           Go back
         </header>
       )}
-      <h1 className={styles.title}>Help &#38; Support</h1>
+      <h2 className={styles.title}>Help &#38; Support</h2>
       <Grid.Container className={styles.FAQ}>
         <Grid xs={0} sm={router.asPath === "/settings" ? 0 : 5} alignItems="flex-start">
           <FaqSVG style={{ padding: "1rem" }} />

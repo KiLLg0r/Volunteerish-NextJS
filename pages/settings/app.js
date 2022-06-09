@@ -27,7 +27,7 @@ export const App = () => {
 
   return (
     <Container sm className={styles.appSettings}>
-      <h1 className={styles.title}>App settings</h1>
+      <h2 className={styles.title}>App settings</h2>
       <Row align="center" className={styles.darkMode}>
         <span>Dark mode: </span>
         <Spacer x={0.5} />

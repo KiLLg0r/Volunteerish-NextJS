@@ -11,8 +11,6 @@ import styles from "./styles/Home.module.scss";
 
 function Index({ auth }) {
   const { currentUser, userData } = auth;
-  const firstName = currentUser.displayName.split(" ")[0];
-  const lastName = currentUser.displayName.split(" ")[1];
 
   const [myAnnounces, setMyAnnounces] = useState([]);
   const [myHelpingAnnounces, setMyHelpingAnnounces] = useState([]);
@@ -53,7 +51,7 @@ function Index({ auth }) {
 
   return (
     <section className={styles.dashboard}>
-      <h1 className={styles.title}>Dashboard</h1>
+      <h2 className={styles.title}>Dashboard</h2>
       <Grid.Container>
         <Grid xs={12} sm={2}>
           <Col>

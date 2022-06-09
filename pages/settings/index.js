@@ -20,7 +20,7 @@ function Settings({ auth }) {
   const MobileInterface = () => {
     return (
       <>
-        <h1 className={styles.title}>Settings</h1>
+        <h2 className={styles.title}>Settings</h2>
         <div className={styles.editProfile}>
           <div className={styles.userIMG}>
             <Image src={auth.currentUser.photoURL} alt="User profile image" height={125} width={125} />
@@ -42,6 +42,22 @@ function Settings({ auth }) {
 
   const DesktopInterface = () => {
     const [open, setOpen] = useState([true, false, false, false]);
+
+    const RenderAppSettings = () => {
+      return open[0] ? <App /> : null;
+    };
+
+    const RenderProfile = () => {
+      return open[1] ? <Account /> : null;
+    };
+
+    const RenderHelp = () => {
+      return open[2] ? <Help /> : null;
+    };
+
+    const RenderAbout = () => {
+      return open[3] ? <About /> : null;
+    };
 
     return (
       <Grid.Container>
@@ -90,18 +106,12 @@ function Settings({ auth }) {
           </Col>
         </Grid>
         <Grid sm={10}>
-          <Col css={{ paddingInline: "1rem" }}>
-            <Row css={{ display: !open[0] && "none" }}>
-              <App />
-            </Row>
-            <Row css={{ display: !open[1] && "none" }}>
-              <Account />
-            </Row>
-            <Row css={{ display: !open[2] && "none" }}>
-              <Help />
-            </Row>
-            <Row css={{ display: !open[3] && "none" }}>
-              <About />
+          <Col>
+            <Row>
+              <RenderAppSettings />
+              <RenderProfile />
+              <RenderHelp />
+              <RenderAbout />
             </Row>
           </Col>
         </Grid>

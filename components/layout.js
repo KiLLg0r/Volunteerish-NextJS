@@ -18,6 +18,7 @@ const Layout = ({ children }) => {
         <meta name="viewport" content="width=device-width,initial-scale=1.0" />
       </Head>
       <Container
+        lg
         css={{
           backgroundColor: "$background",
           minHeight: "100vh",
@@ -26,8 +27,8 @@ const Layout = ({ children }) => {
           paddingBottom: currentUser && "5rem",
 
           "@xs": {
-            paddingTop: currentUser && "5rem",
             paddingTop: router.asPath === "/help" || router.asPath === "/about" ? "1rem" : "5rem",
+            paddingTop: currentUser ? "5rem" : "1rem",
             paddingBottom: "0",
           },
         }}
