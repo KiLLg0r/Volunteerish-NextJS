@@ -67,7 +67,7 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     setFontSize(localStorage.getItem("fontSize"));
-    if (FontSize.length > 0) document.documentElement.style.fontSize = FontSize;
+    if (FontSize?.length > 0) document.documentElement.style.fontSize = FontSize;
 
     if (!userData) getUserData(currentUser?.uid).then((result) => setUserData(result));
   }, [FontSize, currentUser, userData]);

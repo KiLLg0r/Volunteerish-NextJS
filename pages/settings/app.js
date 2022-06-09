@@ -7,7 +7,7 @@ import { useAuth } from "../../context/AuthContext";
 
 import styles from "../styles/Settings.module.scss";
 
-const App = () => {
+export const App = () => {
   const { setTheme } = useNextTheme();
   const { isDark } = useTheme();
 

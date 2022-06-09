@@ -1,7 +1,5 @@
-import { withPublic } from "../utilities/routes";
-
-const About = () => {
+export const About = () => {
   return <></>;
 };
 
-export default withPublic(About);
+export default About;

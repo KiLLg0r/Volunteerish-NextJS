@@ -1,26 +1,28 @@
 import { useRouter } from "next/router";
 import { BsChevronLeft } from "react-icons/bs";
-import { Grid, Collapse, Row, Col, Spacer, Table } from "@nextui-org/react";
+import { Grid, Collapse, Row, Col, Spacer, Table, Container } from "@nextui-org/react";
 
 import FaqSVG from "../public/svg/faq.svg";
 
 import styles from "./styles/Help.module.scss";
 
-const Help = () => {
+export const Help = () => {
   const router = useRouter();
 
   return (
-    <section className={styles.helpAndSupport}>
-      <header className={styles.header} onClick={() => router.push("/")}>
-        <BsChevronLeft />
-        Go back
-      </header>
+    <Container sm className={styles.helpAndSupport}>
+      {router.asPath === "/help" && (
+        <header className={styles.header} onClick={() => router.push("/")}>
+          <BsChevronLeft />
+          Go back
+        </header>
+      )}
       <h1 className={styles.title}>Help &#38; Support</h1>
       <Grid.Container className={styles.FAQ}>
-        <Grid xs={0} sm={5} alignItems="flex-start">
+        <Grid xs={0} sm={router.asPath === "/settings" ? 0 : 5} alignItems="flex-start">
           <FaqSVG style={{ padding: "1rem" }} />
         </Grid>
-        <Grid xs={12} sm={7}>
+        <Grid xs={12} sm={router.asPath === "/settings" ? 12 : 7}>
           <Collapse.Group css={{ width: "100%", padding: "1rem" }}>
             <Collapse title="How can i change my name / email / address / password ?">
               <div className={styles.faqText}>
@@ -150,7 +152,7 @@ const Help = () => {
           </Collapse.Group>
         </Grid>
       </Grid.Container>
-    </section>
+    </Container>
   );
 };
 

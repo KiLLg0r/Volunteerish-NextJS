@@ -54,134 +54,109 @@ function Index({ auth }) {
   return (
     <section className={styles.dashboard}>
       <h1 className={styles.title}>Dashboard</h1>
-      <Container css={{ display: "flex", flexFlow: "column", "@sm": { flexFlow: "row" } }} fluid>
-        <div className={styles.leftSide}>
-          <Grid.Container className={styles.userHeader}>
-            <Grid xs={5} className={styles.imageCol}>
-              <div className={styles.coloredBorder}>
-                <Image
-                  src={currentUser.photoURL}
-                  alt="User profile image"
-                  objectFit="cover"
-                  showSkeleton
-                  maxDelay={5000}
-                  height={"100%"}
-                  width={"100%"}
-                />
-              </div>
-            </Grid>
-            <Grid xs={1} justify="center" alignItems="center">
-              <div className={styles.bar}></div>
-            </Grid>
-            <Grid xs={6} className={styles.textGrid}>
-              <Row>
-                <div className={styles.firstName}>{firstName}</div>
-              </Row>
-              <Row>
-                <div className={styles.lastName}>{lastName}</div>
-              </Row>
-            </Grid>
-          </Grid.Container>
+      <Grid.Container>
+        <Grid xs={12} sm={2}>
+          <Col>
+            <h3 className={styles.subtitle}>Stats</h3>
 
-          <Spacer />
+            <Col css={{ fontSize: "1.25rem", fontWeight: "600" }}>
+              <Row>People helped</Row>
+              <Row>
+                <span style={{ color: "var(--nextui-colors-cyan600)" }}>{userData?.helpedPeople}</span>
+              </Row>
 
-          <Row css={{ fontSize: "1.25rem", fontWeight: "600" }}>
-            <Col>
+              <Spacer />
+
               <Row>Points</Row>
               <Row>
                 <span style={{ color: "var(--nextui-colors-yellow700)" }}>{userData?.points}</span>
               </Row>
             </Col>
-            <Col>
-              <Row>People helped</Row>
-              <Row>
-                <span style={{ color: "var(--nextui-colors-cyan600)" }}>{userData?.helpedPeople}</span>
-              </Row>
-            </Col>
-          </Row>
 
-          <Spacer />
-        </div>
+            <Spacer />
+          </Col>
+        </Grid>
+        <Grid xs={12} sm={10}>
+          <Col>
+            <h3 className={styles.subtitle}>Announces</h3>
 
-        <div className={styles.rightSide}>
-          <h3 className={styles.subtitle}>Announces</h3>
-
-          <Collapse.Group css={{ padding: "0" }}>
-            <Collapse title="Active announce">
-              <div className={styles.horizontalScrollContainer}>
-                {myAnnounces &&
-                  myAnnounces.map((announce) => {
-                    return <AnnounceCard key={announce.ID} data={announce.data} />;
-                  })}
-                {myAnnouncesLastKey && (
-                  <Button
-                    color="error"
-                    css={{ height: "275px", fontSize: "1.25rem", color: "$red500", borderColor: "$red500" }}
-                    bordered
-                    borderWeight={3}
-                  >
-                    See all announces <BsChevronBarRight style={{ fontSize: "2rem" }} />
-                  </Button>
-                )}
-              </div>
-            </Collapse>
-            <Collapse title="Helping now" expanded>
-              <div className={styles.horizontalScrollContainer}>
-                {myHelpingAnnounces &&
-                  myHelpingAnnounces.map((announce) => {
-                    return <AnnounceCard key={announce.ID} data={announce.data} />;
-                  })}
-                {myHelpingAnnouncesLastKey && (
-                  <Button
-                    color="error"
-                    css={{ height: "275px", fontSize: "1.25rem", color: "$red500", borderColor: "$red500" }}
-                    bordered
-                    borderWeight={3}
-                  >
-                    See all announces <BsChevronBarRight style={{ fontSize: "2rem" }} />
-                  </Button>
-                )}
-              </div>
-            </Collapse>
-            <Collapse title="Helped">
-              <div className={styles.horizontalScrollContainer}>
-                {myHelpedAnnounces &&
-                  myHelpedAnnounces.map((announce) => {
-                    return <AnnounceCard key={announce.ID} data={announce.data} />;
-                  })}
-                {myHelpedAnnounceLastKey && (
-                  <Button
-                    color="error"
-                    css={{ height: "275px", fontSize: "1.25rem", color: "$red500", borderColor: "$red500" }}
-                    bordered
-                    borderWeight={3}
-                  >
-                    See all announces <BsChevronBarRight style={{ fontSize: "2rem" }} />
-                  </Button>
-                )}
-              </div>
-            </Collapse>
-            <Collapse title="Closed announces">
-              <div className={styles.horizontalScrollContainer}>
-                {myClosedAnnounces &&
-                  myClosedAnnounces.map((announce) => {
-                    return <AnnounceCard key={announce.ID} data={announce.data} />;
-                  })}
-                {myClosedAnnouncesLastKey && (
-                  <Button
-                    color="error"
-                    css={{ height: "275px", fontSize: "1.25rem", color: "$red500", borderColor: "$red500" }}
-                    bordered
-                    borderWeight={3}
-                  >
-                    See all announces <BsChevronBarRight style={{ fontSize: "2rem" }} />
-                  </Button>
-                )}
-              </div>
-            </Collapse>
-          </Collapse.Group>
-        </div>
-      </Container>
+            <Collapse.Group css={{ padding: "0" }}>
+              <Collapse title="Active announce">
+                <div className={styles.horizontalScrollContainer}>
+                  {myAnnounces &&
+                    myAnnounces.map((announce) => {
+                      return <AnnounceCard key={announce.ID} data={announce.data} />;
+                    })}
+                  {myAnnouncesLastKey && (
+                    <Button
+                      color="error"
+                      css={{ height: "275px", fontSize: "1.25rem", color: "$red500", borderColor: "$red500" }}
+                      bordered
+                      borderWeight={3}
+                    >
+                      See all announces <BsChevronBarRight style={{ fontSize: "2rem" }} />
+                    </Button>
+                  )}
+                </div>
+              </Collapse>
+              <Collapse title="Helping now" expanded>
+                <div className={styles.horizontalScrollContainer}>
+                  {myHelpingAnnounces &&
+                    myHelpingAnnounces.map((announce) => {
+                      return <AnnounceCard key={announce.ID} data={announce.data} />;
+                    })}
+                  {myHelpingAnnouncesLastKey && (
+                    <Button
+                      color="error"
+                      css={{ height: "275px", fontSize: "1.25rem", color: "$red500", borderColor: "$red500" }}
+                      bordered
+                      borderWeight={3}
+                    >
+                      See all announces <BsChevronBarRight style={{ fontSize: "2rem" }} />
+                    </Button>
+                  )}
+                </div>
+              </Collapse>
+              <Collapse title="Helped">
+                <div className={styles.horizontalScrollContainer}>
+                  {myHelpedAnnounces &&
+                    myHelpedAnnounces.map((announce) => {
+                      return <AnnounceCard key={announce.ID} data={announce.data} />;
+                    })}
+                  {myHelpedAnnounceLastKey && (
+                    <Button
+                      color="error"
+                      css={{ height: "275px", fontSize: "1.25rem", color: "$red500", borderColor: "$red500" }}
+                      bordered
+                      borderWeight={3}
+                    >
+                      See all announces <BsChevronBarRight style={{ fontSize: "2rem" }} />
+                    </Button>
+                  )}
+                </div>
+              </Collapse>
+              <Collapse title="Closed announces">
+                <div className={styles.horizontalScrollContainer}>
+                  {myClosedAnnounces &&
+                    myClosedAnnounces.map((announce) => {
+                      return <AnnounceCard key={announce.ID} data={announce.data} />;
+                    })}
+                  {myClosedAnnouncesLastKey && (
+                    <Button
+                      color="error"
+                      css={{ height: "275px", fontSize: "1.25rem", color: "$red500", borderColor: "$red500" }}
+                      bordered
+                      borderWeight={3}
+                    >
+                      See all announces <BsChevronBarRight style={{ fontSize: "2rem" }} />
+                    </Button>
+                  )}
+                </div>
+              </Collapse>
+            </Collapse.Group>
+          </Col>
+        </Grid>
+      </Grid.Container>
     </section>
   );
 }

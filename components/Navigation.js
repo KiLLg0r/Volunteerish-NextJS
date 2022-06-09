@@ -1,10 +1,7 @@
 import { useRouter } from "next/router";
-import { Link, Popover, Row, useTheme } from "@nextui-org/react";
+import { Link, Row } from "@nextui-org/react";
 import { BsFillHouseFill, BsFillChatDotsFill, BsBagFill } from "react-icons/bs";
 import { FaCog, FaClipboard } from "react-icons/fa";
-import { useWindowSize } from "../utilities/hooks";
-import { SettingsMenu } from "../pages/settings";
-import { useState } from "react";
 
 import styles from "./styles/Navigation.module.scss";
 
@@ -13,38 +10,10 @@ const ActiveLink = ({ href, children }) => {
   const condition = router.asPath === href;
   const secondCondition = router.asPath === "/settings/app" || router.asPath === "/settings/account";
 
-  const [popoverOpen, setPopoverOpen] = useState(false);
-
-  const size = useWindowSize();
-
   const handleClick = (e) => {
     e.preventDefault;
     router.push(href);
   };
-
-  if (href === "/settings" && size.width > 650)
-    return (
-      <Link
-        className={`${styles.link} ${condition && styles.active}`}
-        css={{ color: secondCondition ? "$red500" : "$textSecondary" }}
-      >
-        <Popover
-          triggerType="menu"
-          onOpenChange={(isOpen) => {
-            setPopoverOpen(isOpen);
-          }}
-        >
-          <Popover.Trigger>
-            <div className={`${styles.popoverBtn} ${popoverOpen && styles.open}`}>{children}</div>
-          </Popover.Trigger>
-          <Popover.Content>
-            <div style={{ padding: "1rem" }}>
-              <SettingsMenu />
-            </div>
-          </Popover.Content>
-        </Popover>
-      </Link>
-    );
 
   return (
     <Link
@@ -53,7 +22,7 @@ const ActiveLink = ({ href, children }) => {
         color: condition || (href === "/settings" && secondCondition) ? "$red500" : "$textSecondary",
         "@xs": {
           flexDirection: "row",
-          gap: "0.25rem",
+          gap: "0rem",
         },
       }}
       onClick={handleClick}

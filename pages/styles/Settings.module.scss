@@ -1,7 +1,9 @@
-.title {
+.title,
+.subtitle {
   color: var(--nextui-colors-red500);
+  margin-block: 1.5rem;
+  text-align: center;
 }
-
 .settingTitle {
   font-weight: 700;
 }
@@ -40,5 +42,57 @@
     &:focus {
       outline: 2px solid var(--nextui-colors-red500);
     }
+  }
+}
+
+.editProfile {
+  margin-bottom: 2rem;
+
+  svg {
+    font-size: 1.5rem;
+  }
+
+  .userIMG {
+    width: 135px;
+    height: 135px;
+    margin-inline: auto;
+    border-radius: 135px;
+    padding: 5px;
+    padding-top: 7.5px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+    border: 2px solid var(--nextui-colors-red500);
+    border-top: transparent;
+
+    img {
+      border-radius: 135px;
+    }
+  }
+
+  .userName {
+    font-size: 1.25rem;
+    text-align: center;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+  }
+}
+
+.settingsLink {
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+  font-weight: 500;
+
+  &.active {
+    font-weight: 600;
+    color: var(--nextui-colors-red500);
+    font-size: 1.5rem;
+
+    svg {
+      font-size: 2rem;
+    }
+  }
+
+  svg {
+    font-size: 1.5rem;
   }
 }
