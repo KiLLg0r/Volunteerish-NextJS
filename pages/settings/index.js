@@ -1,4 +1,4 @@
-import { withProtected, withNavigation, closeLinkOnDesktop } from "../../utilities/routes";
+import { withProtected, withNavigation } from "../../utilities/routes";
 import SettingsMenu from "../../components/SettingsMenu";
 import { Button, Col, Grid, Row } from "@nextui-org/react";
 import { BsChevronRight } from "react-icons/bs";

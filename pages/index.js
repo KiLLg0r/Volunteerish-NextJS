@@ -4,6 +4,7 @@ import { Row, Col, Spacer, Grid, Image, Collapse, Button, Container } from "@nex
 import { BsChevronBarRight } from "react-icons/bs";
 
 import AnnounceCard from "../components/Card";
+import Leaderboard from "../components/Leaderboards";
 
 import Queries from "../utilities/queries";
 
@@ -52,29 +53,37 @@ function Index({ auth }) {
   return (
     <section className={styles.dashboard}>
       <h2 className={styles.title}>Dashboard</h2>
-      <Grid.Container>
-        <Grid xs={12} sm={2}>
+      <Grid.Container gap={2}>
+        <Grid xs={12} sm={3}>
           <Col>
             <h3 className={styles.subtitle}>Stats</h3>
 
             <Col css={{ fontSize: "1.25rem", fontWeight: "600" }}>
-              <Row>People helped</Row>
-              <Row>
-                <span style={{ color: "var(--nextui-colors-cyan600)" }}>{userData?.helpedPeople}</span>
-              </Row>
+              <Container fluid className={styles.stats}>
+                <Row>
+                  <Col>People helped</Col>
+                  <span style={{ color: "var(--nextui-colors-cyan600)" }}>{userData?.helpedPeople}</span>
+                </Row>
+              </Container>
 
               <Spacer />
 
-              <Row>Points</Row>
-              <Row>
-                <span style={{ color: "var(--nextui-colors-yellow700)" }}>{userData?.points}</span>
-              </Row>
+              <Container fluid className={styles.stats}>
+                <Row>
+                  <Col>Points</Col>
+                  <span style={{ color: "var(--nextui-colors-yellow700)" }}>{userData?.points}</span>
+                </Row>
+              </Container>
+
+              <Spacer />
+              
+              <Leaderboard />
             </Col>
 
             <Spacer />
           </Col>
         </Grid>
-        <Grid xs={12} sm={10}>
+        <Grid xs={12} sm={9}>
           <Col>
             <h3 className={styles.subtitle}>Announces</h3>
 

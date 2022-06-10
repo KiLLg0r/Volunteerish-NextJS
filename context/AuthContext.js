@@ -8,7 +8,7 @@ import {
   updatePassword,
   sendPasswordResetEmail,
 } from "firebase/auth";
-import { doc, getDoc, getFirestore } from "firebase/firestore";
+import { doc, getDoc, getFirestore, getDocs, collection, query, orderBy } from "firebase/firestore";
 import auth, { app } from "../config/firebase";
 
 const AuthContext = React.createContext();
@@ -23,6 +23,7 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(false);
   const [userData, setUserData] = useState(null);
   const [FontSize, setFontSize] = useState("");
+  const [users, setUsers] = useState([]);
 
   function register(email, password) {
     return createUserWithEmailAndPassword(auth, email, password);
@@ -70,6 +71,25 @@ export function AuthProvider({ children }) {
     if (FontSize?.length > 0) document.documentElement.style.fontSize = FontSize;
 
     if (!userData) getUserData(currentUser?.uid).then((result) => setUserData(result));
+
+    const getUsers = async () => {
+      const q = query(collection(db, "users"), orderBy("points", "desc"));
+      const usersSnapshot = await getDocs(q);
+      let usersDocs = [];
+
+      usersSnapshot.forEach((user) => {
+        usersDocs.push({
+          id: user.id,
+          data: user.data(),
+        });
+      });
+
+      setUsers(usersDocs);
+
+      console.log(usersDocs);
+    };
+
+    getUsers().catch((error) => console.log(error));
   }, [FontSize, currentUser, userData]);
 
   const value = {
