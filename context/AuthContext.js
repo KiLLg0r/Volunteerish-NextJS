@@ -22,7 +22,8 @@ export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState();
   const [loading, setLoading] = useState(false);
   const [userData, setUserData] = useState(null);
-  const [FontSize, setFontSize] = useState("");
+  const [FontSize, setFontSize] = useState(new Set(["16px"]));
+  const [Language, setLanguage] = useState(new Set(["English"]));
   const [users, setUsers] = useState([]);
 
   function register(email, password) {
@@ -67,8 +68,15 @@ export function AuthProvider({ children }) {
   }
 
   useEffect(() => {
-    setFontSize(localStorage.getItem("fontSize"));
-    if (FontSize?.length > 0) document.documentElement.style.fontSize = FontSize;
+    if (localStorage.getItem("fontSize") === null || localStorage.getItem("fontSize") === "undefined")
+      localStorage.setItem("fontSize", "16px");
+    else setFontSize(localStorage.getItem("fontSize"));
+
+    if (localStorage.getItem("language") === null || localStorage.getItem("language") === "undefined")
+      localStorage.setItem("language", "English");
+    else setLanguage(localStorage.getItem("language"));
+
+    if (FontSize.length > 0) document.documentElement.style.fontSize = FontSize;
 
     if (!userData) getUserData(currentUser?.uid).then((result) => setUserData(result));
 
@@ -85,12 +93,10 @@ export function AuthProvider({ children }) {
       });
 
       setUsers(usersDocs);
-
-      console.log(usersDocs);
     };
 
     getUsers().catch((error) => console.log(error));
-  }, [FontSize, currentUser, userData]);
+  }, [FontSize, Language, currentUser, userData]);
 
   const value = {
     currentUser,
@@ -98,6 +104,9 @@ export function AuthProvider({ children }) {
     db,
     loading,
     FontSize,
+    users,
+    Language,
+    setLanguage,
     setUserData,
     setFontSize,
     setCurrentUser,

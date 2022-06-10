@@ -11,26 +11,16 @@ export const App = () => {
   const { setTheme } = useNextTheme();
   const { isDark } = useTheme();
 
-  const { setFontSize, FontSize } = useAuth();
+  const { setFontSize, FontSize, setLanguage, Language } = useAuth();
 
-  const [languageSelected, setLanguageSelected] = useState(new Set(["English"]));
-  const [fontSizeSelected, setFontSizeSelected] = useState(new Set([FontSize !== "[object Set]" ? FontSize : "16px"]));
+  const languageSelectedValue = useMemo(() => Array.from(Language).join("").replaceAll(",", ""), [Language]);
 
-  const languageSelectedValue = useMemo(
-    () => Array.from(languageSelected).join(", ").replaceAll("_", " "),
-    [languageSelected],
-  );
-
-  const fontSizeSelectedValue = useMemo(() => {
-    Array.from(fontSizeSelected).join(", ").replaceAll("_", " ");
-    console.log(fontSizeSelected);
-  }, [fontSizeSelected]);
+  const fontSizeSelectedValue = useMemo(() => Array.from(FontSize).join("").replaceAll(",", ""), [FontSize]);
 
   useEffect(() => {
-    return window.addEventListener("storage", () => {
-      setFontSize(localStorage.getItem("fontSize"));
-    });
-  }, [setFontSize]);
+    if (FontSize !== fontSizeSelectedValue) localStorage.setItem("fontSize", fontSizeSelectedValue);
+    if (Language !== languageSelectedValue) localStorage.setItem("language", languageSelectedValue);
+  }, [FontSize, Language, fontSizeSelectedValue, languageSelectedValue]);
 
   return (
     <Container sm className={styles.appSettings}>
@@ -60,8 +50,8 @@ export const App = () => {
             color="error"
             disallowEmptySelection
             selectionMode="single"
-            selectedKeys={languageSelected}
-            onSelectionChange={languageSelectedValue}
+            selectedKeys={Language}
+            onSelectionChange={setLanguage}
           >
             <Dropdown.Item key="English">English</Dropdown.Item>
             <Dropdown.Item key="Français">Français</Dropdown.Item>
@@ -81,12 +71,12 @@ export const App = () => {
             {fontSizeSelectedValue}
           </Dropdown.Button>
           <Dropdown.Menu
-            aria-label="Font size selection"
+            aria-label="Language selection"
             color="error"
             disallowEmptySelection
             selectionMode="single"
-            selectedKeys={fontSizeSelected}
-            onSelectionChange={fontSizeSelectedValue}
+            selectedKeys={FontSize}
+            onSelectionChange={setFontSize}
           >
             <Dropdown.Item key="14px" css={{ fontSize: "14px" }}>
               Small
