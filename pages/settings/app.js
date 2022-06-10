@@ -1,9 +1,17 @@
 import { withNavigation, withProtected } from "../../utilities/routes";
 import { useTheme as useNextTheme } from "next-themes";
-import { useTheme, Switch, Spacer, Row, Container, Dropdown } from "@nextui-org/react";
+import { useTheme, Switch, Spacer, Row, Container, Dropdown, Col } from "@nextui-org/react";
 import { BsFillSunFill, BsMoonFill } from "react-icons/bs";
-import { useRef, useEffect, useState, useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useAuth } from "../../context/AuthContext";
+
+import EN from "../../public/svg/flags/us.svg";
+import FR from "../../public/svg/flags/fr.svg";
+import DE from "../../public/svg/flags/de.svg";
+import ES from "../../public/svg/flags/es.svg";
+import RO from "../../public/svg/flags/ro.svg";
+import UA from "../../public/svg/flags/ua.svg";
+import RU from "../../public/svg/flags/ru.svg";
 
 import styles from "../styles/Settings.module.scss";
 
@@ -53,13 +61,48 @@ export const App = () => {
             selectedKeys={Language}
             onSelectionChange={setLanguage}
           >
-            <Dropdown.Item key="English">English</Dropdown.Item>
-            <Dropdown.Item key="Français">Français</Dropdown.Item>
-            <Dropdown.Item key="Deutsch">Deutsch</Dropdown.Item>
-            <Dropdown.Item key="Español">Español</Dropdown.Item>
-            <Dropdown.Item key="Română">Română</Dropdown.Item>
-            <Dropdown.Item key="Український">Український</Dropdown.Item>
-            <Dropdown.Item key="Русский">Русский</Dropdown.Item>
+            <Dropdown.Item key="English">
+              <Row align="center" gap={1}>
+                <EN className={styles.countryFlag} data-text="US flag" />
+                <Col>English</Col>
+              </Row>
+            </Dropdown.Item>
+            <Dropdown.Item key="Français">
+              <Row align="center" gap={1}>
+                <FR className={styles.countryFlag} data-text="France flag" />
+                <Col>Français</Col>
+              </Row>
+            </Dropdown.Item>
+            <Dropdown.Item key="Deutsch">
+              <Row align="center" gap={1}>
+                <DE className={styles.countryFlag} data-text="Germany flag" />
+                <Col>Deutsch</Col>
+              </Row>
+            </Dropdown.Item>
+            <Dropdown.Item key="Español">
+              <Row align="center" gap={1}>
+                <ES className={styles.countryFlag} data-text="Spain flag" />
+                <Col>Español</Col>
+              </Row>
+            </Dropdown.Item>
+            <Dropdown.Item key="Română">
+              <Row align="center" gap={1}>
+                <RO className={styles.countryFlag} data-text="Romania flag" />
+                <Col>Română</Col>
+              </Row>
+            </Dropdown.Item>
+            <Dropdown.Item key="Український">
+              <Row align="center" gap={1}>
+                <UA className={styles.countryFlag} data-text="Ukraine flag" />
+                <Col>Український</Col>
+              </Row>
+            </Dropdown.Item>
+            <Dropdown.Item key="Русский">
+              <Row align="center" gap={1}>
+                <RU className={styles.countryFlag} data-text="Russia flag" />
+                <Col>Русский</Col>
+              </Row>
+            </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
       </Row>

@@ -19,7 +19,13 @@ export const Account = () => {
   const firstName = currentUser.displayName.split(" ")[0];
   const lastName = currentUser.displayName.split(" ")[1];
 
-  const [newChanges, setNewChanges] = useState(true);
+  const [newChanges, setNewChanges] = useState(false);
+  const [discardChanges, setDiscardChanges] = useState(false);
+
+  const handleChanges = () => {
+    setNewChanges(true);
+    setDiscardChanges(false);
+  };
 
   useEffect(() => {
     if (image) {
@@ -78,9 +84,9 @@ export const Account = () => {
           </Grid>
           <Grid xs={12} sm={6}>
             <Col css={{ display: "flex", flexFlow: "column", alignItems: "center", justifyContent: "center" }}>
-              <Input size="xl" label="First Name" initialValue={firstName} fullWidth />
+              <Input size="lg" label="First Name" initialValue={firstName} fullWidth onChange={handleChanges} />
               <Spacer />
-              <Input size="xl" label="Last Name" initialValue={lastName} fullWidth />
+              <Input size="lg" label="Last Name" initialValue={lastName} fullWidth onChange={handleChanges} />
             </Col>
           </Grid>
         </Grid.Container>
@@ -90,7 +96,7 @@ export const Account = () => {
               <Collapse title="Email" subtitle={currentUser.email}>
                 <Container sm css={{ fontSize: "1.25rem" }}>
                   <Row>
-                    <Col>Email verified: </Col>
+                    <Col>Status email: </Col>
                     <Col>
                       <Text color={currentUser.emailVerified ? "success" : "error"} h4>
                         {currentUser.emailVerified ? "Verified" : "Unverified"}
@@ -99,15 +105,26 @@ export const Account = () => {
                   </Row>
                   <Spacer />
                   {!currentUser.emailVerified && (
-                    <Row>
-                      <Col>Send email verification link</Col>
-                      <Col>
-                        <Button flat color="error" onPress={sendUserEmailVerification}>
-                          Send
-                        </Button>
-                      </Col>
-                    </Row>
+                    <>
+                      <Row>
+                        <Col>Send email verification link</Col>
+                        <Col>
+                          <Button flat color="error" onPress={sendUserEmailVerification}>
+                            Send link
+                          </Button>
+                        </Col>
+                      </Row>
+                      <Spacer />
+                    </>
                   )}
+                  <Row>
+                    <Col>Change email</Col>
+                    <Col>
+                      <Button color="error" bordered>
+                        Change email
+                      </Button>
+                    </Col>
+                  </Row>
                 </Container>
               </Collapse>
             </Collapse.Group>
@@ -117,56 +134,68 @@ export const Account = () => {
           </Grid>
           <Grid xs={12} sm={6}>
             <Col>
-              <Input size="xl" label="Country" initialValue={userData?.country} fullWidth />
+              <Input size="lg" label="Country" initialValue={userData?.country} fullWidth onChange={handleChanges} />
               <Spacer />
             </Col>
             <Spacer />
           </Grid>
           <Grid xs={12} sm={6}>
             <Col>
-              <Input size="xl" label="State" initialValue={userData?.state} fullWidth />
+              <Input size="lg" label="State" initialValue={userData?.state} fullWidth onChange={handleChanges} />
               <Spacer />
             </Col>
             <Spacer />
           </Grid>
           <Grid xs={12} sm={6}>
             <Col>
-              <Input size="xl" label="City" initialValue={userData?.city} fullWidth />
+              <Input size="lg" label="City" initialValue={userData?.city} fullWidth onChange={handleChanges} />
               <Spacer />
             </Col>
             <Spacer />
           </Grid>
           <Grid xs={12} sm={6}>
             <Col>
-              <Input size="xl" label="Street" initialValue={userData?.street} fullWidth />
+              <Input size="lg" label="Street" initialValue={userData?.street} fullWidth onChange={handleChanges} />
               <Spacer />
             </Col>
             <Spacer />
           </Grid>
           <Grid xs={12} sm={6}>
             <Col>
-              <Input size="xl" label="Street number" initialValue={userData?.streetNumber} fullWidth />
+              <Input
+                size="lg"
+                label="Street number"
+                initialValue={userData?.streetNumber}
+                fullWidth
+                onChange={handleChanges}
+              />
               <Spacer />
             </Col>
             <Spacer />
           </Grid>
           <Grid xs={12} sm={6}>
             <Col>
-              <Input size="xl" label="Building" initialValue={userData?.building} fullWidth />
+              <Input size="lg" label="Building" initialValue={userData?.building} fullWidth onChange={handleChanges} />
               <Spacer />
             </Col>
             <Spacer />
           </Grid>
           <Grid xs={12} sm={6}>
             <Col>
-              <Input size="xl" label="Apartment" initialValue={userData?.apartment} fullWidth />
+              <Input
+                size="lg"
+                label="Apartment"
+                initialValue={userData?.apartment}
+                fullWidth
+                onChange={handleChanges}
+              />
               <Spacer />
             </Col>
             <Spacer />
           </Grid>
           <Grid xs={12} sm={6}>
             <Col>
-              <Input size="xl" label="Zipcode" initialValue={userData?.zipcode} fullWidth />
+              <Input size="lg" label="Zipcode" initialValue={userData?.zipcode} fullWidth onChange={handleChanges} />
               <Spacer />
             </Col>
             <Spacer />
@@ -174,9 +203,15 @@ export const Account = () => {
         </Grid.Container>
         <Spacer />
         {newChanges && (
-          <Button css={{ width: "100%" }} size="xl">
-            Save changes
-          </Button>
+          <>
+            <Button bordered css={{ width: "100%" }} size="lg" color="error" onPress={() => setDiscardChanges(true)}>
+              Discard changes
+            </Button>
+            <Spacer />
+            <Button css={{ width: "100%" }} size="lg" color="error">
+              Save changes
+            </Button>
+          </>
         )}
         <Spacer />
       </form>
