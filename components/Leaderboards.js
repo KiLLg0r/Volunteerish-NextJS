@@ -1,10 +1,32 @@
 import { Spacer, User, Table, Button } from "@nextui-org/react";
 import { useAuth } from "../context/AuthContext";
+import { getDocs, collection, query, orderBy } from "firebase/firestore";
+import { useEffect } from "react";
+import { db } from "../config/firebase";
 
 import styles from "../pages/styles/Home.module.scss";
 
 const Leaderboard = () => {
-  const { users } = useAuth();
+  const { users, setUsers } = useAuth();
+
+  useEffect(() => {
+    const getUsers = async () => {
+      const q = query(collection(db, "users"), orderBy("points", "desc"));
+      const usersSnapshot = await getDocs(q);
+      let usersDocs = [];
+
+      usersSnapshot.forEach((user) => {
+        usersDocs.push({
+          id: user.id,
+          data: user.data(),
+        });
+      });
+
+      setUsers(usersDocs);
+    };
+
+    getUsers().catch((error) => console.log(error));
+  }, [setUsers]);
 
   return (
     <>

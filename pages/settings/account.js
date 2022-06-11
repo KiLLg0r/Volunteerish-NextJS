@@ -241,18 +241,20 @@ export const Account = () => {
                 imageInputRef.current.click();
               }}
             >
-              <Image
-                alt="User image"
-                height={200}
-                width={200}
-                src={preview ? preview : currentUser.photoURL}
-                objectFit="cover"
-                showSkeleton
-                maxDelay={5000}
-                css={{
-                  overflow: "hidden",
-                }}
-              />
+              <div className={styles.image}>
+                <Image
+                  alt="User image"
+                  height={200}
+                  width={200}
+                  src={preview ? preview : currentUser.photoURL}
+                  objectFit="cover"
+                  showSkeleton
+                  maxDelay={5000}
+                  css={{
+                    overflow: "hidden",
+                  }}
+                />
+              </div>
               <div className={styles.imageEditSVG}>
                 <BsPencilSquare />
               </div>
@@ -329,7 +331,6 @@ export const Account = () => {
                             open={sendEmailVerification}
                             onClose={() => {
                               setSendEmailVerification(false);
-                              window.location.reload();
                             }}
                             blur
                           >
@@ -346,7 +347,6 @@ export const Account = () => {
                                 color="error"
                                 onPress={() => {
                                   setSendEmailVerification(false);
-                                  window.location.reload();
                                 }}
                                 css={{ width: "100%" }}
                               >

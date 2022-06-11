@@ -5,7 +5,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import Loading from "./Loading";
 
 const AuthStateChanged = ({ children }) => {
-  const { setCurrentUser, getUserData, setUserData } = useAuth();
+  const { setCurrentUser, getUserData } = useAuth();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
