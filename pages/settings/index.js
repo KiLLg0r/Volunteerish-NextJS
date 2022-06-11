@@ -41,7 +41,7 @@ function Settings({ auth }) {
   };
 
   const DesktopInterface = () => {
-    const [open, setOpen] = useState([true, false, false, false]);
+    const [open, setOpen] = useState(JSON.parse(localStorage.getItem("settingsPage")) || [(true, false, false, false)]);
 
     const RenderAppSettings = () => {
       return open[0] ? <App /> : null;
@@ -68,6 +68,7 @@ function Settings({ auth }) {
               className={`${styles.settingsLink} ${open[0] && styles.active}`}
               onClick={() => {
                 setOpen([true, false, false, false]);
+                localStorage.setItem("settingsPage", JSON.stringify([true, false, false, false]));
               }}
             >
               <Col>App settings</Col>
@@ -78,6 +79,7 @@ function Settings({ auth }) {
               className={`${styles.settingsLink} ${open[1] && styles.active}`}
               onClick={() => {
                 setOpen([false, true, false, false]);
+                localStorage.setItem("settingsPage", JSON.stringify([false, true, false, false]));
               }}
             >
               <Col>Profile</Col>
@@ -88,6 +90,7 @@ function Settings({ auth }) {
               className={`${styles.settingsLink} ${open[2] && styles.active}`}
               onClick={() => {
                 setOpen([false, false, true, false]);
+                localStorage.setItem("settingsPage", JSON.stringify([false, false, true, false]));
               }}
             >
               <Col>Help &#38; support</Col>
@@ -98,6 +101,7 @@ function Settings({ auth }) {
               className={`${styles.settingsLink} ${open[3] && styles.active}`}
               onClick={() => {
                 setOpen([false, false, false, true]);
+                localStorage.setItem("settingsPage", JSON.stringify([false, false, false, true]));
               }}
             >
               <Col>About</Col>

@@ -12,6 +12,7 @@ const ActiveLink = ({ href, children }) => {
 
   const handleClick = (e) => {
     e.preventDefault;
+    localStorage.setItem("settingsPage", JSON.stringify([true, false, false, false]));
     router.push(href);
   };
 

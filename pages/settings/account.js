@@ -1,15 +1,15 @@
-import { Button, Col, Container, Grid, Input, Spacer, Collapse, Row, Text, Modal } from "@nextui-org/react";
+import { Button, Col, Container, Grid, Input, Spacer, Collapse, Row, Text, Modal, Image } from "@nextui-org/react";
 import { withNavigation, withProtected } from "../../utilities/routes";
 import { BsChevronLeft, BsPencilSquare } from "react-icons/bs";
 import { useRef, useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useAuth } from "../../context/AuthContext";
 import { Country, State, City } from "country-state-city";
-import Image from "next/image";
-
+import { validateError } from "../../utilities/functions";
+import { db, app } from "../../config/firebase";
 import { doc, updateDoc } from "firebase/firestore";
-import { updateProfile } from "firebase/auth";
-import { db } from "../../config/firebase";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { EmailAuthProvider, reauthenticateWithCredential, updateProfile, updateEmail } from "firebase/auth";
 
 import styles from "../styles/Settings.module.scss";
 
@@ -28,12 +28,11 @@ export const Account = () => {
   const [discardChanges, setDiscardChanges] = useState(false);
 
   const [discardConfirmationVisible, setDiscardConfirmationVisible] = useState(false);
-  const openDiscardConfirmation = () => setDiscardConfirmationVisible(true);
-  const closeDiscardConfirmation = () => setDiscardConfirmationVisible(false);
-
   const [saveConfirmationVisible, setSaveConfirmationVisible] = useState(false);
-  const openSaveConfirmation = () => setSaveConfirmationVisible(true);
-  const closeSaveConfirmation = () => setSaveConfirmationVisible(false);
+  const [reauthenticateUserModal, setReauthenticateUserModal] = useState(false);
+  const [emailChangedSuccessfully, setEmailChangedSuccessfully] = useState(false);
+  const [authenticatedSuccessfully, setAuthenticatedSuccessfully] = useState(false);
+  const [sendEmailVerification, setSendEmailVerification] = useState(false);
 
   const [error, setError] = useState("");
 
@@ -44,7 +43,12 @@ export const Account = () => {
   const [countryChange, setCountryChange] = useState(false);
   const [stateChange, setStateChange] = useState(false);
 
+  const [userProvidedPassword, setUserProvidedPassword] = useState("");
+  const [userProvidedEmail, setUserProvidedEmail] = useState("");
+  const [changeEmailError, setChangeEmailError] = useState({ email: "", password: "" });
+
   const userRef = doc(db, "users", currentUser.uid);
+  const storage = getStorage(app);
 
   const firstNameRef = useRef(null);
   const lastNameRef = useRef(null);
@@ -85,7 +89,7 @@ export const Account = () => {
   };
 
   const discardFormChanges = () => {
-    closeDiscardConfirmation();
+    setDiscardConfirmationVisible(false);
     setTimeout(() => {
       setDiscardChanges(true);
       setCities(City.getCitiesOfState(userData?.country, userData?.state));
@@ -95,17 +99,88 @@ export const Account = () => {
     }, 0);
   };
 
-  const handleSubmit = () => {
-    closeSaveConfirmation();
+  const reauthenticateUser = () => {
+    const credential = EmailAuthProvider.credential(currentUser.email, userProvidedPassword);
+    reauthenticateWithCredential(currentUser, credential)
+      .then(() => {
+        setAuthenticatedSuccessfully(true);
+        console.log("Successfully authenticated");
+        setReauthenticateUserModal(false);
+      })
+      .catch((error) => {
+        const errorValidated = validateError(error.code);
+        if (errorValidated.type === "password") setChangeEmailError({ email: "", password: errorValidated.error });
+      });
+  };
+
+  const changeEmail = () => {
+    console.log(userProvidedEmail);
+    updateEmail(currentUser, userProvidedEmail)
+      .then(() => {
+        setEmailChangedSuccessfully(true);
+        console.log("Email changed successfully");
+        setAuthenticatedSuccessfully(false);
+      })
+      .catch((error) => {
+        const errorValidated = validateError(error.code);
+        if (errorValidated.type === "email") setChangeEmailError({ email: errorValidated.error, password: "" });
+      });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault;
+
+    setSaveConfirmationVisible(false);
 
     setTimeout(() => {
-      const name = firstNameRef.current.value.concat(" ", lastNameRef.current.value);
+      const name =
+        firstNameRef.current.value !== firstName || lastNameRef.current.value !== lastName
+          ? firstNameRef.current.value.concat(" ", lastNameRef.current.value)
+          : "";
 
-      updateProfile(currentUser, { displayName: name }).catch((error) => {
-        console.log(error);
-        setError("Failed to update name!");
-        imgRef.current.scrollIntoView({ behavior: "smooth" });
-      });
+      const imageRef = ref(storage, `profile/${currentUser.uid}`);
+
+      if (image) {
+        const task = uploadBytesResumable(imageRef, image);
+
+        task.on(
+          "state_changed",
+          (snapshot) => {
+            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            console.log("Upload is " + progress + "% done");
+            switch (snapshot.state) {
+              case "paused":
+                console.log("Upload is paused");
+                break;
+              case "running":
+                console.log("Upload is running");
+                break;
+            }
+          },
+          (error) => {
+            console.log(error);
+            setError("Failed to upload image!");
+            imageInputRef.current.scrollIntoView({ behavior: "smooth" });
+          },
+          () =>
+            getDownloadURL(task.snapshot.ref).then((url) => {
+              updateProfile(currentUser, { photoURL: url })
+                .then(() => console.log(`Image updated successfully`))
+                .catch((error) => {
+                  console.log(error);
+                  setError("Failed to update image!");
+                  imageInputRef.current.scrollIntoView({ behavior: "smooth" });
+                });
+            }),
+        );
+      }
+
+      if (name.length > 0)
+        updateProfile(currentUser, { displayName: name }).catch((error) => {
+          console.log(error);
+          setError("Failed to update name!");
+          imageInputRef.current.scrollIntoView({ behavior: "smooth" });
+        });
 
       const updateUser = async () => {
         await updateDoc(userRef, {
@@ -120,7 +195,7 @@ export const Account = () => {
         }).catch((error) => {
           console.log(error);
           setError("Failed to update address!");
-          imgRef.current.scrollIntoView({ behavior: "smooth" });
+          imageInputRef.current.scrollIntoView({ behavior: "smooth" });
         });
       };
 
@@ -172,6 +247,11 @@ export const Account = () => {
                 width={200}
                 src={preview ? preview : currentUser.photoURL}
                 objectFit="cover"
+                showSkeleton
+                maxDelay={5000}
+                css={{
+                  overflow: "hidden",
+                }}
               />
               <div className={styles.imageEditSVG}>
                 <BsPencilSquare />
@@ -187,6 +267,7 @@ export const Account = () => {
                 const file = e.target.files[0];
                 if (file && file.type.substring(0, 5) === "image") setImage(file);
                 else setImage(null);
+                setNewChanges(true);
               }}
             />
           </Grid>
@@ -212,11 +293,11 @@ export const Account = () => {
             </Col>
           </Grid>
         </Grid.Container>
-        <Grid.Container>
+        <Grid.Container gap={1}>
           <Grid xs={12}>
             <Collapse.Group css={{ width: "100%" }}>
               <Collapse title="Email" subtitle={currentUser.email}>
-                <Container sm css={{ fontSize: "1.25rem" }}>
+                <Col>
                   <Row>
                     <Col>Status email: </Col>
                     <Col>
@@ -231,9 +312,48 @@ export const Account = () => {
                       <Row>
                         <Col>Send email verification link</Col>
                         <Col>
-                          <Button flat color="error" onPress={sendUserEmailVerification}>
+                          <Button
+                            auto
+                            flat
+                            color="error"
+                            onPress={() => {
+                              setSendEmailVerification(true);
+                              sendUserEmailVerification();
+                            }}
+                          >
                             Send link
                           </Button>
+                          <Modal
+                            closeButton
+                            aria-labelledby="Send email verification link"
+                            open={sendEmailVerification}
+                            onClose={() => {
+                              setSendEmailVerification(false);
+                              window.location.reload();
+                            }}
+                            blur
+                          >
+                            <Modal.Header>
+                              <h3>Email verification link</h3>
+                            </Modal.Header>
+                            <Modal.Body>
+                              <h6 style={{ textAlign: "center" }}>Email verification link sent successfully!</h6>
+                            </Modal.Body>
+                            <Modal.Footer>
+                              <Button
+                                auto
+                                bordered
+                                color="error"
+                                onPress={() => {
+                                  setSendEmailVerification(false);
+                                  window.location.reload();
+                                }}
+                                css={{ width: "100%" }}
+                              >
+                                Close this modal
+                              </Button>
+                            </Modal.Footer>
+                          </Modal>
                         </Col>
                       </Row>
                       <Spacer />
@@ -242,12 +362,145 @@ export const Account = () => {
                   <Row>
                     <Col>Change email</Col>
                     <Col>
-                      <Button color="error" bordered>
+                      <Button color="error" bordered onPress={() => setReauthenticateUserModal(true)} auto>
                         Change email
                       </Button>
+                      <Modal
+                        closeButton
+                        aria-labelledby="Change email"
+                        open={reauthenticateUserModal}
+                        onClose={() => setReauthenticateUserModal(false)}
+                        blur
+                        css={{ backgroundColor: "var(--nextui-colors-background)" }}
+                      >
+                        <Modal.Header>
+                          <h3>Change email address</h3>
+                        </Modal.Header>
+                        <Modal.Body>
+                          <h6 style={{ textAlign: "center" }}>
+                            In order to change the current email address you need to reauthenticate
+                          </h6>
+                          <Input size="lg" label="Email" initialValue={currentUser.email} fullWidth readOnly />
+                          <Input.Password
+                            clearable
+                            label="Password"
+                            placeholder="Password"
+                            fullWidth
+                            onChange={(e) => {
+                              setUserProvidedPassword(e.target.value);
+                              setChangeEmailError({ email: "", password: "" });
+                            }}
+                            size="lg"
+                            status={changeEmailError.password.length > 0 && "error"}
+                            helperText={changeEmailError.password.length > 0 && changeEmailError.password}
+                            helperColor={changeEmailError.password.length > 0 && "error"}
+                            required
+                          />
+                          <Spacer />
+                        </Modal.Body>
+                        <Modal.Footer>
+                          <Grid.Container gap={1}>
+                            <Grid xs>
+                              <Button
+                                auto
+                                bordered
+                                color="error"
+                                onPress={() => setReauthenticateUserModal(false)}
+                                css={{ width: "100%" }}
+                              >
+                                Cancel
+                              </Button>
+                            </Grid>
+                            <Grid xs>
+                              <Button auto color="success" onPress={reauthenticateUser} css={{ width: "100%" }}>
+                                Authenticate
+                              </Button>
+                            </Grid>
+                          </Grid.Container>
+                        </Modal.Footer>
+                      </Modal>
+                      <Modal
+                        closeButton
+                        aria-labelledby="Change email"
+                        open={authenticatedSuccessfully}
+                        onClose={() => setAuthenticatedSuccessfully(false)}
+                        blur
+                        css={{ backgroundColor: "var(--nextui-colors-background)" }}
+                      >
+                        <Modal.Header>
+                          <h3>Change email address</h3>
+                        </Modal.Header>
+                        <Modal.Body>
+                          <h6 style={{ textAlign: "center" }}>Enter your new email address</h6>
+                          <Input
+                            clearable
+                            label="Email"
+                            placeholder="Your new email address"
+                            fullWidth
+                            onChange={(e) => {
+                              setUserProvidedEmail(e.target.value);
+                              setChangeEmailError({ email: "", password: "" });
+                            }}
+                            size="lg"
+                            status={changeEmailError.email.length > 0 && "error"}
+                            helperText={changeEmailError.email.length > 0 && changeEmailError.email}
+                            helperColor={changeEmailError.email.length > 0 && "error"}
+                            required
+                          />
+                          <Spacer />
+                        </Modal.Body>
+                        <Modal.Footer>
+                          <Grid.Container gap={1}>
+                            <Grid xs>
+                              <Button
+                                auto
+                                bordered
+                                color="error"
+                                onPress={() => setAuthenticatedSuccessfully(false)}
+                                css={{ width: "100%" }}
+                              >
+                                Cancel
+                              </Button>
+                            </Grid>
+                            <Grid xs>
+                              <Button auto color="success" onPress={changeEmail} css={{ width: "100%" }}>
+                                Change email
+                              </Button>
+                            </Grid>
+                          </Grid.Container>
+                        </Modal.Footer>
+                      </Modal>
+                      <Modal
+                        closeButton
+                        aria-labelledby="Change email"
+                        open={emailChangedSuccessfully}
+                        onClose={() => setEmailChangedSuccessfully(false)}
+                        blur
+                      >
+                        <Modal.Body>
+                          <h5 style={{ textAlign: "center" }}>Your email was changed successfully!</h5>
+                          <p>
+                            Your new email address is:{" "}
+                            <span style={{ fontStyle: "italic", color: "var(--nextui-colors-red500)" }}>
+                              {currentUser.email}
+                            </span>
+                          </p>
+                        </Modal.Body>
+                        <Modal.Footer>
+                          <Button
+                            auto
+                            bordered
+                            color="error"
+                            onPress={() => setEmailChangedSuccessfully(false)}
+                            css={{ width: "100%" }}
+                          >
+                            Close this modal
+                          </Button>
+                        </Modal.Footer>
+                      </Modal>
                     </Col>
                   </Row>
-                </Container>
+                </Col>
               </Collapse>
             </Collapse.Group>
           </Grid>
@@ -278,9 +531,7 @@ export const Account = () => {
                     })}
                 </select>
               </div>
-              <Spacer />
             </Col>
-            <Spacer />
           </Grid>
           <Grid xs={12} sm={6}>
             <Col>
@@ -306,9 +557,7 @@ export const Account = () => {
                     })}
                 </select>
               </div>
-              <Spacer />
             </Col>
-            <Spacer />
           </Grid>
           <Grid xs={12} sm={6}>
             <Col>
@@ -334,9 +583,7 @@ export const Account = () => {
                     })}
                 </select>
               </div>
-              <Spacer />
             </Col>
-            <Spacer />
           </Grid>
           <Grid xs={12} sm={6}>
             <Col>
@@ -348,9 +595,7 @@ export const Account = () => {
                 onChange={handleChanges}
                 ref={streetRef}
               />
-              <Spacer />
             </Col>
-            <Spacer />
           </Grid>
           <Grid xs={12} sm={6}>
             <Col>
@@ -363,9 +608,7 @@ export const Account = () => {
                 type="number"
                 ref={streetNumberRef}
               />
-              <Spacer />
             </Col>
-            <Spacer />
           </Grid>
           <Grid xs={12} sm={6}>
             <Col>
@@ -377,9 +620,7 @@ export const Account = () => {
                 onChange={handleChanges}
                 ref={buildingRef}
               />
-              <Spacer />
             </Col>
-            <Spacer />
           </Grid>
           <Grid xs={12} sm={6}>
             <Col>
@@ -392,9 +633,7 @@ export const Account = () => {
                 type="number"
                 ref={apartmentRef}
               />
-              <Spacer />
             </Col>
-            <Spacer />
           </Grid>
           <Grid xs={12} sm={6}>
             <Col>
@@ -407,22 +646,26 @@ export const Account = () => {
                 type="number"
                 ref={zipcodeRef}
               />
-              <Spacer />
             </Col>
-            <Spacer />
           </Grid>
         </Grid.Container>
         <Spacer />
         {newChanges && (
           <>
-            <Button bordered css={{ width: "100%" }} size="lg" color="error" onPress={openDiscardConfirmation}>
+            <Button
+              bordered
+              css={{ width: "100%" }}
+              size="lg"
+              color="error"
+              onPress={() => setDiscardConfirmationVisible(true)}
+            >
               Discard changes
             </Button>
             <Modal
               closeButton
               aria-labelledby="Discard changes"
               open={discardConfirmationVisible}
-              onClose={closeDiscardConfirmation}
+              onClose={() => setDiscardConfirmationVisible(false)}
               blur
             >
               <Modal.Header>
@@ -434,7 +677,13 @@ export const Account = () => {
               <Modal.Footer>
                 <Grid.Container gap={1}>
                   <Grid xs>
-                    <Button auto light color="error" onPress={closeDiscardConfirmation} css={{ width: "100%" }}>
+                    <Button
+                      auto
+                      light
+                      color="error"
+                      onPress={() => setDiscardConfirmationVisible(false)}
+                      css={{ width: "100%" }}
+                    >
                       Cancel
                     </Button>
                   </Grid>
@@ -447,14 +696,14 @@ export const Account = () => {
               </Modal.Footer>
             </Modal>
             <Spacer />
-            <Button css={{ width: "100%" }} size="lg" color="error" onPress={openSaveConfirmation}>
+            <Button css={{ width: "100%" }} size="lg" color="error" onPress={() => setSaveConfirmationVisible(true)}>
               Save changes
             </Button>
             <Modal
               closeButton
               aria-labelledby="Save changes"
               open={saveConfirmationVisible}
-              onClose={closeSaveConfirmation}
+              onClose={() => setSaveConfirmationVisible(false)}
               blur
             >
               <Modal.Header>
@@ -466,7 +715,13 @@ export const Account = () => {
               <Modal.Footer>
                 <Grid.Container gap={1}>
                   <Grid xs>
-                    <Button auto flat color="error" onPress={closeSaveConfirmation} css={{ width: "100%" }}>
+                    <Button
+                      auto
+                      flat
+                      color="error"
+                      onPress={() => setSaveConfirmationVisible(false)}
+                      css={{ width: "100%" }}
+                    >
                       Cancel
                     </Button>
                   </Grid>

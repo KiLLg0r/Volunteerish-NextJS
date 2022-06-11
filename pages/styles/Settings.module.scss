@@ -123,6 +123,7 @@
   cursor: pointer;
 
   img {
+    display: block;
     border-radius: 50%;
   }
 
@@ -135,6 +136,7 @@
     aspect-ratio: 1;
     padding: 12px;
     border-radius: 50%;
+    z-index: 1000;
 
     svg {
       font-size: 1.5rem;
