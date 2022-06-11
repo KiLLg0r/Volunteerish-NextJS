@@ -17,6 +17,7 @@ const UserDataChanges = ({ children }) => {
 
       return unsubscribe;
     }
+    setLoading(false);
     //eslint-disable-next-line
   }, []);
 
