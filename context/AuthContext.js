@@ -77,7 +77,7 @@ export function AuthProvider({ children }) {
 
     if (FontSize.length > 0) document.documentElement.style.fontSize = FontSize;
 
-    if (!userData) getUserData(currentUser?.uid).then((result) => setUserData(result));
+    if (!userData) getUserData(currentUser?.uid);
   }, [FontSize, Language, currentUser, userData]);
 
   const value = {
