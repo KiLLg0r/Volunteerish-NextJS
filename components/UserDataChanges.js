@@ -9,17 +9,13 @@ const UserDataChanges = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (currentUser) {
-      const unsubscribe = onSnapshot(doc(db, "users", currentUser.uid), (user) => {
+    if (currentUser)
+      onSnapshot(doc(db, "users", currentUser.uid), (user) => {
         setUserData(user.data());
         setLoading(false);
       });
-
-      return unsubscribe;
-    }
     setLoading(false);
-    //eslint-disable-next-line
-  }, []);
+  }, [currentUser, setUserData]);
 
   if (loading) return <Loading />;
 

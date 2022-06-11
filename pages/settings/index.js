@@ -13,6 +13,7 @@ import { Help } from "../help";
 import { About } from "../about";
 
 import styles from "../styles/Settings.module.scss";
+import { useAuth } from "../../context/AuthContext";
 
 function Settings({ auth }) {
   const size = useWindowSize();
@@ -42,6 +43,7 @@ function Settings({ auth }) {
 
   const DesktopInterface = () => {
     const [open, setOpen] = useState(JSON.parse(localStorage.getItem("settingsPage")) || [(true, false, false, false)]);
+    const { logout } = useAuth();
 
     const RenderAppSettings = () => {
       return open[0] ? <App /> : null;
@@ -106,6 +108,11 @@ function Settings({ auth }) {
             >
               <Col>About</Col>
               <BsChevronRight />
+            </Row>
+            <Row>
+              <Button onPress={logout} color="error" bordered css={{ width: "100%" }} size="lg">
+                Log out
+              </Button>
             </Row>
           </Col>
         </Grid>
