@@ -23,7 +23,7 @@ const AnnounceCard = ({ data }) => {
   }, [data.difficulty]);
 
   return (
-    <Card clickable className={styles.card} color="gradient" css={{ height: "275px" }}>
+    <Card isPressable className={styles.card} color="gradient" css={{ height: "275px" }}>
       <Card.Header>
         <h3>{data.name}</h3>
       </Card.Header>

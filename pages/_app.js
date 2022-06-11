@@ -2,6 +2,7 @@ import "../styles/globals.css";
 import { AuthProvider } from "../context/AuthContext";
 import Layout from "../components/layout";
 import AuthStateChanged from "../components/AuthStateChanged";
+import UserDataChanges from "../components/UserDataChanges";
 
 import { NextUIProvider, createTheme } from "@nextui-org/react";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
@@ -78,7 +79,9 @@ function MyApp({ Component, pageProps }) {
         <AuthProvider>
           <Layout>
             <AuthStateChanged>
-              <Component {...pageProps} />
+              <UserDataChanges>
+                <Component {...pageProps} />
+              </UserDataChanges>
             </AuthStateChanged>
           </Layout>
         </AuthProvider>

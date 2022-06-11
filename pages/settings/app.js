@@ -135,20 +135,6 @@ export const App = () => {
             </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
-        {/* <select name="fontSize" onChange={changeFontSize} ref={selectFontSizeRef} defaultValue={FontSize}>
-          <option value="14px" style={{ fontSize: "14px" }}>
-            Small
-          </option>
-          <option value="16px" style={{ fontSize: "16px" }}>
-            Normal
-          </option>
-          <option value="18px" style={{ fontSize: "18px" }}>
-            Big
-          </option>
-          <option value="20px" style={{ fontSize: "20px" }}>
-            Very big
-          </option>
-        </select> */}
       </Row>
     </Container>
   );

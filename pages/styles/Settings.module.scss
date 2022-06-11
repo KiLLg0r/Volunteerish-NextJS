@@ -151,3 +151,24 @@
   width: 30px;
   height: 22px;
 }
+
+.selectMenu {
+  width: 100%;
+  display: flex;
+  flex-flow: column;
+
+  .select {
+    width: 100%;
+    background: var(--nextui-colors-accents0);
+    padding: var(--nextui-space-2) var(--nextui-space-5);
+    border-radius: var(--nextui-space-7);
+    height: calc(2.2 * var(--nextui-space-9));
+    border: none;
+  }
+
+  .selectLabel {
+    display: block;
+    margin-bottom: var(--nextui-space-3);
+    padding: 0 0 0 var(--nextui-space-2);
+  }
+}

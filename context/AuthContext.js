@@ -8,11 +8,10 @@ import {
   updatePassword,
   sendPasswordResetEmail,
 } from "firebase/auth";
-import { doc, getDoc, getFirestore, getDocs, collection, query, orderBy } from "firebase/firestore";
-import auth, { app } from "../config/firebase";
+import { doc, getDoc, getDocs, collection, query, orderBy } from "firebase/firestore";
+import auth, { db } from "../config/firebase";
 
 const AuthContext = React.createContext();
-const db = getFirestore(app);
 
 export function useAuth() {
   return useContext(AuthContext);
@@ -62,7 +61,7 @@ export function AuthProvider({ children }) {
     if (uid) {
       const userRef = doc(db, "users", uid);
       const userSnap = await getDoc(userRef);
-      if (userSnap.exists()) return userSnap.data();
+      if (userSnap.exists()) setUserData(userSnap.data());
     }
     return null;
   }
@@ -107,9 +106,10 @@ export function AuthProvider({ children }) {
     users,
     Language,
     setLanguage,
-    setUserData,
+    getUserData,
     setFontSize,
     setCurrentUser,
+    setUserData,
     setLoading,
     register,
     login,

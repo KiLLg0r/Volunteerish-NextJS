@@ -27,7 +27,7 @@ function Settings({ auth }) {
           </div>
           <div className={styles.userName}>{auth.currentUser.displayName}</div>
           <Link href="/settings/account">
-            <Button color="gradient" flat auto css={{ marginInline: "auto", borderRadius: "5rem" }}>
+            <Button color="gradient" auto css={{ marginInline: "auto", borderRadius: "5rem" }}>
               <Row gap={1} align="center">
                 <Col>Edit profile</Col>
                 <BsChevronRight />
