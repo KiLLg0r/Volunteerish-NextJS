@@ -1,4 +1,4 @@
-import { Row, Col, Spacer, Grid, Card } from "@nextui-org/react";
+import { Row, Col, Grid, Card } from "@nextui-org/react";
 import { useState, useEffect } from "react";
 
 import styles from "./styles/Card.module.scss";
@@ -23,12 +23,17 @@ const AnnounceCard = ({ data }) => {
   }, [data.difficulty]);
 
   return (
-    <Card isPressable className={styles.card} color="gradient" css={{ height: "275px" }}>
+    <Card
+      isPressable
+      className={styles.card}
+      variant="flat"
+      css={{ height: "275px", background: "var(--nextui-colors-gradient)" }}
+    >
       <Card.Header>
         <h3>{data.name}</h3>
       </Card.Header>
-      <Card.Body>
-        <Grid.Container>
+      <Card.Body css={{ paddingBlock: "0" }}>
+        <Grid.Container gap={1}>
           <Grid xs={4}>
             <div className={styles.imgWrapper}>
               <Card.Image
@@ -45,10 +50,7 @@ const AnnounceCard = ({ data }) => {
           <Grid xs={8} className={styles.cardDescription}>
             {data.description}
           </Grid>
-          <Grid xs={12}>
-            <Spacer />
-          </Grid>
-          <Grid xs={6} css={{ fontWeight: "600" }}>
+          <Grid xs={8} css={{ fontWeight: "600" }}>
             <Row>
               <Col>
                 <Row>Category</Row>
@@ -58,7 +60,7 @@ const AnnounceCard = ({ data }) => {
               </Col>
             </Row>
           </Grid>
-          <Grid xs={6} css={{ fontWeight: "600" }}>
+          <Grid xs={4} css={{ fontWeight: "600" }}>
             <Row>
               <Col>
                 <Row>Difficulty</Row>

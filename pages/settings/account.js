@@ -10,6 +10,7 @@ import { db, app } from "../../config/firebase";
 import { doc, updateDoc } from "firebase/firestore";
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { EmailAuthProvider, reauthenticateWithCredential, updateProfile, updateEmail } from "firebase/auth";
+import { updateAllImages } from "../../utilities/functions";
 
 import styles from "../styles/Settings.module.scss";
 
@@ -164,6 +165,7 @@ export const Account = () => {
           },
           () =>
             getDownloadURL(task.snapshot.ref).then((url) => {
+              updateAllImages(currentUser.uid, url);
               updateProfile(currentUser, { photoURL: url })
                 .then(() => console.log(`Image updated successfully`))
                 .catch((error) => {

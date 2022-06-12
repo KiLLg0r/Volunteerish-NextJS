@@ -8,7 +8,6 @@ import {
   updatePassword,
   sendPasswordResetEmail,
 } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
 import auth, { db } from "../config/firebase";
 
 const AuthContext = React.createContext();
@@ -17,13 +16,12 @@ export function useAuth() {
   return useContext(AuthContext);
 }
 
-export function AuthProvider({ children }) {
+export function AuthProvider({ children, initialUserData, users }) {
   const [currentUser, setCurrentUser] = useState();
   const [loading, setLoading] = useState(false);
-  const [userData, setUserData] = useState(null);
+  const [userData, setUserData] = useState(initialUserData);
   const [FontSize, setFontSize] = useState(new Set(["16px"]));
   const [Language, setLanguage] = useState(new Set(["English"]));
-  const [users, setUsers] = useState([]);
 
   function register(email, password) {
     return createUserWithEmailAndPassword(auth, email, password);
@@ -57,15 +55,6 @@ export function AuthProvider({ children }) {
     sendPasswordResetEmail(auth, email);
   }
 
-  async function getUserData(uid) {
-    if (uid) {
-      const userRef = doc(db, "users", uid);
-      const userSnap = await getDoc(userRef);
-      if (userSnap.exists()) setUserData(userSnap.data());
-    }
-    return null;
-  }
-
   useEffect(() => {
     if (localStorage.getItem("fontSize") === null || localStorage.getItem("fontSize") === "undefined")
       localStorage.setItem("fontSize", "16px");
@@ -76,8 +65,6 @@ export function AuthProvider({ children }) {
     else setLanguage(localStorage.getItem("language"));
 
     if (FontSize.length > 0) document.documentElement.style.fontSize = FontSize;
-
-    if (!userData) getUserData(currentUser?.uid);
   }, [FontSize, Language, currentUser, userData]);
 
   const value = {
@@ -88,9 +75,7 @@ export function AuthProvider({ children }) {
     FontSize,
     users,
     Language,
-    setUsers,
     setLanguage,
-    getUserData,
     setFontSize,
     setCurrentUser,
     setUserData,

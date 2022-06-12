@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { db } from "../config/firebase";
-import { doc, onSnapshot } from "firebase/firestore";
 import Loading from "./Loading";
+import { doc, onSnapshot } from "firebase/firestore";
 
 const UserDataChanges = ({ children }) => {
   const { currentUser, setUserData } = useAuth();

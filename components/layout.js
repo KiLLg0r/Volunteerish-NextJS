@@ -27,8 +27,9 @@ const Layout = ({ children }) => {
           paddingBottom: currentUser && "5rem",
 
           "@xs": {
-            paddingTop: router.asPath === "/help" || router.asPath === "/about" ? "1rem" : "5rem",
             paddingTop: currentUser ? "5rem" : "1rem",
+            paddingTop: router.asPath === "/help" || router.asPath === "/about" ? "1rem" : "5rem",
+            paddingBlock: router.asPath === "/create-new-account" && "1rem",
             paddingBottom: "0",
           },
         }}
