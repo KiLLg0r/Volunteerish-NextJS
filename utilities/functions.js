@@ -71,3 +71,37 @@ export const updateAllImages = async (uid, newURL) => {
     });
   });
 };
+
+export const updateAllNames = async (uid, newName) => {
+  const userDoc = doc(db, "users", uid);
+  await updateDoc(userDoc, {
+    name: newName,
+  });
+
+  const announcesQuery = query(collection(db, "announces"), where("uid", "==", uid));
+  const announcesSnapshot = await getDocs(announcesQuery);
+
+  announcesSnapshot.forEach(async (announce) => {
+    await updateDoc(doc(db, "announces", announce.id), {
+      name: newName,
+    });
+  });
+
+  const conversationQuery1 = query(collection(db, "conversations"), where("uid1", "==", uid));
+  const conversationQuery1Snapshot = await getDocs(conversationQuery1);
+
+  conversationQuery1Snapshot.forEach(async (conversation) => {
+    await updateDoc(doc(db, "conversations", conversation.id), {
+      name1: newName,
+    });
+  });
+
+  const conversationQuery2 = query(collection(db, "conversations"), where("uid2", "==", uid));
+  const conversationQuery2Snapshot = await getDocs(conversationQuery2);
+
+  conversationQuery2Snapshot.forEach(async (conversation) => {
+    await updateDoc(doc(db, "conversations", conversation.id), {
+      name2: newName,
+    });
+  });
+};

@@ -23,12 +23,20 @@ const Layout = ({ children }) => {
           backgroundColor: "$background",
           minHeight: "100vh",
           width: "auto",
+          paddingBlock: "1rem",
           paddingTop: currentUser && "1rem",
           paddingBottom: currentUser && "5rem",
+          paddingBottom: router.asPath === "/create-new-account" && "1rem",
 
           "@xs": {
             paddingTop: currentUser ? "5rem" : "1rem",
-            paddingTop: router.asPath === "/help" || router.asPath === "/about" ? "1rem" : "5rem",
+            paddingTop:
+              router.asPath === "/help" ||
+              router.asPath === "/about" ||
+              router.asPath === "/login" ||
+              router.asPath === "/register"
+                ? "1rem"
+                : "5rem",
             paddingBlock: router.asPath === "/create-new-account" && "1rem",
             paddingBottom: "0",
           },

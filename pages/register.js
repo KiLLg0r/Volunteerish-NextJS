@@ -5,7 +5,7 @@ import { useAuth } from "../context/AuthContext";
 import { useRouter } from "next/router";
 import Link from "next/link";
 
-import { withProtected } from "../utilities/routes";
+import { withPublic } from "../utilities/routes";
 import { validateError } from "../utilities/functions";
 
 import styles from "./styles/Auth.module.scss";
@@ -146,4 +146,4 @@ const Register = () => {
   );
 };
 
-export default withProtected(Register);
+export default withPublic(Register);

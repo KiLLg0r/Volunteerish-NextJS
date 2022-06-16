@@ -1,7 +1,118 @@
 .createNewAccountSwiper {
+  height: calc(100vh - 2rem);
   width: 100%;
+
+  .swiper-wrapper {
+    height: auto;
+    margin-bottom: auto;
+  }
 }
 
-.swiperBtns {
+.swiperSlide {
+  background-color: var(--nextui-colors-background);
+  display: flex;
+  flex-flow: column;
+}
+
+.swiperColumn {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.volunteerSvg {
+  width: 50%;
+  aspect-ratio: 1;
+  display: block;
+  margin-inline: auto;
+}
+
+.title,
+.titleLogo {
+  margin-block: 0;
+  color: var(--nextui-colors-red500);
+  text-align: center;
+  padding-block: 0;
+}
+
+.titleLogo {
+  letter-spacing: 2px;
+  font-family: "Love Light", cursive;
+}
+
+.subtitle {
+  margin-block-start: 1rem;
+  font-size: 1rem;
+  color: var(--nextui-colors-textSecondary);
+  text-align: center;
+}
+
+.imageEdit {
   position: relative;
+  margin-inline: auto;
+  width: fit-content;
+  height: fit-content;
+  padding: 0.25rem;
+  border: 2px solid var(--nextui-colors-red500);
+  border-radius: 50%;
+  cursor: pointer;
+
+  .image {
+    overflow: hidden;
+  }
+
+  img {
+    display: block;
+    border-radius: 50%;
+  }
+
+  .imageEditSVG {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background-color: var(--nextui-colors-red500);
+    height: 48px;
+    aspect-ratio: 1;
+    padding: 12px;
+    border-radius: 50%;
+    z-index: 1000;
+
+    svg {
+      font-size: 1.5rem;
+    }
+  }
+}
+
+.imageEditLabel {
+  text-align: center;
+  margin-block: 1rem;
+}
+
+.selectMenu {
+  width: 100%;
+  display: flex;
+  flex-flow: column;
+
+  .select {
+    width: 100%;
+    background: var(--nextui-colors-accents0);
+    padding: var(--nextui-space-2) var(--nextui-space-5);
+    border-radius: var(--nextui-space-7);
+    height: calc(2.2 * var(--nextui-space-9));
+    border: none;
+  }
+
+  .selectLabel {
+    display: block;
+    margin-bottom: var(--nextui-space-3);
+    padding: 0 0 0 var(--nextui-space-2);
+  }
+}
+
+@media screen and (max-width: 650px) {
+  .volunteerSvg {
+    width: 100%;
+    aspect-ratio: 1;
+    display: block;
+    margin-inline: auto;
+  }
 }

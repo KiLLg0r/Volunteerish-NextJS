@@ -7,8 +7,8 @@ import styles from "./styles/Navigation.module.scss";
 
 const ActiveLink = ({ href, children }) => {
   const router = useRouter();
-  const condition = router.asPath === href;
-  const secondCondition = router.asPath === "/settings/app" || router.asPath === "/settings/account";
+  const condition = router.pathname === href;
+  const secondCondition = router.pathname === "/settings/app" || router.pathname === "/settings/account";
 
   const handleClick = (e) => {
     e.preventDefault;

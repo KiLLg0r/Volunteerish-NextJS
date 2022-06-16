@@ -10,7 +10,7 @@ import { db, app } from "../../config/firebase";
 import { doc, updateDoc } from "firebase/firestore";
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { EmailAuthProvider, reauthenticateWithCredential, updateProfile, updateEmail } from "firebase/auth";
-import { updateAllImages } from "../../utilities/functions";
+import { updateAllImages, updateAllNames } from "../../utilities/functions";
 
 import styles from "../styles/Settings.module.scss";
 
@@ -20,7 +20,7 @@ export const Account = () => {
   const imageInputRef = useRef(null);
 
   const router = useRouter();
-  const { currentUser, sendUserEmailVerification, userData, getUserData, setUserData } = useAuth();
+  const { currentUser, sendUserEmailVerification, userData } = useAuth();
 
   const firstName = currentUser.displayName.split(" ")[0];
   const lastName = currentUser.displayName.split(" ")[1];
@@ -53,7 +53,6 @@ export const Account = () => {
 
   const firstNameRef = useRef(null);
   const lastNameRef = useRef(null);
-  const emailRef = useRef(null);
   const countryRef = useRef(null);
   const stateRef = useRef(null);
   const cityRef = useRef(null);
@@ -128,9 +127,7 @@ export const Account = () => {
       });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault;
-
+  const handleSubmit = () => {
     setSaveConfirmationVisible(false);
 
     setTimeout(() => {
@@ -177,12 +174,14 @@ export const Account = () => {
         );
       }
 
-      if (name.length > 0)
+      if (name.length > 0) {
         updateProfile(currentUser, { displayName: name }).catch((error) => {
           console.log(error);
           setError("Failed to update name!");
           imageInputRef.current.scrollIntoView({ behavior: "smooth" });
         });
+        updateAllNames(currentUser.uid, name);
+      }
 
       const updateUser = async () => {
         await updateDoc(userRef, {
@@ -221,7 +220,7 @@ export const Account = () => {
       };
       reader.readAsDataURL(image);
     }
-  }, [currentUser, getUserData, image, setUserData, userData, userRef]);
+  }, [image]);
 
   return (
     <Container sm className={styles.account} key={discardChanges}>

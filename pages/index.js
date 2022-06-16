@@ -1,58 +1,45 @@
-import { useState, useEffect } from "react";
 import { withProtected, withNavigation } from "../utilities/routes";
-import { Row, Col, Spacer, Grid, Image, Collapse, Button, Container } from "@nextui-org/react";
+import { Row, Col, Spacer, Grid, Collapse, Button, Container } from "@nextui-org/react";
 import { BsChevronBarRight } from "react-icons/bs";
+import { collection, query, where, getDocs, orderBy, limit } from "firebase/firestore";
+import nookies from "nookies";
+import { firebaseAdmin } from "../config/firebaseAdmin";
+
+import { db } from "../config/firebase";
 
 import AnnounceCard from "../components/Card";
 import Leaderboard from "../components/Leaderboards";
 
-import Queries from "../utilities/queries";
-
 import styles from "./styles/Home.module.scss";
 
-function Index({ auth }) {
-  const { currentUser, userData } = auth;
+function Index({
+  auth,
+  initialUserAnnounces,
+  userAnnouncesLastKey,
+  initialUserHelpingAnnounces,
+  userHelpingAnnouncesLastKey,
+  initialUserHelpedAnnounces,
+  userHelpedAnnouncesLastKey,
+  initialUserClosedAnnounces,
+  userClosedAnnouncesLastKey,
+}) {
+  const { userData, currentUser } = auth;
 
-  const [myAnnounces, setMyAnnounces] = useState([]);
-  const [myHelpingAnnounces, setMyHelpingAnnounces] = useState([]);
-  const [myHelpedAnnounces, setMyHelpedAnnounces] = useState([]);
-  const [myClosedAnnounces, setMyClosedAnnounces] = useState([]);
+  const myAnnounces = JSON.parse(initialUserAnnounces);
+  const myHelpingAnnounces = JSON.parse(initialUserHelpingAnnounces);
+  const myHelpedAnnounces = JSON.parse(initialUserHelpedAnnounces);
+  const myClosedAnnounces = JSON.parse(initialUserClosedAnnounces);
 
-  const [myAnnouncesLastKey, setMyAnnouncesLastKey] = useState("");
-  const [myHelpingAnnouncesLastKey, setMyHelpingAnnouncesLastKey] = useState("");
-  const [myHelpedAnnounceLastKey, setMyHelpedAnnounceLastKey] = useState("");
-  const [myClosedAnnouncesLastKey, setMyClosedAnnouncesLastKey] = useState("");
-
-  useEffect(() => {
-    Queries.userAnnouncesFirstFetch(currentUser.uid, "active").then((res) => {
-      if (res) {
-        setMyAnnounces(res.announces);
-        setMyAnnouncesLastKey(res.lastKey);
-      }
-    });
-    Queries.helperUserAnnouncesFirstFetch(currentUser.uid, "helping").then((res) => {
-      if (res) {
-        setMyHelpingAnnounces(res.announces);
-        setMyHelpingAnnouncesLastKey(res.lastKey);
-      }
-    });
-    Queries.helperUserAnnouncesFirstFetch(currentUser.uid, "helped").then((res) => {
-      if (res) {
-        setMyHelpedAnnounces(res.announces);
-        setMyHelpedAnnounceLastKey(res.lastKey);
-      }
-    });
-    Queries.userAnnouncesFirstFetch(currentUser.uid, "closed").then((res) => {
-      if (res) {
-        setMyClosedAnnounces(res.announces);
-        setMyClosedAnnouncesLastKey(res.lastKey);
-      }
-    });
-  }, [currentUser.uid]);
+  const myAnnouncesLastKey = userAnnouncesLastKey ? JSON.parse(userAnnouncesLastKey) : "";
+  const myHelpingAnnouncesLastKey = userHelpingAnnouncesLastKey ? JSON.parse(userHelpingAnnouncesLastKey) : "";
+  const myHelpedAnnouncesLastKey = userHelpedAnnouncesLastKey ? JSON.parse(userHelpedAnnouncesLastKey) : "";
+  const myClosedAnnouncesLastKey = userClosedAnnouncesLastKey ? JSON.parse(userClosedAnnouncesLastKey) : "";
 
   return (
     <section className={styles.dashboard}>
-      <h2 className={styles.title}>Dashboard</h2>
+      <h2 className={styles.title} onClick={() => console.log(currentUser)}>
+        Dashboard
+      </h2>
       <Grid.Container gap={2}>
         <Grid xs={12} sm={3}>
           <Col>
@@ -62,7 +49,9 @@ function Index({ auth }) {
               <Container fluid className={styles.stats}>
                 <Row>
                   <Col>People helped</Col>
-                  <span style={{ color: "var(--nextui-colors-cyan600)" }}>{userData?.helpedPeople}</span>
+                  <span style={{ color: "var(--nextui-colors-cyan600)" }}>
+                    {userData?.helpedPeople ? userData.helpedPeople : "0"}
+                  </span>
                 </Row>
               </Container>
 
@@ -71,7 +60,9 @@ function Index({ auth }) {
               <Container fluid className={styles.stats}>
                 <Row>
                   <Col>Points</Col>
-                  <span style={{ color: "var(--nextui-colors-yellow700)" }}>{userData?.points}</span>
+                  <span style={{ color: "var(--nextui-colors-yellow700)" }}>
+                    {userData?.points ? userData.points : "0"}
+                  </span>
                 </Row>
               </Container>
 
@@ -130,7 +121,7 @@ function Index({ auth }) {
                     myHelpedAnnounces.map((announce) => {
                       return <AnnounceCard key={announce.ID} data={announce.data} />;
                     })}
-                  {myHelpedAnnounceLastKey && (
+                  {myHelpedAnnouncesLastKey && (
                     <Button
                       color="error"
                       css={{ height: "275px", fontSize: "1.25rem", color: "$red500", borderColor: "$red500" }}
@@ -169,3 +160,139 @@ function Index({ auth }) {
 }
 
 export default withProtected(withNavigation(Index));
+
+export const getServerSideProps = async (ctx) => {
+  try {
+    const cookies = nookies.get(ctx);
+    const user = await firebaseAdmin.auth().verifyIdToken(cookies.token);
+
+    const { uid } = user;
+
+    const userAnnouncesQuery = query(
+      collection(db, "announces"),
+      where("status", "==", "active"),
+      where("uid", "==", uid),
+      orderBy("posted", "desc"),
+      limit(5),
+    );
+
+    const userHelpingAnnouncesQuery = query(
+      collection(db, "announces"),
+      where("status", "==", "helping"),
+      where("uid", "!=", uid),
+      where("helpingBy", "==", uid),
+      orderBy("uid", "desc"),
+      orderBy("posted", "desc"),
+      limit(5),
+    );
+
+    const userHelpedAnnouncesQuery = query(
+      collection(db, "announces"),
+      where("status", "==", "helped"),
+      where("uid", "!=", uid),
+      where("helpingBy", "==", uid),
+      orderBy("uid", "desc"),
+      orderBy("posted", "desc"),
+      limit(5),
+    );
+
+    const userClosedAnnouncesQuery = query(
+      collection(db, "announces"),
+      where("status", "==", "closed"),
+      where("uid", "==", uid),
+      orderBy("posted", "desc"),
+      limit(5),
+    );
+
+    const userAnnouncesSnapshot = await getDocs(userAnnouncesQuery);
+    const userHelpingAnnouncesSnapshot = await getDocs(userHelpingAnnouncesQuery);
+    const userHelpedAnnouncesSnapshot = await getDocs(userHelpedAnnouncesQuery);
+    const userClosedAnnouncesSnapshot = await getDocs(userClosedAnnouncesQuery);
+
+    let rawUserAnnounces = [];
+    let rawUserAnnouncesLastKey = "";
+    let userAnnouncesNumber = 0;
+
+    let rawUserHelpingAnnounces = [];
+    let rawUserHelpingAnnouncesLastKey = "";
+    let userHelpingAnnouncesNumber = 0;
+
+    let rawUserHelpedAnnounces = [];
+    let rawUserHelpedAnnouncesLastKey = "";
+    let userHelpedAnnouncesNumber = 0;
+
+    let rawUserClosedAnnounces = [];
+    let rawUserClosedAnnouncesLastKey = "";
+    let userClosedAnnouncesNumber = 0;
+
+    userAnnouncesSnapshot.forEach((announce) => {
+      rawUserAnnounces.push({
+        id: announce.id,
+        data: announce.data(),
+      });
+      rawUserAnnouncesLastKey = announce.data().posted;
+      userAnnouncesNumber++;
+    });
+
+    userHelpingAnnouncesSnapshot.forEach((announce) => {
+      rawUserHelpingAnnounces.push({
+        id: announce.id,
+        data: announce.data(),
+      });
+      rawUserHelpingAnnouncesLastKey = announce.data().posted;
+      userHelpingAnnouncesNumber++;
+    });
+
+    userHelpedAnnouncesSnapshot.forEach((announce) => {
+      rawUserHelpedAnnounces.push({
+        id: announce.id,
+        data: announce.data(),
+      });
+      rawUserHelpedAnnouncesLastKey = announce.data().posted;
+      userHelpedAnnouncesNumber++;
+    });
+
+    userClosedAnnouncesSnapshot.forEach((announce) => {
+      rawUserClosedAnnounces.push({
+        id: announce.id,
+        data: announce.data(),
+      });
+      rawUserClosedAnnouncesLastKey = announce.data().posted;
+      userClosedAnnouncesNumber++;
+    });
+
+    const initialUserAnnounces = JSON.stringify(rawUserAnnounces);
+    const initialUserHelpingAnnounces = JSON.stringify(rawUserHelpingAnnounces);
+    const initialUserHelpedAnnounces = JSON.stringify(rawUserHelpedAnnounces);
+    const initialUserClosedAnnounces = JSON.stringify(rawUserClosedAnnounces);
+
+    const userAnnouncesLastKey = userAnnouncesNumber > 5 ? JSON.stringify(rawUserAnnouncesLastKey) : "";
+    const userHelpingAnnouncesLastKey =
+      userHelpingAnnouncesNumber > 5 ? JSON.stringify(rawUserHelpingAnnouncesLastKey) : "";
+    const userHelpedAnnouncesLastKey =
+      userHelpedAnnouncesNumber > 5 ? JSON.stringify(rawUserHelpedAnnouncesLastKey) : "";
+    const userClosedAnnouncesLastKey =
+      userClosedAnnouncesNumber > 5 ? JSON.stringify(rawUserClosedAnnouncesLastKey) : "";
+
+    return {
+      props: {
+        initialUserAnnounces,
+        userAnnouncesLastKey,
+        initialUserHelpingAnnounces,
+        userHelpingAnnouncesLastKey,
+        initialUserHelpedAnnounces,
+        userHelpedAnnouncesLastKey,
+        initialUserClosedAnnounces,
+        userClosedAnnouncesLastKey,
+      },
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      redirect: {
+        permanent: false,
+        destination: "/login",
+      },
+    };
+  }
+};

@@ -28,6 +28,11 @@ export const withProtected = (Component) => {
       return <Loading />;
     }
 
+    if (auth.currentUser.displayName === null) {
+      router.replace("/create-new-account");
+      return <Loading />;
+    }
+
     return <Component {...props} auth={auth} />;
   };
 };
