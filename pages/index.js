@@ -5,6 +5,8 @@ import { collection, query, where, getDocs, orderBy, limit } from "firebase/fire
 import nookies from "nookies";
 import { firebaseAdmin } from "../config/firebaseAdmin";
 
+import Link from "next/link";
+
 import { db } from "../config/firebase";
 
 import AnnounceCard from "../components/Card";
@@ -83,7 +85,13 @@ function Index({
                 <div className={styles.horizontalScrollContainer}>
                   {myAnnounces &&
                     myAnnounces.map((announce) => {
-                      return <AnnounceCard key={announce.ID} data={announce.data} />;
+                      return (
+                        <Link href={`/announces/${announce.id}`} key={announce.ID}>
+                          <a>
+                            <AnnounceCard key={announce.ID} data={announce.data} />
+                          </a>
+                        </Link>
+                      );
                     })}
                   {myAnnouncesLastKey && (
                     <Button
@@ -101,7 +109,13 @@ function Index({
                 <div className={styles.horizontalScrollContainer}>
                   {myHelpingAnnounces &&
                     myHelpingAnnounces.map((announce) => {
-                      return <AnnounceCard key={announce.ID} data={announce.data} />;
+                      return (
+                        <Link href={`/announces/${announce.id}`} key={announce.ID}>
+                          <a>
+                            <AnnounceCard key={announce.ID} data={announce.data} />
+                          </a>
+                        </Link>
+                      );
                     })}
                   {myHelpingAnnouncesLastKey && (
                     <Button
@@ -119,7 +133,13 @@ function Index({
                 <div className={styles.horizontalScrollContainer}>
                   {myHelpedAnnounces &&
                     myHelpedAnnounces.map((announce) => {
-                      return <AnnounceCard key={announce.ID} data={announce.data} />;
+                      return (
+                        <Link href={`/announces/${announce.id}`} key={announce.ID}>
+                          <a>
+                            <AnnounceCard key={announce.ID} data={announce.data} />
+                          </a>
+                        </Link>
+                      );
                     })}
                   {myHelpedAnnouncesLastKey && (
                     <Button
@@ -137,7 +157,13 @@ function Index({
                 <div className={styles.horizontalScrollContainer}>
                   {myClosedAnnounces &&
                     myClosedAnnounces.map((announce) => {
-                      return <AnnounceCard key={announce.ID} data={announce.data} />;
+                      return (
+                        <Link href={`/announces/${announce.id}`} key={announce.ID}>
+                          <a>
+                            <AnnounceCard key={announce.ID} data={announce.data} />
+                          </a>
+                        </Link>
+                      );
                     })}
                   {myClosedAnnouncesLastKey && (
                     <Button
@@ -170,7 +196,7 @@ export const getServerSideProps = async (ctx) => {
 
     const userAnnouncesQuery = query(
       collection(db, "announces"),
-      where("status", "==", "active"),
+      where("status", "in", ["active", "helping"]),
       where("uid", "==", uid),
       orderBy("posted", "desc"),
       limit(5),
@@ -180,7 +206,7 @@ export const getServerSideProps = async (ctx) => {
       collection(db, "announces"),
       where("status", "==", "helping"),
       where("uid", "!=", uid),
-      where("helpingBy", "==", uid),
+      where("helpedBy", "==", uid),
       orderBy("uid", "desc"),
       orderBy("posted", "desc"),
       limit(5),
@@ -190,7 +216,7 @@ export const getServerSideProps = async (ctx) => {
       collection(db, "announces"),
       where("status", "==", "helped"),
       where("uid", "!=", uid),
-      where("helpingBy", "==", uid),
+      where("helpedBy", "==", uid),
       orderBy("uid", "desc"),
       orderBy("posted", "desc"),
       limit(5),

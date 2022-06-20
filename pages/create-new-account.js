@@ -177,6 +177,8 @@ const CreateNewAccount = () => {
         building: building,
         apartment: apartment,
         zipcode: zipcode,
+        points: 0,
+        helpedPeople: 0,
       }).catch((error) => {
         setError(error);
         setShowError(true);

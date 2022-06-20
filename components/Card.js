@@ -24,7 +24,6 @@ const AnnounceCard = ({ data }) => {
 
   return (
     <Card
-      isPressable
       className={styles.card}
       variant="flat"
       css={{ height: "275px", background: "var(--nextui-colors-gradient)" }}

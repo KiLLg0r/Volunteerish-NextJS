@@ -1,20 +1,23 @@
-import { withProtected, withNavigation } from "../utilities/routes";
-import AnnounceCard from "../components/Card";
+import { withProtected, withNavigation } from "../../utilities/routes";
+import AnnounceCard from "../../components/Card";
 import { useState, useRef, useEffect } from "react";
-import { Collapse, Grid, Col, Row } from "@nextui-org/react";
-import { query, collection, getDocs, orderBy, where } from "firebase/firestore";
+import { Collapse, Grid, Col, Row, Button } from "@nextui-org/react";
+import { query, collection, getDocs, orderBy, where, limit } from "firebase/firestore";
 import { Country, State, City } from "country-state-city";
 import { useRouter } from "next/router";
-import { useWindowSize } from "../utilities/hooks";
-import { db } from "../config/firebase";
+import { useWindowSize } from "../../utilities/hooks";
+import { db } from "../../config/firebase";
 import nookies from "nookies";
-import { firebaseAdmin } from "../config/firebaseAdmin";
+import { firebaseAdmin } from "../../config/firebaseAdmin";
+import { BsPlusCircleFill } from "react-icons/bs";
+import Link from "next/link";
 
-import NoAnnounces from "../public/svg/no_announces.svg";
-import styles from "./styles/Announces.module.scss";
+import NoAnnounces from "../../public/svg/no_announces.svg";
+import styles from "../styles/Announces.module.scss";
 
-const Announces = ({ initialAnnounces }) => {
+const Announces = ({ initialAnnounces, initialLastKey }) => {
   const announces = JSON.parse(initialAnnounces);
+  const lastKey = initialLastKey ? JSON.parse(initialLastKey) : "";
   const router = useRouter();
   const queryURL = router.query;
   const size = useWindowSize();
@@ -51,7 +54,7 @@ const Announces = ({ initialAnnounces }) => {
   }, [announces, initialAnnounces, queryURL]);
 
   return (
-    <Grid.Container gap={2}>
+    <Grid.Container gap={2} css={{ position: "relative" }}>
       <Grid xs={12}>
         <h2 className={styles.title}>Announces</h2>
       </Grid>
@@ -158,15 +161,26 @@ const Announces = ({ initialAnnounces }) => {
         </Collapse.Group>
       </Grid>
       <Grid xs={12} sm={9}>
-        <Grid.Container gap={3}>
+        <Grid.Container gap={2}>
           {announces &&
             announces.map((announce) => {
               return (
-                <Grid xs={12} sm={6} key={announce.id}>
-                  <AnnounceCard key={announce.id} data={announce.data} />
+                <Grid xs={12} sm={6} key={announce.id} css={{ height: "fit-content" }}>
+                  <Link href={`/announces/${announce.id}`}>
+                    <a>
+                      <AnnounceCard key={announce.id} data={announce.data} />
+                    </a>
+                  </Link>
                 </Grid>
               );
             })}
+          {lastKey?.length > 0 && (
+            <Grid xs={12} justify="center">
+              <Button color="error" bordered>
+                Load more announces
+              </Button>
+            </Grid>
+          )}
           {announces.length === 0 && (
             <Grid xs={12} className={styles.noAnnouncesSVG}>
               <Col>
@@ -179,6 +193,11 @@ const Announces = ({ initialAnnounces }) => {
           )}
         </Grid.Container>
       </Grid>
+      <Link href="/announces/add-new-announce">
+        <a className={styles.addNewAnnounce}>
+          <BsPlusCircleFill />
+        </a>
+      </Link>
     </Grid.Container>
   );
 };
@@ -193,7 +212,6 @@ export const getServerSideProps = async (ctx) => {
     const { uid } = user;
 
     const URLQuery = ctx.query;
-    console.log(URLQuery);
 
     let URLQueryItems = [];
 
@@ -216,26 +234,31 @@ export const getServerSideProps = async (ctx) => {
       where("uid", "!=", uid),
       orderBy("uid", "desc"),
       ...URLQueryItems,
+      limit(15),
     );
 
     const announcesSnapshot = await getDocs(q);
 
     let rawAnnounces = [];
+    let rawLastKey = [];
+    let announcesNumber = 0;
 
     announcesSnapshot.forEach((announce) => {
       rawAnnounces.push({
         id: announce.id,
         data: announce.data(),
       });
+      rawLastKey = announce.data().posted;
+      announcesNumber++;
     });
 
-    console.log(rawAnnounces);
-
     const initialAnnounces = JSON.stringify(rawAnnounces);
+    const initialLastKey = announcesNumber > 15 ? JSON.stringify(rawLastKey) : "";
 
     return {
       props: {
         initialAnnounces,
+        initialLastKey,
       },
     };
   } catch (error) {

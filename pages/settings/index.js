@@ -24,7 +24,13 @@ function Settings({ auth }) {
         <h2 className={styles.title}>Settings</h2>
         <div className={styles.editProfile}>
           <div className={styles.userIMG}>
-            <Image src={auth.currentUser.photoURL} alt="User profile image" height={125} width={125} />
+            <Image
+              src={auth.currentUser.photoURL}
+              alt="User profile image"
+              height={125}
+              width={125}
+              style={{ objectFit: "cover" }}
+            />
           </div>
           <div className={styles.userName}>{auth.currentUser.displayName}</div>
           <Link href="/settings/account">
