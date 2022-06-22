@@ -10,12 +10,43 @@
   border-radius: 0.875rem;
   padding: 1rem;
   height: 100%;
+  position: relative;
+}
+
+.scrollDown {
+  position: fixed;
+  right: 7rem;
+  bottom: 6rem;
+  font-size: 2.5rem;
+  color: var(--nextui-colors-red500);
+  border-radius: 50%;
+  box-shadow: 8px 16px 16px#1c1f24;
+  background-color: #1c1f24;
+  cursor: pointer;
+}
+
+.noData {
+  span {
+    margin-block: 1rem;
+    font-size: 1.25rem;
+    color: var(--nextui-colors-red500);
+  }
+
+  svg {
+    display: block;
+    margin-inline: auto;
+    width: 70%;
+    margin-block: 1rem;
+  }
+}
+
+.conversationsList {
+  height: calc(100vh - 10rem);
 }
 
 .conversationsList,
 .messagesList {
-  overflow-y: auto;
-  height: calc(100vh - 10rem);
+  overflow-y: scroll;
 
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -23,11 +54,6 @@
   &::-webkit-scrollbar {
     display: none;
   }
-}
-
-.messagesList {
-  height: calc(100vh - 15rem);
-  width: 100%;
 }
 
 .conversationItem:not(:last-child) {
@@ -65,6 +91,7 @@
 .receivedBy {
   padding: 0.5rem;
   border-radius: 0.875rem;
+  max-width: 80%;
 }
 
 .sentBy {
@@ -96,6 +123,12 @@
 }
 
 @media screen and (max-width: 650px) {
+  .scrollDown {
+    right: 3rem;
+  }
+  .messagesList {
+    height: calc(100vh - 11.5rem);
+  }
   .sendNewMessage {
     right: 2rem;
     left: unset;

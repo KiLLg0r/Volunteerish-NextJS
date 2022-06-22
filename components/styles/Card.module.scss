@@ -4,16 +4,6 @@
   position: relative;
   overflow: hidden;
   padding-left: 1rem;
-
-  &::after {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    height: 33px;
-    width: 50%;
-    background: linear-gradient(90deg, transparent, var(--nextui-colors-red200));
-  }
 }
 
 .imgWrapper {

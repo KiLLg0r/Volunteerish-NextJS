@@ -22,3 +22,19 @@ export function useWindowSize() {
 
   return windowSize;
 }
+
+export function useOnScreen(ref) {
+  const [isIntersecting, setIntersecting] = useState(false);
+
+  const observer = new IntersectionObserver(([entry]) => setIntersecting(entry.isIntersecting));
+
+  useEffect(() => {
+    observer.observe(ref.current);
+    return () => {
+      observer.disconnect();
+    };
+    //eslint-disable-next-line
+  }, []);
+
+  return isIntersecting;
+}

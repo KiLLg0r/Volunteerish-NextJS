@@ -7,8 +7,11 @@ import { useState } from "react";
 import Link from "next/link";
 import { useWindowSize } from "../../utilities/hooks";
 import { BsPlusCircleFill } from "react-icons/bs";
+import { getDoc, doc } from "firebase/firestore";
+import { db } from "../../config/firebase";
 import MessagesBody from "./[id]";
 
+import NoData from "../../public/svg/noData.svg";
 import styles from "../styles/Messages.module.scss";
 
 const Conversation = ({ imgURL, name, lastMessage, lastMessageSent, id }) => {
@@ -36,7 +39,7 @@ const Conversation = ({ imgURL, name, lastMessage, lastMessageSent, id }) => {
   };
 
   const showDate = () => {
-    const date = new Date(lastMessageSent._seconds * 1000);
+    const date = new Date(lastMessageSent?._seconds * 1000);
     const now = new Date();
 
     const hourInMS = 60 * 60 * 1000;
@@ -53,7 +56,7 @@ const Conversation = ({ imgURL, name, lastMessage, lastMessageSent, id }) => {
     const msBetweenDates = Math.abs(date.getTime() - now.getTime());
     const hoursBetweenDates = msBetweenDates / hourInMS;
 
-    if (hoursBetweenDates < 24) return `${hour}:${minutes}`;
+    if (hoursBetweenDates < 24) return `${hour < 10 ? "0" + hour : hour}:${minutes < 10 ? "0" + minutes : minutes}`;
     else if (hoursBetweenDates > 24 && hoursBetweenDates < 48) return "Yesterday";
     else if (hoursBetweenDates > 48 && hoursBetweenDates < 168) return `${dayName}`;
     else return `${day}.${month < 10 ? "0" + month : month}.${year}`;
@@ -84,15 +87,23 @@ const Conversation = ({ imgURL, name, lastMessage, lastMessageSent, id }) => {
         </Grid>
         <Grid xs={8.5} sm={10}>
           <Col span={10} css={{ height: "100%", width: "100%", padding: "0.5rem" }}>
-            <Row>{name}</Row>
-            <Row>
-              <Col span={9} css={{ overflow: "hidden" }}>
-                {lastMessage}
-              </Col>
-              <Col span={3} css={{ textAlign: "right" }}>
-                {showDate()}
-              </Col>
-            </Row>
+            {!lastMessage && !lastMessageSent ? (
+              <Row css={{ height: "100%" }} align="center">
+                {name}
+              </Row>
+            ) : (
+              <Row>{name}</Row>
+            )}
+            {lastMessage && lastMessageSent && (
+              <Row>
+                <Col span={9} css={{ overflow: "hidden", color: "$textSecondary", height: "1.5rem" }}>
+                  {lastMessage}
+                </Col>
+                <Col span={3} css={{ textAlign: "right" }}>
+                  {showDate()}
+                </Col>
+              </Row>
+            )}
           </Col>
         </Grid>
       </Grid.Container>
@@ -112,9 +123,35 @@ const Messages = ({ initialConversations }) => {
   const conversations = JSON.parse(initialConversations);
   const [conversationID, setConversationID] = useState("");
   const [sendNewMessageModal, setSendNewMessageModal] = useState(false);
-  const { currentUser } = useAuth();
+  const { currentUser, userData } = useAuth();
+  const [message, setMessage] = useState("");
+  const [newSendMessageData, setNewSendMessageData] = useState({
+    imgURL: "",
+    name: "",
+    uid: "",
+  });
 
   const size = useWindowSize();
+
+  const getNewConversations = async () => {
+    if (!userData?.helpingAnnounceID) {
+      setMessage("Currently you have no one to send a new message");
+      return;
+    }
+
+    const announceRef = doc(db, "announces", userData?.helpingAnnounceID);
+    const announceSnap = await getDoc(announceRef);
+
+    const announceData = announceSnap.data();
+    const userID = announceData.uid;
+
+    const result = conversations.filter((conversation) => {
+      return conversation.data.uid1 === userID || conversation.data.uid2 === userID;
+    });
+
+    if (result.length === 0)
+      setNewSendMessageData({ imgURL: announceData.imgURL, name: announceData.name, uid: announceData.uid });
+  };
 
   return (
     <section className={styles.messages}>
@@ -148,7 +185,13 @@ const Messages = ({ initialConversations }) => {
                   );
                 })}
             </Col>
-            <div className={styles.sendNewMessage} onClick={() => setSendNewMessageModal(true)}>
+            <div
+              className={styles.sendNewMessage}
+              onClick={() => {
+                getNewConversations();
+                setSendNewMessageModal(true);
+              }}
+            >
               <BsPlusCircleFill />
             </div>
           </Col>
@@ -169,7 +212,22 @@ const Messages = ({ initialConversations }) => {
           <h3 style={{ color: "var(--nextui-colors-red500)" }}>Send new message</h3>
         </Modal.Header>
         <Modal.Body>
-          <h6 style={{ textAlign: "center" }}>{""}</h6>
+          <h6 style={{ textAlign: "center" }}>
+            {message.length > 0 ? (
+              <div className={styles.noData}>
+                <NoData />
+                <span>{message}</span>
+              </div>
+            ) : (
+              <Link
+                href={`/messages/newConversation?name=${newSendMessageData?.name}&imgURL=${encodeURI(newSendMessageData?.imgURL)}&uid=${newSendMessageData?.uid}`}
+              >
+                <a>
+                  <Conversation imgURL={newSendMessageData?.imgURL} name={newSendMessageData?.name} />
+                </a>
+              </Link>
+            )}
+          </h6>
         </Modal.Body>
         <Modal.Footer>
           <Grid.Container gap={1}>
@@ -220,7 +278,6 @@ export const getServerSideProps = async (ctx) => {
             id: conversation.id,
             data: conversation.data(),
           });
-          console.log(rawConversations);
         }),
       )
       .catch((error) => console.log(error));
