@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { Container, Grid, Button, Image, Input, Textarea, Spacer, Modal } from "@nextui-org/react";
-import { BsChevronLeft } from "react-icons/bs";
+import { BsChevronLeft, BsPencilSquare } from "react-icons/bs";
 import { db } from "../../config/firebase";
 import { collection, getDoc, getDocs, doc, updateDoc, deleteField } from "firebase/firestore";
 import { useWindowSize } from "../../utilities/hooks";
@@ -18,6 +18,8 @@ const Announce = ({ id, data }) => {
 
   const firstName = announceData.name.split(" ")[0];
   const lastName = announceData.name.split(" ")[1];
+
+  const [email, setEmail] = useState("");
 
   const [address, setAddress] = useState(null);
   const [showAddress, setShowAddress] = useState(false);
@@ -70,14 +72,16 @@ const Announce = ({ id, data }) => {
     cityRef.current.selectedIndex = 0;
   };
 
-  const getAddress = async () => {
+  const getData = async () => {
     const userRef = doc(db, "users", announceData.uid);
     const userSnap = await getDoc(userRef);
 
     if (userSnap.exists()) {
       const userDocData = userSnap.data();
       const data = userDocData.temporaryAddress;
-      console.log(data);
+
+      setEmail(userDocData.email);
+
       if (data) {
         setAddress(data);
         setStates(State.getStatesOfCountry(data?.country));
@@ -444,10 +448,24 @@ const Announce = ({ id, data }) => {
         <Grid xs={6}>
           <Grid.Container>
             <Grid xs={12}>
-              <Input label="First name" initialValue={firstName} fullWidth readOnly={!edit} ref={firstNameRef} />
+              <Input
+                label="First name"
+                initialValue={firstName}
+                fullWidth
+                readOnly={!edit}
+                ref={firstNameRef}
+                contentRight={edit && <BsPencilSquare />}
+              />
             </Grid>
             <Grid xs={12}>
-              <Input label="Last name" initialValue={lastName} fullWidth readOnly={!edit} ref={lastNameRef} />
+              <Input
+                label="Last name"
+                initialValue={lastName}
+                fullWidth
+                readOnly={!edit}
+                ref={lastNameRef}
+                contentRight={edit && <BsPencilSquare />}
+              />
             </Grid>
           </Grid.Container>
         </Grid>
@@ -493,6 +511,7 @@ const Announce = ({ id, data }) => {
             size="lg"
             readOnly={!edit}
             ref={descriptionRef}
+            contentRight={edit && <BsPencilSquare />}
           />
         </Grid>
         {announceData.status !== "closed" &&
@@ -504,15 +523,18 @@ const Announce = ({ id, data }) => {
                 color="gradient"
                 onPress={() => {
                   setShowAddress(!showAddress);
-                  if (!showAddress) getAddress();
+                  if (!showAddress) getData();
                 }}
               >
-                {!showAddress ? "Show" : "Hide"} address
+                {!showAddress ? "Show" : "Hide"} address and contact information
               </Button>
             </Grid>
           )}
         {showAddress && (
           <>
+            <Grid xs={12}>
+              <Input size="lg" label="Email" fullWidth type="email" initialValue={email} readOnly />
+            </Grid>
             <Grid xs={12}>
               <div className={styles.selectMenu}>
                 <label className={styles.selectLabel}>Country</label>
@@ -586,6 +608,7 @@ const Announce = ({ id, data }) => {
                 initialValue={address?.street}
                 readOnly={!edit}
                 ref={streetRef}
+                contentRight={edit && <BsPencilSquare />}
               />
             </Grid>
             <Grid xs={6}>
@@ -597,6 +620,7 @@ const Announce = ({ id, data }) => {
                 initialValue={address?.streetNumber}
                 readOnly={!edit}
                 ref={streetNumberRef}
+                contentRight={edit && <BsPencilSquare />}
               />
             </Grid>
             <Grid xs={6}>
@@ -607,6 +631,7 @@ const Announce = ({ id, data }) => {
                 initialValue={address?.building}
                 readOnly={!edit}
                 ref={buildingRef}
+                contentRight={edit && <BsPencilSquare />}
               />
             </Grid>
             <Grid xs={12}>
@@ -618,6 +643,7 @@ const Announce = ({ id, data }) => {
                 initialValue={address?.apartment}
                 readOnly={!edit}
                 ref={apartmentRef}
+                contentRight={edit && <BsPencilSquare />}
               />
             </Grid>
             <Grid xs={12}>
@@ -629,6 +655,7 @@ const Announce = ({ id, data }) => {
                 initialValue={address?.zipcode}
                 readOnly={!edit}
                 ref={zipcodeRef}
+                contentRight={edit && <BsPencilSquare />}
               />
             </Grid>
             <Grid xs={12}>

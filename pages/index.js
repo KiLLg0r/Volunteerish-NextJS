@@ -25,7 +25,7 @@ function Index({
   initialUserClosedAnnounces,
   userClosedAnnouncesLastKey,
 }) {
-  const { userData, currentUser } = auth;
+  const { userData } = auth;
 
   const myAnnounces = JSON.parse(initialUserAnnounces);
   const myHelpingAnnounces = JSON.parse(initialUserHelpingAnnounces);
@@ -39,9 +39,7 @@ function Index({
 
   return (
     <section className={styles.dashboard}>
-      <h2 className={styles.title} onClick={() => console.log(currentUser)}>
-        Dashboard
-      </h2>
+      <h2 className={styles.title}>Dashboard</h2>
       <Grid.Container gap={2}>
         <Grid xs={12} sm={3}>
           <Col>

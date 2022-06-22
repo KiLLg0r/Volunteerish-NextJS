@@ -1,0 +1,104 @@
+.title {
+  color: var(--nextui-colors-red500);
+  margin-block: 0.5rem;
+  text-align: center;
+}
+
+.messagesBody {
+  padding-inline: 0;
+  background-color: var(--nextui-colors-backgroundSecondary);
+  border-radius: 0.875rem;
+  padding: 1rem;
+  height: 100%;
+}
+
+.conversationsList,
+.messagesList {
+  overflow-y: auto;
+  height: calc(100vh - 10rem);
+
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.messagesList {
+  height: calc(100vh - 15rem);
+  width: 100%;
+}
+
+.conversationItem:not(:last-child) {
+  margin-bottom: 1rem;
+  cursor: pointer;
+}
+
+.messageHeader {
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+  margin-inline: 0;
+
+  svg {
+    font-size: 2rem;
+    color: var(--nextui-colors-red500);
+  }
+}
+
+.sendMessage {
+  --nextui--inputColor: #1c1f24;
+
+  svg {
+    font-size: 1.5rem;
+    color: var(--nextui-colors-red500);
+  }
+}
+
+.message {
+  width: 100%;
+  margin-block: 0.5rem;
+  height: fit-content;
+}
+
+.sentBy,
+.receivedBy {
+  padding: 0.5rem;
+  border-radius: 0.875rem;
+}
+
+.sentBy {
+  float: right;
+  background: var(--nextui-colors-gradient);
+  border-top-right-radius: 0;
+}
+
+.receivedBy {
+  float: left;
+  background-color: #1c1f24;
+  border-top-left-radius: 0;
+}
+
+.sendNewMessage {
+  position: fixed;
+  bottom: 1rem;
+  left: 31vw;
+  color: var(--nextui-colors-red500);
+  font-size: 3rem;
+  cursor: pointer;
+}
+
+@media screen and (min-width: 651px) and (max-width: 960px) {
+  .sendNewMessage {
+    right: 2rem;
+    left: unset;
+  }
+}
+
+@media screen and (max-width: 650px) {
+  .sendNewMessage {
+    right: 2rem;
+    left: unset;
+    bottom: 5rem;
+  }
+}
