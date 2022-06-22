@@ -25,7 +25,6 @@ const Announce = ({ id, data }) => {
 
   const [errorModal, setErrorModal] = useState(false);
   const [helpModal, setHelpModal] = useState(false);
-  const [editModal, setEditModal] = useState(false);
   const [confirmEditModal, setConfirmEditModal] = useState(false);
   const [cancelEditModal, setCancelEditModal] = useState(false);
   const [closeAnnounceModal, setCloseAnnounceModal] = useState(false);
@@ -77,7 +76,7 @@ const Announce = ({ id, data }) => {
 
     if (userSnap.exists()) {
       const userDocData = userSnap.data();
-      const data = userSnap.get("temporaryAddress");
+      const data = userDocData.temporaryAddress;
       console.log(data);
       if (data) {
         setAddress(data);
@@ -98,20 +97,6 @@ const Announce = ({ id, data }) => {
         setCities(City.getCitiesOfState(userDocData?.country, userDocData?.state));
       }
     }
-  };
-
-  const helpPerson = async () => {
-    const announceDoc = doc(db, "announces", id);
-    await updateDoc(announceDoc, {
-      helpedBy: currentUser.uid,
-      status: "helping",
-    }).catch((error) => {
-      console.log(error);
-      setErrorModal(true);
-      setErrorModalMessage("Something went wrong. You can't help this person right now");
-    });
-
-    router.reload();
   };
 
   const calculatePoints = () => {
@@ -284,6 +269,38 @@ const Announce = ({ id, data }) => {
     return 1;
   };
 
+  const helpPerson = async () => {
+    if (userData?.helpingAnnounceID) {
+      setErrorModalMessage(
+        "You already help someone. You cannot help other people until you finish with the one you help now!",
+      );
+      setErrorModal(true);
+      return;
+    }
+
+    const announceDoc = doc(db, "announces", id);
+    const userDoc = doc(db, "users", currentUser.uid);
+
+    await updateDoc(announceDoc, {
+      helpedBy: currentUser.uid,
+      status: "helping",
+    }).catch((error) => {
+      console.log(error);
+      setErrorModal(true);
+      setErrorModalMessage("Something went wrong. You can't help this person right now");
+    });
+
+    await updateDoc(userDoc, {
+      helpingAnnounceID: id,
+    }).catch((error) => {
+      console.log(error);
+      setErrorModal(true);
+      setErrorModalMessage("Something went wrong. You can't help this person right now");
+    });
+
+    if (errorModalMessage.length === 0) router.reload();
+  };
+
   const saveChanges = async () => {
     const announceDoc = doc(db, "announces", id);
     const userDoc = doc(db, "users", currentUser.uid);
@@ -296,8 +313,8 @@ const Announce = ({ id, data }) => {
         points: calculatePoints(),
       }).catch((error) => {
         console.log(error);
-        setErrorModal(true);
         setErrorModalMessage("Something went wrong. We couldn't update the new changes!");
+        setErrorModal(true);
       });
 
     if (userData?.temporaryAddress) {
@@ -314,12 +331,12 @@ const Announce = ({ id, data }) => {
         },
       }).catch((error) => {
         console.log(error);
-        setErrorModal(true);
         setErrorModalMessage("Something went wrong. We couldn't update the new changes!");
+        setErrorModal(true);
       });
     }
 
-    router.reload();
+    if (errorModalMessage.length === 0) router.reload();
   };
 
   const closeAnnounce = async () => {
@@ -330,52 +347,65 @@ const Announce = ({ id, data }) => {
       status: "closed",
     }).catch((error) => {
       console.log(error);
-      setErrorModal(true);
       setErrorModalMessage("Something went wrong. We couldn't close the announce!");
+      setErrorModal(true);
     });
-
-    const userSnap = await getDoc(userDoc);
-
-    if (userSnap.exists() && userSnap.get("temporaryAddress"))
-      await updateDoc(userDoc, {
-        temporaryAddress: deleteField(),
-      }).catch((error) => {
-        console.log(error);
-        setErrorModal(true);
-        setErrorModalMessage("Something went wrong. We couldn't close the announce!");
-      });
 
     await updateDoc(userDoc, {
       announceID: "",
+      temporaryAddress: deleteField(),
+    }).catch((error) => {
+      console.log(error);
+      setErrorModalMessage("Something went wrong. We couldn't close the announce!");
+      setErrorModal(true);
     });
 
-    router.reload();
+    if (errorModalMessage.length === 0) router.reload();
   };
 
   const finishAnnounce = async () => {
     const announceDoc = doc(db, "announces", id);
-    const userDoc = doc(db, "users", currentUser.uid);
+    const helpingUserDoc = doc(db, "users", announceData.helpedBy);
+    const helpedUserDoc = doc(db, "users", announceData.uid);
 
     await updateDoc(announceDoc, {
       status: "helped",
     }).catch((error) => {
       console.log(error);
-      setErrorModal(true);
       setErrorModalMessage("Something went wrong. We couldn't finish the announce!");
+      setErrorModal(true);
     });
 
-    await updateDoc(userDoc, {
+    await updateDoc(helpedUserDoc, {
       temporaryAddress: deleteField(),
-      points: userData.points + announceData.points,
-      helpedPeople: userData.helpedPeople + 1,
       announceID: "",
     }).catch((error) => {
       console.log(error);
-      setErrorModal(true);
       setErrorModalMessage("Something went wrong. We couldn't finish the announce!");
+      setErrorModal(true);
     });
 
-    router.reload();
+    const helpingUserSnap = await getDoc(helpingUserDoc).catch((error) =>
+      console.log("I couldn't get the user's who help me data"),
+    );
+    const helpingUserData = helpingUserSnap.data();
+
+    console.log(helpingUserSnap.data());
+
+    const points = helpingUserData.points + announceData.points;
+    const helpedPeople = helpingUserData.helpedPeople + 1;
+
+    await updateDoc(helpingUserDoc, {
+      points: points,
+      helpedPeople: helpedPeople,
+      helpingAnnounceID: "",
+    }).catch((error) => {
+      console.log(error);
+      setErrorModalMessage("Something went wrong. We couldn't finish the announce!");
+      setErrorModal(true);
+    });
+
+    if (errorModalMessage.length === 0) router.reload();
   };
 
   useEffect(() => {
@@ -633,7 +663,7 @@ const Announce = ({ id, data }) => {
               <>
                 {announceData.status !== "closed" && announceData.status !== "helped" && (
                   <Grid xs={12} sm={6}>
-                    <Button color="success" onPress={() => setEditModal(true)} css={{ width: "100%" }}>
+                    <Button color="success" onPress={() => setEdit(true)} css={{ width: "100%" }}>
                       Edit announce
                     </Button>
                   </Grid>
@@ -828,44 +858,6 @@ const Announce = ({ id, data }) => {
                 css={{ width: "100%" }}
               >
                 Close
-              </Button>
-            </Grid>
-          </Grid.Container>
-        </Modal.Footer>
-      </Modal>
-      <Modal
-        closeButton
-        aria-labelledby="Edit announce"
-        open={editModal}
-        onClose={() => setEditModal(false)}
-        blur
-        css={{ backgroundColor: "var(--nextui-colors-background)" }}
-      >
-        <Modal.Header>
-          <h3>Edit this announce ?</h3>
-        </Modal.Header>
-        <Modal.Body>
-          <h5 style={{ textAlign: "center" }}>Are you sure you want to edit this announce ?</h5>
-        </Modal.Body>
-        <Modal.Footer>
-          <Grid.Container gap={1} justify="center">
-            <Grid xs>
-              <Button auto flat ripple color="error" onPress={() => setEditModal(false)} css={{ width: "100%" }}>
-                Cancel
-              </Button>
-            </Grid>
-            <Grid xs>
-              <Button
-                auto
-                ripple
-                color="success"
-                onPress={() => {
-                  setEditModal(false);
-                  setEdit(true);
-                }}
-                css={{ width: "100%" }}
-              >
-                Edit
               </Button>
             </Grid>
           </Grid.Container>
