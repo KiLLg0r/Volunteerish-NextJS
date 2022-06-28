@@ -6,12 +6,8 @@ import { useEffect, useMemo } from "react";
 import { useAuth } from "../../context/AuthContext";
 
 import EN from "../../public/svg/flags/us.svg";
-import FR from "../../public/svg/flags/fr.svg";
-import DE from "../../public/svg/flags/de.svg";
-import ES from "../../public/svg/flags/es.svg";
 import RO from "../../public/svg/flags/ro.svg";
-import UA from "../../public/svg/flags/ua.svg";
-import RU from "../../public/svg/flags/ru.svg";
+import languages from "../../utilities/languages.json";
 
 import styles from "../styles/Settings.module.scss";
 
@@ -32,9 +28,9 @@ export const App = () => {
 
   return (
     <Container sm className={styles.appSettings}>
-      <h2 className={styles.title}>App settings</h2>
+      <h2 className={styles.title}>{languages[Language].appSettings.title}</h2>
       <Row align="center" className={styles.darkMode}>
-        <span>Dark mode: </span>
+        <span>{languages[Language].appSettings.darkMode}: </span>
         <Spacer x={0.5} />
         <Switch
           checked={isDark}
@@ -48,7 +44,7 @@ export const App = () => {
       </Row>
       <Spacer />
       <Row align="center" className={styles.languages}>
-        <label>Language: </label>
+        <label>{languages[Language].appSettings.language}: </label>
         <Dropdown>
           <Dropdown.Button flat color="error">
             {languageSelectedValue}
@@ -67,40 +63,10 @@ export const App = () => {
                 <Col>English</Col>
               </Row>
             </Dropdown.Item>
-            <Dropdown.Item key="Français">
-              <Row align="center" gap={1}>
-                <FR className={styles.countryFlag} data-text="France flag" />
-                <Col>Français</Col>
-              </Row>
-            </Dropdown.Item>
-            <Dropdown.Item key="Deutsch">
-              <Row align="center" gap={1}>
-                <DE className={styles.countryFlag} data-text="Germany flag" />
-                <Col>Deutsch</Col>
-              </Row>
-            </Dropdown.Item>
-            <Dropdown.Item key="Español">
-              <Row align="center" gap={1}>
-                <ES className={styles.countryFlag} data-text="Spain flag" />
-                <Col>Español</Col>
-              </Row>
-            </Dropdown.Item>
             <Dropdown.Item key="Română">
               <Row align="center" gap={1}>
                 <RO className={styles.countryFlag} data-text="Romania flag" />
                 <Col>Română</Col>
-              </Row>
-            </Dropdown.Item>
-            <Dropdown.Item key="Український">
-              <Row align="center" gap={1}>
-                <UA className={styles.countryFlag} data-text="Ukraine flag" />
-                <Col>Український</Col>
-              </Row>
-            </Dropdown.Item>
-            <Dropdown.Item key="Русский">
-              <Row align="center" gap={1}>
-                <RU className={styles.countryFlag} data-text="Russia flag" />
-                <Col>Русский</Col>
               </Row>
             </Dropdown.Item>
           </Dropdown.Menu>
@@ -108,7 +74,7 @@ export const App = () => {
       </Row>
       <Spacer />
       <Row align="center" className={styles.fontSize}>
-        <label>Font size: </label>
+        <label>{languages[Language].appSettings.fontSize.title}: </label>
         <Dropdown>
           <Dropdown.Button flat color="error">
             {fontSizeSelectedValue}
@@ -122,16 +88,16 @@ export const App = () => {
             onSelectionChange={setFontSize}
           >
             <Dropdown.Item key="14px" css={{ fontSize: "14px" }}>
-              Small
+              {languages[Language].appSettings.fontSize.small}
             </Dropdown.Item>
             <Dropdown.Item key="16px" css={{ fontSize: "16px" }}>
-              Normal
+              {languages[Language].appSettings.fontSize.normal}
             </Dropdown.Item>
             <Dropdown.Item key="18px" css={{ fontSize: "18px" }}>
-              Big
+              {languages[Language].appSettings.fontSize.big}
             </Dropdown.Item>
             <Dropdown.Item key="20px" css={{ fontSize: "20px" }}>
-              Very big
+              {languages[Language].appSettings.fontSize.veryBig}
             </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>

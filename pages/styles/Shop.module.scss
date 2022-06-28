@@ -1,0 +1,97 @@
+.productPage {
+  padding-top: 5rem;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin: 0;
+  }
+}
+
+.title {
+  color: var(--nextui-colors-red500);
+  margin-block: 0.5rem;
+  text-align: center;
+}
+
+.userProduct,
+.rightMenu {
+  background-color: var(--nextui-colors-backgroundSecondary);
+  border-radius: 0.875rem;
+  &:not(:last-child) {
+    margin-bottom: 1rem;
+  }
+}
+
+.rightMenu {
+  width: 100%;
+  padding: 1rem;
+  height: fit-content;
+}
+
+.productCode {
+  color: var(--nextui-colors-textSecondary);
+  padding: 0.5rem;
+  background-color: var(--nextui-colors-backgroundSecondary);
+  border-radius: 0.875rem;
+}
+
+.color {
+  height: 2.5rem;
+  padding: 0.125rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  margin-right: 1rem;
+
+  .innerColor {
+    height: 100%;
+    border-radius: 50%;
+    width: 100%;
+  }
+}
+
+.productHeader {
+  font-size: 1.5rem;
+}
+
+.cart {
+  position: fixed;
+  bottom: 1rem;
+  right: 2rem;
+  background-color: var(--nextui-colors-red500);
+  font-size: 3rem;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  padding: 0.75rem;
+  cursor: pointer;
+
+  svg {
+    height: 100%;
+    width: 100%;
+    display: block;
+    margin-inline: auto;
+  }
+}
+
+.productDescription {
+  height: 1.5rem;
+  overflow: hidden;
+}
+
+.cartHeader {
+  font-size: 1.5rem;
+}
+
+@media screen and (max-width: 650px) {
+  .productPage {
+    padding-top: 1rem;
+    padding-bottom: 5rem;
+  }
+  .cart {
+    bottom: 5rem;
+  }
+}

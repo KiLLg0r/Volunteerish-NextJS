@@ -7,12 +7,13 @@ import { useState, useRef } from "react";
 import { db } from "../../config/firebase";
 import { doc, updateDoc, collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { Country, State, City } from "country-state-city";
+import languages from "../../utilities/languages.json";
 
 import styles from "../styles/Announces.module.scss";
 
 const AddNewAnnounce = () => {
   const router = useRouter();
-  const { currentUser, userData } = useAuth();
+  const { currentUser, userData, Language } = useAuth();
 
   const firstName = currentUser.displayName.split(" ")[0];
   const lastName = currentUser.displayName.split(" ")[1];
@@ -43,8 +44,7 @@ const AddNewAnnounce = () => {
   const [apartment, setApartment] = useState("");
   const [zipcode, setZipcode] = useState("");
 
-  const defaultMessage =
-    "Hi. I need your help. I cannot write about what I need but this announce contains the category and difficulty of the task. It can be connected with me by message or call. Thank you very much!";
+  const defaultMessage = languages[Language].defaultMessage;
 
   const showStates = () => {
     setCountryChange(true);
@@ -79,7 +79,7 @@ const AddNewAnnounce = () => {
       },
     }).catch((error) => {
       console.log(error);
-      setErrorModalMessage("Failed to set address!");
+      setErrorModalMessage(languages[Language].modal.addNewAnnounce.error.address);
       setErrorModal(true);
     });
   };
@@ -90,7 +90,7 @@ const AddNewAnnounce = () => {
       announceID: id,
     }).catch((error) => {
       console.log(error);
-      setErrorModalMessage("Failed to set announce ID!");
+      setErrorModalMessage(languages[Language].modal.addNewAnnounce.error.announceID);
       setErrorModal(true);
     });
   };
@@ -120,50 +120,50 @@ const AddNewAnnounce = () => {
 
   const validateErrors = () => {
     if (category.length === 0 && difficulty.length === 0) {
-      setErrorModalMessage("You have to provide a category and a difficulty for the announcement!");
+      setErrorModalMessage(languages[Language].modal.addNewAnnounce.error.categoryAndDifficulty);
       setErrorModal(true);
       return 0;
     } else if (category.length === 0) {
-      setErrorModalMessage("You have to provide a category for the announcement!");
+      setErrorModalMessage(languages[Language].modal.addNewAnnounce.error.category);
       setErrorModal(true);
       return 0;
     } else if (difficulty.length === 0) {
-      setErrorModalMessage("You have to provide a difficulty for the announcement!");
+      setErrorModalMessage(languages[Language].modal.addNewAnnounce.error.difficulty);
       setErrorModal(true);
       return 0;
     }
 
     if (otherAddress) {
       if (countryRef.current.value === "") {
-        setErrorModalMessage("You have to set a country for the address!");
+        setErrorModalMessage(languages[Language].modal.addNewAnnounce.error.country);
         setErrorModal(true);
         return 0;
       } else if (stateRef.current.value === "") {
-        setErrorModalMessage("You have to set a state for the address!");
+        setErrorModalMessage(languages[Language].modal.addNewAnnounce.error.state);
         setErrorModal(true);
         return 0;
       } else if (cityRef.current.value === "") {
-        setErrorModalMessage("You have to set a city for the address!");
+        setErrorModalMessage(languages[Language].modal.addNewAnnounce.error.city);
         setErrorModal(true);
         return 0;
       } else if (street.length === 0) {
-        setErrorModalMessage("You have to set a street for the address!");
+        setErrorModalMessage(languages[Language].modal.addNewAnnounce.error.street);
         setErrorModal(true);
         return 0;
       } else if (streetNumber.length === 0) {
-        setErrorModalMessage("You have to set a street number for the address!");
+        setErrorModalMessage(languages[Language].modal.addNewAnnounce.error.streetNumber);
         setErrorModal(true);
         return 0;
       } else if (building.length === 0) {
-        setErrorModalMessage("You have to set a building for the address!");
+        setErrorModalMessage(languages[Language].modal.addNewAnnounce.error.building);
         setErrorModal(true);
         return 0;
       } else if (apartment.length === 0) {
-        setErrorModalMessage("You have to set an apartment number for the address!");
+        setErrorModalMessage(languages[Language].modal.addNewAnnounce.error.apartment);
         setErrorModal(true);
         return 0;
       } else if (zipcode.length === 0) {
-        setErrorModalMessage("You have to set a zipcode for the address!");
+        setErrorModalMessage(languages[Language].modal.addNewAnnounce.error.zipcode);
         setErrorModal(true);
         return 0;
       }
@@ -315,11 +315,11 @@ const AddNewAnnounce = () => {
               icon={<BsChevronLeft />}
               className={styles.newAnnounceHeader}
             >
-              Go back
+              {languages[Language].goBack}
             </Button>
           </Grid>
           <Grid xs={12}>
-            <h2 className={styles.title}>Add a new announce</h2>
+            <h2 className={styles.title}>{languages[Language].announces.addNewAnnounce.title}</h2>
           </Grid>
           <Grid xs={6}>
             <Image
@@ -337,51 +337,56 @@ const AddNewAnnounce = () => {
             <Grid.Container>
               <Grid xs={12}>
                 <Input
-                  label="First name"
+                  label={languages[Language].announces.addNewAnnounce.firstName}
                   initialValue={firstName}
                   fullWidth
                   onChange={(e) => setFName(e.target.value)}
                 />
               </Grid>
               <Grid xs={12}>
-                <Input label="Last name" initialValue={lastName} fullWidth onChange={(e) => setLName(e.target.value)} />
+                <Input
+                  label={languages[Language].announces.addNewAnnounce.lastName}
+                  initialValue={lastName}
+                  fullWidth
+                  onChange={(e) => setLName(e.target.value)}
+                />
               </Grid>
             </Grid.Container>
           </Grid>
           <Grid xs={12}>
             <div className={styles.selectMenu}>
-              <label className={styles.selectLabel}>Category</label>
+              <label className={styles.selectLabel}>{languages[Language].announces.filter.category}</label>
               <select className={styles.select} onChange={(e) => setCategory(e.target.value)}>
-                <option value="">Select a category</option>
-                <option value="Groceries">Groceries</option>
-                <option value="School meditations">School meditations</option>
-                <option value="Shopping">Shopping</option>
-                <option value="Cleaning">Cleaning</option>
-                <option value="Walking">Walking</option>
-                <option value="Cooking">Cooking</option>
-                <option value="Paying of bills">Paying of bills</option>
-                <option value="Emotional support">Emotional support</option>
-                <option value="Physical labour">Physical labour</option>
-                <option value="Hard work">Hard work</option>
+                <option value="">{languages[Language].announces.filter.categoryOption}</option>
+                <option value="Groceries">{languages[Language].announces.filter.groceries}</option>
+                <option value="School meditations">{languages[Language].announces.filter.schoolMeditations}</option>
+                <option value="Shopping">{languages[Language].announces.filter.shopping}</option>
+                <option value="Cleaning">{languages[Language].announces.filter.cleaning}</option>
+                <option value="Walking">{languages[Language].announces.filter.walking}</option>
+                <option value="Cooking">{languages[Language].announces.filter.cooking}</option>
+                <option value="Paying of bills">{languages[Language].announces.filter.payingOfBills}</option>
+                <option value="Emotional support">{languages[Language].announces.filter.emotionalSupport}</option>
+                <option value="Physical labour">{languages[Language].announces.filter.physicalLabour}</option>
+                <option value="Hard work">{languages[Language].announces.filter.hardWork}</option>
               </select>
             </div>
           </Grid>
           <Grid xs={12}>
             <div className={styles.selectMenu}>
-              <label className={styles.selectLabel}>Difficulty</label>
+              <label className={styles.selectLabel}>{languages[Language].announces.filter.difficulty}</label>
               <select className={styles.select} onChange={(e) => setDifficulty(e.target.value)}>
-                <option value="">Select a difficulty</option>
-                <option value="0">Easy</option>
-                <option value="1">Medium</option>
-                <option value="2">Hard</option>
+                <option value="">{languages[Language].announces.filter.difficultyOption}</option>
+                <option value="0">{languages[Language].announces.filter.easy}</option>
+                <option value="1">{languages[Language].announces.filter.medium}</option>
+                <option value="2">{languages[Language].announces.filter.hard}</option>
               </select>
             </div>
           </Grid>
           <Grid xs={12}>
             <Textarea
               minRows={15}
-              label="Description"
-              placeholder="Enter a thorough description of the announce"
+              label={languages[Language].announces.addNewAnnounce.description}
+              placeholder={languages[Language].announces.addNewAnnounce.descriptionInfo}
               fullWidth
               size="lg"
               onChange={(e) => setDescription(e.target.value)}
@@ -389,16 +394,16 @@ const AddNewAnnounce = () => {
           </Grid>
           <Grid xs={12}>
             <Checkbox isSelected={otherAddress} color="error" onChange={setOtherAddress}>
-              Use another address compared to the one from your account
+              {languages[Language].announces.addNewAnnounce.anotherAddress}
             </Checkbox>
           </Grid>
           {otherAddress && (
             <>
               <Grid xs={12}>
                 <div className={styles.selectMenu}>
-                  <label className={styles.selectLabel}>Country</label>
+                  <label className={styles.selectLabel}>{languages[Language].announces.filter.country}</label>
                   <select className={styles.select} onChange={showStates} ref={countryRef}>
-                    <option value="">Select country</option>
+                    <option value="">{languages[Language].announces.filter.countryOption}</option>
                     {countries &&
                       countries.map((country) => {
                         return (
@@ -413,10 +418,10 @@ const AddNewAnnounce = () => {
               <Grid xs={12}>
                 <div className={styles.selectMenu}>
                   <label htmlFor="state" className={styles.selectLabel}>
-                    State
+                    {languages[Language].announces.filter.state}
                   </label>
                   <select id="state" onChange={showCities} className={styles.select} ref={stateRef}>
-                    {countryChange && <option value="">Select state</option>}
+                    {countryChange && <option value="">{languages[Language].announces.filter.stateOption}</option>}
                     {states &&
                       states.map((state) => {
                         return (
@@ -431,10 +436,10 @@ const AddNewAnnounce = () => {
               <Grid xs={12}>
                 <div className={styles.selectMenu}>
                   <label htmlFor="city" className={styles.selectLabel}>
-                    City
+                    {languages[Language].announces.filter.city}
                   </label>
                   <select id="city" className={styles.select} ref={cityRef}>
-                    {stateChange && <option value="">Select city</option>}
+                    {stateChange && <option value="">{languages[Language].announces.filter.cityOption}</option>}
                     {cities &&
                       cities.map((city) => {
                         return (
@@ -447,31 +452,47 @@ const AddNewAnnounce = () => {
                 </div>
               </Grid>
               <Grid xs={12}>
-                <Input size="lg" label="Street" fullWidth onChange={(e) => setStreet(e.target.value)} />
+                <Input
+                  size="lg"
+                  label={languages[Language].address.street}
+                  fullWidth
+                  onChange={(e) => setStreet(e.target.value)}
+                />
               </Grid>
               <Grid xs={6}>
                 <Input
                   size="lg"
-                  label="Street number"
+                  label={languages[Language].address.streetNumber}
                   fullWidth
                   type="number"
                   onChange={(e) => setStreetNumber(e.target.value)}
                 />
               </Grid>
               <Grid xs={6}>
-                <Input size="lg" label="Building" fullWidth onChange={(e) => setBuilding(e.target.value)} />
+                <Input
+                  size="lg"
+                  label={languages[Language].address.building}
+                  fullWidth
+                  onChange={(e) => setBuilding(e.target.value)}
+                />
               </Grid>
               <Grid xs={12}>
                 <Input
                   size="lg"
-                  label="Apartment"
+                  label={languages[Language].address.apartment}
                   fullWidth
                   type="number"
                   onChange={(e) => setApartment(e.target.value)}
                 />
               </Grid>
               <Grid xs={12}>
-                <Input size="lg" label="Zipcode" fullWidth type="number" onChange={(e) => setZipcode(e.target.value)} />
+                <Input
+                  size="lg"
+                  label={languages[Language].address.zipcode}
+                  fullWidth
+                  type="number"
+                  onChange={(e) => setZipcode(e.target.value)}
+                />
               </Grid>
               <Grid xs={12}>
                 <Spacer />
@@ -480,14 +501,14 @@ const AddNewAnnounce = () => {
           )}
           <Grid xs={12}>
             <Button color="gradient" auto css={{ width: "100%" }} size="lg" onPress={addAnnounce}>
-              Add announce
+              {languages[Language].announces.addNewAnnounce.addAnnounce}
             </Button>
           </Grid>
         </Grid.Container>
       </form>
       <Modal
         closeButton
-        aria-labelledby="Change email"
+        aria-labelledby="Error modal"
         open={errorModal}
         onClose={() => {
           setErrorModal(false);

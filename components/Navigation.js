@@ -2,16 +2,20 @@ import { useRouter } from "next/router";
 import { Link, Row } from "@nextui-org/react";
 import { BsFillHouseFill, BsFillChatDotsFill, BsBagFill } from "react-icons/bs";
 import { FaCog, FaClipboard } from "react-icons/fa";
+import languages from "../utilities/languages.json";
 
 import styles from "./styles/Navigation.module.scss";
+import { useAuth } from "../context/AuthContext";
 
 const ActiveLink = ({ href, children }) => {
   const router = useRouter();
-  const condition = router.pathname === href;
-  const secondCondition = router.pathname === "/settings/app" || router.pathname === "/settings/account";
+  const condition = router.pathname === href || (router.pathname.includes(href) && href !== "/");
 
-  const handleClick = (e) => {
-    e.preventDefault;
+  const handleClick = () => {
+    router.push(href);
+  };
+
+  const settingsPageClick = () => {
     localStorage.setItem("settingsPage", JSON.stringify([true, false, false, false]));
     router.push(href);
   };
@@ -20,14 +24,14 @@ const ActiveLink = ({ href, children }) => {
     <Link
       css={{
         flexDirection: "column",
-        color: condition || (href === "/settings" && secondCondition) ? "$red500" : "$textSecondary",
+        color: condition ? "$red500" : "$textSecondary",
         "@xs": {
           flexDirection: "row",
           gap: "0rem",
         },
       }}
-      onClick={handleClick}
-      className={`${styles.link} ${condition || (href === "/settings" && secondCondition) ? styles.active : ""}`}
+      onClick={href === "/settings" ? settingsPageClick : handleClick}
+      className={`${styles.link} ${condition ? styles.active : ""}`}
     >
       {children}
     </Link>
@@ -35,6 +39,7 @@ const ActiveLink = ({ href, children }) => {
 };
 
 const Navigation = () => {
+  const { Language } = useAuth();
   return (
     <Row
       fluid
@@ -52,7 +57,7 @@ const Navigation = () => {
           <ActiveLink href="/">
             <>
               <BsFillHouseFill />
-              <span>Home</span>
+              <span>{languages[Language].nav.home}</span>
             </>
           </ActiveLink>
         </li>
@@ -60,7 +65,7 @@ const Navigation = () => {
           <ActiveLink href="/announces">
             <>
               <FaClipboard />
-              <span>Announces</span>
+              <span>{languages[Language].nav.announces}</span>
             </>
           </ActiveLink>
         </li>
@@ -68,7 +73,7 @@ const Navigation = () => {
           <ActiveLink href="/shop">
             <>
               <BsBagFill />
-              <span>Shop</span>
+              <span>{languages[Language].nav.shop}</span>
             </>
           </ActiveLink>
         </li>
@@ -76,7 +81,7 @@ const Navigation = () => {
           <ActiveLink href="/messages">
             <>
               <BsFillChatDotsFill />
-              <span>Messages</span>
+              <span>{languages[Language].nav.messages}</span>
             </>
           </ActiveLink>
         </li>
@@ -84,7 +89,7 @@ const Navigation = () => {
           <ActiveLink href="/settings">
             <>
               <FaCog />
-              <span>Settings</span>
+              <span>{languages[Language].nav.settings}</span>
             </>
           </ActiveLink>
         </li>

@@ -7,13 +7,13 @@ import Link from "next/link";
 
 import { withPublic } from "../utilities/routes";
 import { validateError } from "../utilities/functions";
-
+import languages from "../utilities/languages.json";
 import styles from "./styles/Auth.module.scss";
 import { Button, Input, Spacer } from "@nextui-org/react";
 import AuthContainer, { AuthLeftSide, AuthRightSide } from "../components/AuthContainer";
 
 const Register = () => {
-  const { register } = useAuth();
+  const { register, Language } = useAuth();
   const [error, setError] = useState({
     email: "",
     password: "",
@@ -32,7 +32,7 @@ const Register = () => {
       return setError({
         email: "",
         password: "",
-        passwordConfirm: "Passwords do not match",
+        passwordConfirm: languages[Language].register.notMatch,
       });
     }
 
@@ -72,12 +72,12 @@ const Register = () => {
         </div>
       </AuthLeftSide>
       <AuthRightSide>
-        <h1 className={styles.title}>Create new account</h1>
+        <h1 className={styles.title}>{languages[Language].register.title}</h1>
         <form className="contact-form" onSubmit={handleSubmit}>
           <Input
             clearable
-            label="Email"
-            placeholder="Enter your email"
+            label={languages[Language].email}
+            placeholder={languages[Language].register.emailPlaceholder}
             fullWidth
             onChange={(e) => {
               setEmail(e.target.value);
@@ -96,8 +96,8 @@ const Register = () => {
           <Spacer y={error.email.length ? 2 : 1} />
           <Input.Password
             clearable
-            label="Password"
-            placeholder="Enter your password"
+            label={languages[Language].password}
+            placeholder={languages[Language].register.passPlaceholder}
             fullWidth
             onChange={(e) => {
               setPassword(e.target.value);
@@ -116,8 +116,8 @@ const Register = () => {
           <Spacer y={error.password.length ? 2 : 1} />
           <Input.Password
             clearable
-            label="Confirm password"
-            placeholder="Enter your password again"
+            label={languages[Language].confirmPassword}
+            placeholder={languages[Language].register.confirmPassPlaceholder}
             fullWidth
             onChange={(e) => {
               setPasswordConfirm(e.target.value);
@@ -135,11 +135,11 @@ const Register = () => {
           />
           <Spacer y={error.passwordConfirm.length ? 3 : 2} />
           <Button disabled={loading} type="submit" css={{ width: "100%", backgroundColor: "$red500" }}>
-            Create account
+            {languages[Language].register.title}
           </Button>
         </form>
         <div className={styles.linkText}>
-          Already have an account? <Link href="/login">Log in</Link>
+          {languages[Language].register.link} <Link href="/login">{languages[Language].register.link2}</Link>
         </div>
       </AuthRightSide>
     </AuthContainer>

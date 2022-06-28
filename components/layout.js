@@ -23,8 +23,8 @@ const Layout = ({ children }) => {
           backgroundColor: "$background",
           minHeight: "100vh",
           paddingTop: currentUser && "1rem",
-          paddingBottom: currentUser && "5rem",
           paddingBottom: (router.asPath === "/create-new-account" || router.query.id) && "1rem",
+          paddingBottom: currentUser && "5rem",
 
           "@xs": {
             paddingTop: currentUser ? "5rem" : "1rem",

@@ -33,6 +33,11 @@ export const withProtected = (Component) => {
       return <Loading />;
     }
 
+    if (auth.currentUser.displayName && router.asPath === "/create-new-account") {
+      router.replace("/");
+      return <Loading />;
+    }
+
     return <Component {...props} auth={auth} />;
   };
 };

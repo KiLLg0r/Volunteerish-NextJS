@@ -6,6 +6,7 @@ import {
   BsFillInfoCircleFill,
   BsFillQuestionCircleFill,
 } from "react-icons/bs";
+import languages from "../utilities/languages.json";
 
 import styles from "../pages/styles/Settings.module.scss";
 import Link from "next/link";
@@ -46,35 +47,35 @@ const SettingRow = ({ icon, title, subtitle, href }) => {
 };
 
 const SettingsMenu = () => {
-  const { logout } = useAuth();
+  const { logout, Language } = useAuth();
   const size = useWindowSize();
 
   return (
     <>
       <SettingRow
         icon={<BsFillPhoneFill className={styles.settingSVG} />}
-        title="App settings"
-        subtitle="Settings on language, dark mode ..."
+        title={languages[Language].settings.app.title}
+        subtitle={languages[Language].settings.app.subtitle}
         href="/settings/app"
       />
       {size.width >= 650 && (
         <SettingRow
           icon={<BsFillFilePersonFill className={styles.settingSVG} />}
-          title="Account"
-          subtitle="Settings on name, email, address ..."
+          title={languages[Language].settings.account.title}
+          subtitle={languages[Language].settings.account.subtitle}
           href="/settings/account"
         />
       )}
       <SettingRow
         icon={<BsFillInfoCircleFill className={styles.settingSVG} />}
-        title="About"
-        subtitle="Information about platform"
+        title={languages[Language].settings.about.title}
+        subtitle={languages[Language].settings.about.subtitle}
         href="/about"
       />
       <SettingRow
         icon={<BsFillQuestionCircleFill className={styles.settingSVG} />}
-        title="Help and Support"
-        subtitle="FAQ and support information"
+        title={languages[Language].settings.help.title}
+        subtitle={languages[Language].settings.help.subtitle}
         href="/help"
       />
       <Button onPress={logout} color="error" bordered css={{ width: "100%" }} size="lg">

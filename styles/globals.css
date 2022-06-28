@@ -7,6 +7,7 @@ body {
   --breakpoints-lg: 1280px;
   --breakpoints-md: 960px;
   --breakpoints-sm: 650px;
+  --swiper-theme-color: #ff5a5a;
 
   padding: 0;
   margin: 0;

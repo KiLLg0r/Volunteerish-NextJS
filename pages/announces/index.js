@@ -11,11 +11,14 @@ import nookies from "nookies";
 import { firebaseAdmin } from "../../config/firebaseAdmin";
 import { BsPlusCircleFill } from "react-icons/bs";
 import Link from "next/link";
+import languages from "../../utilities/languages.json";
+import { useAuth } from "../../context/AuthContext";
 
 import NoAnnounces from "../../public/svg/no_announces.svg";
 import styles from "../styles/Announces.module.scss";
 
 const Announces = ({ initialAnnounces, initialLastKey }) => {
+  const { Language } = useAuth();
   const announces = JSON.parse(initialAnnounces);
   const lastKey = initialLastKey ? JSON.parse(initialLastKey) : "";
   const router = useRouter();
@@ -47,65 +50,71 @@ const Announces = ({ initialAnnounces, initialLastKey }) => {
     });
 
   useEffect(() => {
-    if (queryURL?.country) {
-      setStates(State.getStatesOfCountry(queryURL.country));
-      if (queryURL?.state) setCities(City.getCitiesOfState(queryURL.country, queryURL.state));
+    if (queryURL) {
+      setStates(State.getStatesOfCountry(queryURL?.country));
+      setCities(City.getCitiesOfState(queryURL?.country, queryURL?.state));
     }
-  }, [announces, initialAnnounces, queryURL]);
+  }, [announces, queryURL]);
 
   return (
     <Grid.Container gap={2} css={{ position: "relative" }}>
       <Grid xs={12}>
-        <h2 className={styles.title}>Announces</h2>
+        <h2 className={styles.title}>{languages[Language].announces.title}</h2>
       </Grid>
       <Grid xs={12} sm={3}>
         <Collapse.Group css={{ width: "100%" }}>
-          <Collapse expanded={size.width > 650} title="Filter">
+          <Collapse expanded={size.width > 650} title={languages[Language].announces.filter}>
             <form>
               <div className={styles.filterOption}>
-                <label className={styles.selectLabel}>Category</label>
+                <label className={styles.selectLabel}>{languages[Language].select.category}</label>
                 <select
                   className={styles.select}
                   ref={categoryRef}
                   defaultValue={queryURL?.category}
                   onChange={handleChange}
                 >
-                  <option value="">Select a category</option>
-                  <option value="Groceries">Groceries</option>
-                  <option value="School meditations">School meditations</option>
-                  <option value="Shopping">Shopping</option>
-                  <option value="Cleaning">Cleaning</option>
-                  <option value="Walking">Walking</option>
-                  <option value="Cooking">Cooking</option>
-                  <option value="Paying of bills">Paying of bills</option>
-                  <option value="Emotional support">Emotional support</option>
-                  <option value="Physical labour">Physical labour</option>
-                  <option value="Hard work">Hard work</option>
+                  <option value="">{languages[Language].select.categoryOption}</option>
+                  <option value="Groceries">{languages[Language].announces.groceries}</option>
+                  <option value="School meditations">{languages[Language].announces.schoolMeditations}</option>
+                  <option value="Shopping">{languages[Language].announces.shopping}</option>
+                  <option value="Cleaning">{languages[Language].announces.cleaning}</option>
+                  <option value="Walking">{languages[Language].announces.walking}</option>
+                  <option value="Cooking">{languages[Language].announces.cooking}</option>
+                  <option value="Paying of bills">{languages[Language].announces.payingOfBills}</option>
+                  <option value="Emotional support">{languages[Language].announces.emotionalSupport}</option>
+                  <option value="Physical labour">{languages[Language].announces.physicalLabour}</option>
+                  <option value="Hard work">{languages[Language].announces.hardWork}</option>
                 </select>
               </div>
               <div className={styles.filterOption}>
-                <label className={styles.selectLabel}>Difficulty</label>
+                <label className={styles.selectLabel}>{languages[Language].select.difficulty}</label>
                 <select
                   className={styles.select}
                   ref={difficultyRef}
                   defaultValue={queryURL?.difficulty}
                   onChange={handleChange}
                 >
-                  <option value="">Select a difficulty</option>
-                  <option value="easy">Easy</option>
-                  <option value="medium">Medium</option>
-                  <option value="hard">Hard</option>
+                  <option value="">{languages[Language].select.difficultyOption}</option>
+                  <option value="easy">{languages[Language].announces.easy}</option>
+                  <option value="medium">{languages[Language].announces.medium}</option>
+                  <option value="hard">{languages[Language].announces.hard}</option>
                 </select>
               </div>
               <div className={styles.filterOption}>
-                <label className={styles.selectLabel}>Country</label>
+                <label className={styles.selectLabel}>{languages[Language].select.country}</label>
                 <select
                   className={styles.select}
                   ref={countryRef}
                   defaultValue={queryURL?.country}
-                  onChange={handleChange}
+                  onChange={() => {
+                    setStates([]);
+                    setCities([]);
+                    stateRef.current.selectedIndex = 0;
+                    cityRef.current.selectedIndex = 0;
+                    handleChange();
+                  }}
                 >
-                  <option value="">Select country</option>
+                  <option value="">{languages[Language].select.countryOption}</option>
                   {countries &&
                     countries.map((country) => {
                       return (
@@ -117,9 +126,18 @@ const Announces = ({ initialAnnounces, initialLastKey }) => {
                 </select>
               </div>
               <div className={styles.filterOption}>
-                <label className={styles.selectLabel}>State</label>
-                <select className={styles.select} ref={stateRef} defaultValue={queryURL?.state} onChange={handleChange}>
-                  <option value="">Select state</option>
+                <label className={styles.selectLabel}>{languages[Language].select.state}</label>
+                <select
+                  className={styles.select}
+                  ref={stateRef}
+                  defaultValue={queryURL?.state}
+                  onChange={() => {
+                    setCities([]);
+                    cityRef.current.selectedIndex = 0;
+                    handleChange();
+                  }}
+                >
+                  <option value="">{languages[Language].select.stateOption}</option>
                   {states &&
                     states.map((state) => {
                       return (
@@ -131,9 +149,9 @@ const Announces = ({ initialAnnounces, initialLastKey }) => {
                 </select>
               </div>
               <div className={styles.filterOption}>
-                <label className={styles.selectLabel}>City</label>
+                <label className={styles.selectLabel}>{languages[Language].select.city}</label>
                 <select className={styles.select} defaultValue={queryURL?.city} ref={cityRef} onChange={handleChange}>
-                  <option value="">Select city</option>
+                  <option value="">{languages[Language].select.cityOption}</option>
                   {cities &&
                     cities.map((city) => {
                       return (
@@ -145,15 +163,15 @@ const Announces = ({ initialAnnounces, initialLastKey }) => {
                 </select>
               </div>
               <div className={styles.filterOption}>
-                <label className={styles.selectLabel}>Order by</label>
+                <label className={styles.selectLabel}>{languages[Language].select.orderBy}</label>
                 <select
                   className={styles.select}
                   ref={orderByRef}
                   defaultValue={queryURL?.orderBy}
                   onChange={handleChange}
                 >
-                  <option value="recent">The newest</option>
-                  <option value="latest">The oldest</option>
+                  <option value="recent">{languages[Language].select.orderByOption1}</option>
+                  <option value="latest">{languages[Language].select.orderByOption2}</option>
                 </select>
               </div>
             </form>
@@ -177,7 +195,7 @@ const Announces = ({ initialAnnounces, initialLastKey }) => {
           {lastKey?.length > 0 && (
             <Grid xs={12} justify="center">
               <Button color="error" bordered>
-                Load more announces
+                {languages[Language].announces.loadMoreAnnounces}
               </Button>
             </Grid>
           )}
@@ -186,7 +204,7 @@ const Announces = ({ initialAnnounces, initialLastKey }) => {
               <Col>
                 <NoAnnounces />
                 <Row>
-                  <h3 className={styles.subtitle}>No announces at the time!</h3>
+                  <h3 className={styles.subtitle}>{languages[Language].announces.noAnnounces}</h3>
                 </Row>
               </Col>
             </Grid>

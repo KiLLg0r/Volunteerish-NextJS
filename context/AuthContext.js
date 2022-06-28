@@ -16,7 +16,7 @@ export function useAuth() {
   return useContext(AuthContext);
 }
 
-export function AuthProvider({ children, initialUserData, users }) {
+export function AuthProvider({ children, initialUserData }) {
   const [currentUser, setCurrentUser] = useState();
   const [loading, setLoading] = useState(false);
   const [userData, setUserData] = useState(initialUserData);
@@ -73,7 +73,6 @@ export function AuthProvider({ children, initialUserData, users }) {
     db,
     loading,
     FontSize,
-    users,
     Language,
     setLanguage,
     setFontSize,

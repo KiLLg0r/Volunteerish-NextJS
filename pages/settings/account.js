@@ -11,6 +11,7 @@ import { doc, updateDoc } from "firebase/firestore";
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { EmailAuthProvider, reauthenticateWithCredential, updateProfile, updateEmail } from "firebase/auth";
 import { updateAllImages, updateAllNames } from "../../utilities/functions";
+import languages from "../../utilities/languages.json";
 
 import styles from "../styles/Settings.module.scss";
 
@@ -20,7 +21,7 @@ export const Account = () => {
   const imageInputRef = useRef(null);
 
   const router = useRouter();
-  const { currentUser, sendUserEmailVerification, userData } = useAuth();
+  const { currentUser, sendUserEmailVerification, userData, Language } = useAuth();
 
   const firstName = currentUser.displayName.split(" ")[0];
   const lastName = currentUser.displayName.split(" ")[1];
@@ -224,14 +225,14 @@ export const Account = () => {
 
   return (
     <Container sm className={styles.account} key={discardChanges}>
-      {router.asPath === "/account" && (
+      {router.asPath === "/settings/account" && (
         <header className={styles.header} onClick={() => router.push("/")}>
           <BsChevronLeft />
-          Go back
+          {languages[Language].goBack}
         </header>
       )}
       <form onSubmit={handleSubmit}>
-        <h2 className={styles.title}>Edit profile</h2>
+        <h2 className={styles.title}>{languages[Language].profile.title}</h2>
         {error && <div className={styles.error}>{error}</div>}
         <Grid.Container>
           <Grid xs={12} sm={6} css={{ flexFlow: "column" }}>
@@ -260,7 +261,7 @@ export const Account = () => {
                 <BsPencilSquare />
               </div>
             </div>
-            <h4 className={styles.imageEditLabel}>Change profile image</h4>
+            <h4 className={styles.imageEditLabel}>{languages[Language].profile.image}</h4>
             <input
               type="file"
               style={{ display: "none" }}
@@ -278,7 +279,7 @@ export const Account = () => {
             <Col css={{ display: "flex", flexFlow: "column", alignItems: "center", justifyContent: "center" }}>
               <Input
                 size="lg"
-                label="First Name"
+                label={languages[Language].userData.firstName}
                 initialValue={firstName}
                 fullWidth
                 onChange={handleChanges}
@@ -287,7 +288,7 @@ export const Account = () => {
               <Spacer />
               <Input
                 size="lg"
-                label="Last Name"
+                label={languages[Language].userData.lastName}
                 initialValue={lastName}
                 fullWidth
                 onChange={handleChanges}
@@ -299,10 +300,10 @@ export const Account = () => {
         <Grid.Container gap={1}>
           <Grid xs={12}>
             <Collapse.Group css={{ width: "100%" }}>
-              <Collapse title="Email" subtitle={currentUser.email}>
+              <Collapse title={languages[Language].email} subtitle={currentUser.email}>
                 <Col>
                   <Row>
-                    <Col>Status email: </Col>
+                    <Col>{languages[Language].profile.statusEmail}: </Col>
                     <Col>
                       <Text color={currentUser.emailVerified ? "success" : "error"} h4>
                         {currentUser.emailVerified ? "Verified" : "Unverified"}
@@ -313,7 +314,7 @@ export const Account = () => {
                   {!currentUser.emailVerified && (
                     <>
                       <Row>
-                        <Col>Send email verification link</Col>
+                        <Col>{languages[Language].profile.sendEmailLink}</Col>
                         <Col>
                           <Button
                             auto
@@ -324,7 +325,7 @@ export const Account = () => {
                               sendUserEmailVerification();
                             }}
                           >
-                            Send link
+                            {languages[Language].profile.sendLink}
                           </Button>
                           <Modal
                             closeButton
@@ -336,10 +337,12 @@ export const Account = () => {
                             blur
                           >
                             <Modal.Header>
-                              <h3>Email verification link</h3>
+                              <h3>{languages[Language].modal.account.emailLink.title}</h3>
                             </Modal.Header>
                             <Modal.Body>
-                              <h6 style={{ textAlign: "center" }}>Email verification link sent successfully!</h6>
+                              <h6 style={{ textAlign: "center" }}>
+                                {languages[Language].modal.account.emailLink.body}
+                              </h6>
                             </Modal.Body>
                             <Modal.Footer>
                               <Button
@@ -351,7 +354,7 @@ export const Account = () => {
                                 }}
                                 css={{ width: "100%" }}
                               >
-                                Close this modal
+                                {languages[Language].modal.account.emailLink.close}
                               </Button>
                             </Modal.Footer>
                           </Modal>
@@ -361,10 +364,10 @@ export const Account = () => {
                     </>
                   )}
                   <Row>
-                    <Col>Change email</Col>
+                    <Col>{languages[Language].profile.changeEmail}</Col>
                     <Col>
                       <Button color="error" bordered onPress={() => setReauthenticateUserModal(true)} auto>
-                        Change email
+                        {languages[Language].profile.changeEmail}
                       </Button>
                       <Modal
                         closeButton
@@ -375,12 +378,10 @@ export const Account = () => {
                         css={{ backgroundColor: "var(--nextui-colors-background)" }}
                       >
                         <Modal.Header>
-                          <h3>Change email address</h3>
+                          <h3>{languages[Language].modal.account.authenticate.title}</h3>
                         </Modal.Header>
                         <Modal.Body>
-                          <h6 style={{ textAlign: "center" }}>
-                            In order to change the current email address you need to reauthenticate
-                          </h6>
+                          <h6 style={{ textAlign: "center" }}>{languages[Language].modal.account.authenticate.body}</h6>
                           <Input size="lg" label="Email" initialValue={currentUser.email} fullWidth readOnly />
                           <Input.Password
                             clearable
@@ -409,12 +410,12 @@ export const Account = () => {
                                 onPress={() => setReauthenticateUserModal(false)}
                                 css={{ width: "100%" }}
                               >
-                                Cancel
+                                {languages[Language].modal.account.authenticate.buttons.cancel}
                               </Button>
                             </Grid>
                             <Grid xs>
                               <Button auto color="success" onPress={reauthenticateUser} css={{ width: "100%" }}>
-                                Authenticate
+                                {languages[Language].modal.account.authenticate.buttons.auth}
                               </Button>
                             </Grid>
                           </Grid.Container>
@@ -429,13 +430,13 @@ export const Account = () => {
                         css={{ backgroundColor: "var(--nextui-colors-background)" }}
                       >
                         <Modal.Header>
-                          <h3>Change email address</h3>
+                          <h3>{languages[Language].modal.account.changeEmail.title}</h3>
                         </Modal.Header>
                         <Modal.Body>
-                          <h6 style={{ textAlign: "center" }}>Enter your new email address</h6>
+                          <h6 style={{ textAlign: "center" }}>{languages[Language].modal.account.changeEmail.body}</h6>
                           <Input
                             clearable
-                            label="Email"
+                            label={languages[Language].email}
                             placeholder="Your new email address"
                             fullWidth
                             onChange={(e) => {
@@ -460,12 +461,12 @@ export const Account = () => {
                                 onPress={() => setAuthenticatedSuccessfully(false)}
                                 css={{ width: "100%" }}
                               >
-                                Cancel
+                                {languages[Language].modal.account.changeEmail.buttons.cancel}
                               </Button>
                             </Grid>
                             <Grid xs>
                               <Button auto color="success" onPress={changeEmail} css={{ width: "100%" }}>
-                                Change email
+                                {languages[Language].modal.account.changeEmail.buttons.change}
                               </Button>
                             </Grid>
                           </Grid.Container>
@@ -479,9 +480,11 @@ export const Account = () => {
                         blur
                       >
                         <Modal.Body>
-                          <h5 style={{ textAlign: "center" }}>Your email was changed successfully!</h5>
+                          <h5 style={{ textAlign: "center" }}>
+                            {languages[Language].modal.account.emailChanged.title}
+                          </h5>
                           <p>
-                            Your new email address is:{" "}
+                            {languages[Language].modal.account.emailChanged.body}:{" "}
                             <span style={{ fontStyle: "italic", color: "var(--nextui-colors-red500)" }}>
                               {currentUser.email}
                             </span>
@@ -495,7 +498,7 @@ export const Account = () => {
                             onPress={() => setEmailChangedSuccessfully(false)}
                             css={{ width: "100%" }}
                           >
-                            Close this modal
+                            {languages[Language].modal.account.emailChanged.close}
                           </Button>
                         </Modal.Footer>
                       </Modal>
@@ -506,13 +509,13 @@ export const Account = () => {
             </Collapse.Group>
           </Grid>
           <Grid xs={12}>
-            <h3 className={styles.subtitle}>Address</h3>
+            <h3 className={styles.subtitle}>{languages[Language].userData.address}</h3>
           </Grid>
           <Grid xs={12} sm={6}>
             <Col>
               <div className={styles.selectMenu}>
                 <label htmlFor="country" className={styles.selectLabel}>
-                  Country
+                  {languages[Language].userData.country}
                 </label>
                 <select
                   name="country"
@@ -538,7 +541,7 @@ export const Account = () => {
             <Col>
               <div className={styles.selectMenu}>
                 <label htmlFor="state" className={styles.selectLabel}>
-                  State
+                  {languages[Language].userData.state}
                 </label>
                 <select
                   id="state"
@@ -547,7 +550,7 @@ export const Account = () => {
                   className={styles.select}
                   defaultValue={userData?.state}
                 >
-                  {countryChange && <option value="">Select state</option>}
+                  {countryChange && <option value="">{languages[Language].select.stateOption}</option>}
                   {states &&
                     states.map((state) => {
                       return (
@@ -564,7 +567,7 @@ export const Account = () => {
             <Col>
               <div className={styles.selectMenu}>
                 <label htmlFor="city" className={styles.selectLabel}>
-                  City
+                  {languages[Language].userData.city}
                 </label>
                 <select
                   id="city"
@@ -573,7 +576,7 @@ export const Account = () => {
                   className={styles.select}
                   defaultValue={userData?.city}
                 >
-                  {stateChange && <option value="">Select city</option>}
+                  {stateChange && <option value="">{languages[Language].select.cityOption}</option>}
                   {cities &&
                     cities.map((city) => {
                       return (
@@ -590,7 +593,7 @@ export const Account = () => {
             <Col>
               <Input
                 size="lg"
-                label="Street"
+                label={languages[Language].userData.street}
                 initialValue={userData?.street}
                 fullWidth
                 onChange={handleChanges}
@@ -602,7 +605,7 @@ export const Account = () => {
             <Col>
               <Input
                 size="lg"
-                label="Street number"
+                label={languages[Language].userData.streetNumber}
                 initialValue={userData?.streetNumber}
                 fullWidth
                 onChange={handleChanges}
@@ -615,7 +618,7 @@ export const Account = () => {
             <Col>
               <Input
                 size="lg"
-                label="Building"
+                label={languages[Language].userData.building}
                 initialValue={userData?.building}
                 fullWidth
                 onChange={handleChanges}
@@ -627,7 +630,7 @@ export const Account = () => {
             <Col>
               <Input
                 size="lg"
-                label="Apartment"
+                label={languages[Language].userData.apartment}
                 initialValue={userData?.apartment}
                 fullWidth
                 onChange={handleChanges}
@@ -640,7 +643,7 @@ export const Account = () => {
             <Col>
               <Input
                 size="lg"
-                label="Zipcode"
+                label={languages[Language].userData.zipcode}
                 initialValue={userData?.zipcode}
                 fullWidth
                 onChange={handleChanges}
@@ -660,7 +663,7 @@ export const Account = () => {
               color="error"
               onPress={() => setDiscardConfirmationVisible(true)}
             >
-              Discard changes
+              {languages[Language].profile.discard}
             </Button>
             <Modal
               closeButton
@@ -670,10 +673,10 @@ export const Account = () => {
               blur
             >
               <Modal.Header>
-                <h3>Discard changes</h3>
+                <h3>{languages[Language].modal.account.discard.title}</h3>
               </Modal.Header>
               <Modal.Body>
-                <h5 style={{ textAlign: "center" }}>Are you sure you want to discard these changes?</h5>
+                <h5 style={{ textAlign: "center" }}>{languages[Language].modal.account.discard.body}</h5>
               </Modal.Body>
               <Modal.Footer>
                 <Grid.Container gap={1}>
@@ -685,12 +688,12 @@ export const Account = () => {
                       onPress={() => setDiscardConfirmationVisible(false)}
                       css={{ width: "100%" }}
                     >
-                      Cancel
+                      {languages[Language].modal.account.discard.buttons.cancel}
                     </Button>
                   </Grid>
                   <Grid xs>
                     <Button auto flat color="error" onPress={discardFormChanges} css={{ width: "100%" }}>
-                      Discard changes
+                      {languages[Language].modal.account.discard.buttons.discard}
                     </Button>
                   </Grid>
                 </Grid.Container>
@@ -698,7 +701,7 @@ export const Account = () => {
             </Modal>
             <Spacer />
             <Button css={{ width: "100%" }} size="lg" color="error" onPress={() => setSaveConfirmationVisible(true)}>
-              Save changes
+              {languages[Language].profile.save}
             </Button>
             <Modal
               closeButton
@@ -708,10 +711,10 @@ export const Account = () => {
               blur
             >
               <Modal.Header>
-                <h3>Save changes</h3>
+                <h3>{languages[Language].modal.account.save.title}</h3>
               </Modal.Header>
               <Modal.Body>
-                <h5 style={{ textAlign: "center" }}>Are you sure you want to save these changes?</h5>
+                <h5 style={{ textAlign: "center" }}>{languages[Language].modal.account.save.body}</h5>
               </Modal.Body>
               <Modal.Footer>
                 <Grid.Container gap={1}>
@@ -723,12 +726,12 @@ export const Account = () => {
                       onPress={() => setSaveConfirmationVisible(false)}
                       css={{ width: "100%" }}
                     >
-                      Cancel
+                      {languages[Language].modal.account.save.buttons.cancel}
                     </Button>
                   </Grid>
                   <Grid xs>
                     <Button auto color="success" onPress={handleSubmit} css={{ width: "100%" }}>
-                      Save changes
+                      {languages[Language].modal.account.save.buttons.save}
                     </Button>
                   </Grid>
                 </Grid.Container>

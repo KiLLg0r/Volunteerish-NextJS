@@ -76,7 +76,7 @@ function MyApp({ Component, pageProps }) {
       }}
     >
       <NextUIProvider>
-        <AuthProvider initialUserData={pageProps?.initialUserData} users={pageProps?.users}>
+        <AuthProvider initialUserData={pageProps?.initialUserData} >
           <Layout>
             <AuthStateChanged>
               <UserDataChanges>

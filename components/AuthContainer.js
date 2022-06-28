@@ -1,8 +1,9 @@
 import { Row, Col, Switch, useTheme, Container, Spacer } from "@nextui-org/react";
 import { useTheme as useNextTheme } from "next-themes";
 import { BsFillSunFill, BsMoonFill } from "react-icons/bs";
-
+import languages from "../utilities/languages.json";
 import styles from "../pages/styles/Auth.module.scss";
+import { useAuth } from "../context/AuthContext";
 
 export const AuthLeftSide = ({ children }) => {
   return (
@@ -31,11 +32,12 @@ export const AuthRightSide = ({ children }) => {
 const AuthContainer = ({ children }) => {
   const { setTheme } = useNextTheme();
   const { isDark } = useTheme();
+  const { Language } = useAuth();
 
   return (
     <Container fluid display="flex" direction="column" alignContent="center" css={{ minHeight: "100vh" }}>
       <Row fluid align="center" justify="flex-end" css={{ paddingBlock: "1rem" }}>
-        <span>Dark mode: </span>
+        <span>{languages[Language].appSettings.darkMode}: </span>
         <Spacer x={0.5} />
         <Switch
           checked={isDark}

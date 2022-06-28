@@ -8,12 +8,12 @@ import styles from "./styles/Auth.module.scss";
 
 import { validateError } from "../utilities/functions";
 import { withPublic } from "../utilities/routes";
-
+import languages from "../utilities/languages.json";
 import { Button, Input, Spacer } from "@nextui-org/react";
 import AuthContainer, { AuthLeftSide, AuthRightSide } from "../components/AuthContainer";
 
 const Login = ({ auth }) => {
-  const { login } = auth;
+  const { login, Language } = auth;
   const [error, setError] = useState({
     email: "",
     password: "",
@@ -59,12 +59,12 @@ const Login = ({ auth }) => {
         </div>
       </AuthLeftSide>
       <AuthRightSide>
-        <h1 className={styles.title}>Log in</h1>
+        <h1 className={styles.title}>{languages[Language].login.title}</h1>
         <form className="contact-form" onSubmit={handleSubmit}>
           <Input
             clearable
-            label="Email"
-            placeholder="Email"
+            label={languages[Language].email}
+            placeholder={languages[Language].email}
             fullWidth
             onChange={(e) => {
               setEmail(e.target.value);
@@ -82,8 +82,8 @@ const Login = ({ auth }) => {
           <Spacer y={error.email.length ? 2 : 1} />
           <Input.Password
             clearable
-            label="Password"
-            placeholder="Password"
+            label={languages[Language].password}
+            placeholder={languages[Language].password}
             fullWidth
             onChange={(e) => {
               setPassword(e.target.value);
@@ -100,11 +100,11 @@ const Login = ({ auth }) => {
           />
           <Spacer y={error.password.length ? 3 : 2} />
           <Button disabled={loading} type="submit" css={{ width: "100%", backgroundColor: "$red500" }}>
-            Log in
+            {languages[Language].login.title}
           </Button>
         </form>
         <div className={styles.linkText}>
-          Need an account? <Link href="/register">Sign up</Link>
+          {languages[Language].login.link} <Link href="/register">{languages[Language].login.link2}</Link>
         </div>
       </AuthRightSide>
     </AuthContainer>

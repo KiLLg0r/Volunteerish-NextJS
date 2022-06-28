@@ -1,9 +1,8 @@
 import { withProtected, withNavigation } from "../../utilities/routes";
 import SettingsMenu from "../../components/SettingsMenu";
-import { Button, Col, Grid, Row } from "@nextui-org/react";
+import { Button, Col, Grid, Row, Image } from "@nextui-org/react";
 import { BsChevronRight } from "react-icons/bs";
 import Link from "next/link";
-import Image from "next/image";
 import { useWindowSize } from "../../utilities/hooks";
 import { useState } from "react";
 
@@ -14,14 +13,16 @@ import { About } from "../about";
 
 import styles from "../styles/Settings.module.scss";
 import { useAuth } from "../../context/AuthContext";
+import languages from "../../utilities/languages.json";
 
 function Settings({ auth }) {
   const size = useWindowSize();
+  const { Language } = auth;
 
   const MobileInterface = () => {
     return (
       <>
-        <h2 className={styles.title}>Settings</h2>
+        <h2 className={styles.title}>{languages[Language].settings.title}</h2>
         <div className={styles.editProfile}>
           <div className={styles.userIMG}>
             <Image
@@ -29,14 +30,16 @@ function Settings({ auth }) {
               alt="User profile image"
               height={125}
               width={125}
-              style={{ objectFit: "cover" }}
+              objectFit="cover"
+              showSkeleton
+              maxDelay={5000}
             />
           </div>
           <div className={styles.userName}>{auth.currentUser.displayName}</div>
           <Link href="/settings/account">
             <Button color="gradient" auto css={{ marginInline: "auto", borderRadius: "5rem" }}>
               <Row gap={1} align="center">
-                <Col>Edit profile</Col>
+                <Col>{languages[Language].settings.editProfile}</Col>
                 <BsChevronRight />
               </Row>
             </Button>
@@ -79,7 +82,7 @@ function Settings({ auth }) {
                 localStorage.setItem("settingsPage", JSON.stringify([true, false, false, false]));
               }}
             >
-              <Col>App settings</Col>
+              <Col>{languages[Language].settings.app.title}</Col>
               <BsChevronRight />
             </Row>
             <Row
@@ -90,7 +93,7 @@ function Settings({ auth }) {
                 localStorage.setItem("settingsPage", JSON.stringify([false, true, false, false]));
               }}
             >
-              <Col>Profile</Col>
+              <Col>{languages[Language].settings.account.title}</Col>
               <BsChevronRight />
             </Row>
             <Row
@@ -101,7 +104,7 @@ function Settings({ auth }) {
                 localStorage.setItem("settingsPage", JSON.stringify([false, false, true, false]));
               }}
             >
-              <Col>Help &#38; support</Col>
+              <Col>{languages[Language].settings.help.title}</Col>
               <BsChevronRight />
             </Row>
             <Row
@@ -112,12 +115,12 @@ function Settings({ auth }) {
                 localStorage.setItem("settingsPage", JSON.stringify([false, false, false, true]));
               }}
             >
-              <Col>About</Col>
+              <Col>{languages[Language].settings.about.title}</Col>
               <BsChevronRight />
             </Row>
             <Row>
               <Button onPress={logout} color="error" bordered css={{ width: "100%" }} size="lg">
-                Log out
+                {languages[Language].logout}
               </Button>
             </Row>
           </Col>

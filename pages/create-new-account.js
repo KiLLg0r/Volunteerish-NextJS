@@ -1,4 +1,3 @@
-import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
 import { Grid, Button, Container, Col, Image, Spacer, Input, Modal } from "@nextui-org/react";
 import { useRef, useState, useEffect } from "react";
 import { BsPencilSquare } from "react-icons/bs";
@@ -9,23 +8,27 @@ import { doc, setDoc } from "firebase/firestore";
 import { useAuth } from "../context/AuthContext";
 import { useRouter } from "next/router";
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import languages from "../utilities/languages.json";
+import { withProtected } from "../utilities/routes";
 
 import "swiper/css";
+import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
 
 import VolunteerSvg from "../public/svg/volunteer.svg";
 import styles from "./styles/CreateNewAccount.module.scss";
 
 const CreateNewAccount = () => {
-  const { currentUser } = useAuth();
+  const { currentUser, Language } = useAuth();
   const router = useRouter();
 
   const storage = getStorage(app);
 
   const [image, setImage] = useState(null);
+  const [imgURL, setImgURL] = useState(
+    "https://firebasestorage.googleapis.com/v0/b/volunteerish-ed549.appspot.com/o/placeholder.jpg?alt=media&token=8960960f-36a2-4a20-8115-c692d95e9fda",
+  );
   const [preview, setPreview] = useState("");
   const imageInputRef = useRef(null);
-  const defaultImage =
-    "https://firebasestorage.googleapis.com/v0/b/volunteerish-ed549.appspot.com/o/placeholder.jpg?alt=media&token=8960960f-36a2-4a20-8115-c692d95e9fda";
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -89,7 +92,7 @@ const CreateNewAccount = () => {
 
     return (
       <Button color="error" auto css={{ width: "100%" }} onPress={() => swiper.slideNext()} disabled={disabled}>
-        Next step
+        {languages[Language].createNewAccount.nextStep}
       </Button>
     );
   };
@@ -99,7 +102,7 @@ const CreateNewAccount = () => {
 
     return (
       <Button color="error" bordered auto css={{ width: "100%" }} onPress={() => swiper.slidePrev()}>
-        Previous step
+        {languages[Language].createNewAccount.prevStep}
       </Button>
     );
   };
@@ -107,7 +110,7 @@ const CreateNewAccount = () => {
   const SubmitBtn = () => {
     return (
       <Button color="error" auto css={{ width: "100%" }} onPress={submitForm}>
-        Complete registration
+        {languages[Language].createNewAccount.complete}
       </Button>
     );
   };
@@ -133,27 +136,31 @@ const CreateNewAccount = () => {
         },
         (error) => {
           console.log(error);
-          setError("Failed to upload image!");
+          setError(languages[Language].modal.createNewAccount.error.imgUploadError);
           setShowError(true);
           imageInputRef.current.scrollIntoView({ behavior: "smooth" });
         },
         () =>
           getDownloadURL(task.snapshot.ref).then((url) => {
+            setImgURL(url);
             updateProfile(currentUser, { photoURL: url })
-              .then(() => console.log(`Image updated successfully`))
+              .then(() => {
+                console.log(`Image updated successfully`);
+                setImgURL(url);
+              })
               .catch((error) => {
                 console.log(error);
-                setError("Failed to update image!");
+                setError(languages[Language].modal.createNewAccount.error.imgUpdateError);
                 setShowError(true);
               });
           }),
       );
     } else {
-      updateProfile(currentUser, { photoURL: defaultImage })
+      updateProfile(currentUser, { photoURL: imgURL })
         .then(() => console.log(`Image updated successfully`))
         .catch((error) => {
           console.log(error);
-          setError("Failed to update image!");
+          setError(languages[Language].modal.createNewAccount.error.imgUpdateError);
           setShowError(true);
         });
     }
@@ -166,8 +173,8 @@ const CreateNewAccount = () => {
       const userDocRef = doc(db, "users", currentUser.uid);
 
       await setDoc(userDocRef, {
-        name: currentUser.displayName,
-        photoURL: currentUser.photoURL,
+        name: firstName.concat(" ", lastName),
+        photoURL: imgURL,
         email: currentUser.email,
         country: country,
         state: state,
@@ -196,10 +203,10 @@ const CreateNewAccount = () => {
         <Swiper allowTouchMove={false} spaceBetween={30} className={styles.createNewAccountSwiper} preloadImages>
           <SwiperSlide className={styles.swiperSlide}>
             <Col className={styles.swiperColumn}>
-              <h1 className={styles.title}>Welcome to</h1>
+              <h1 className={styles.title}>{languages[Language].createNewAccount.firstSlide.title}</h1>
               <VolunteerSvg className={styles.volunteerSvg} />
               <h1 className={styles.titleLogo}>Volunteerish</h1>
-              <h3 className={styles.subtitle}>In order to complete registration we need more information about you</h3>
+              <h3 className={styles.subtitle}>{languages[Language].createNewAccount.firstSlide.subtitle}</h3>
             </Col>
             <Grid.Container gap={1} className={styles.swiperBtns}>
               <Grid xs={12}>
@@ -209,7 +216,7 @@ const CreateNewAccount = () => {
           </SwiperSlide>
           <SwiperSlide className={styles.swiperSlide}>
             <Col className={styles.swiperColumn}>
-              <h2 className={styles.title}>First, let&apos;s set your profile image</h2>
+              <h2 className={styles.title}>{languages[Language].createNewAccount.secondSlide.title}</h2>
               <Spacer />
               <div
                 className={styles.imageEdit}
@@ -223,7 +230,7 @@ const CreateNewAccount = () => {
                     alt="User image"
                     height={200}
                     width={200}
-                    src={preview ? preview : defaultImage}
+                    src={preview ? preview : imgURL}
                     objectFit="cover"
                     showSkeleton
                     maxDelay={5000}
@@ -236,7 +243,7 @@ const CreateNewAccount = () => {
                   <BsPencilSquare />
                 </div>
               </div>
-              <h4 className={styles.imageEditLabel}>Choose profile image</h4>
+              <h4 className={styles.imageEditLabel}>{languages[Language].createNewAccount.secondSlide.img}</h4>
               <input
                 type="file"
                 style={{ display: "none" }}
@@ -260,10 +267,10 @@ const CreateNewAccount = () => {
           </SwiperSlide>
           <SwiperSlide className={styles.swiperSlide}>
             <Col className={styles.swiperColumn}>
-              <h3 className={styles.title}>Let&apos;s add your personal information</h3>
+              <h3 className={styles.title}>{languages[Language].createNewAccount.thirdSlide.title}</h3>
               <Spacer />
               <Input
-                label="First name"
+                label={languages[Language].userData.firstName}
                 placeholder="John"
                 required
                 fullWidth
@@ -272,7 +279,7 @@ const CreateNewAccount = () => {
               />
               <Spacer />
               <Input
-                label="Last name"
+                label={languages[Language].userData.lastName}
                 placeholder="Doe"
                 required
                 fullWidth
@@ -282,7 +289,7 @@ const CreateNewAccount = () => {
               <Spacer />
               <Input
                 type="date"
-                label="Birth date"
+                label={languages[Language].userData.birth}
                 required
                 fullWidth
                 onChange={(e) => setBirthDate(e.target.value)}
@@ -302,14 +309,14 @@ const CreateNewAccount = () => {
           </SwiperSlide>
           <SwiperSlide className={styles.swiperSlide}>
             <Col className={styles.swiperColumn}>
-              <h3 className={styles.title}>Next, we need your address</h3>
+              <h3 className={styles.title}>{languages[Language].createNewAccount.fourthSlide.title}</h3>
               <Spacer />
               <div className={styles.selectMenu}>
                 <label htmlFor="country" className={styles.selectLabel}>
-                  Country
+                  {languages[Language].select.country}
                 </label>
                 <select name="country" id="country" ref={countryRef} onChange={showStates} className={styles.select}>
-                  <option value="">Select country</option>
+                  <option value="">{languages[Language].select.countryOption}</option>
                   {countries &&
                     countries.map((country) => {
                       return (
@@ -323,10 +330,10 @@ const CreateNewAccount = () => {
               <Spacer />
               <div className={styles.selectMenu}>
                 <label htmlFor="state" className={styles.selectLabel}>
-                  State
+                  {languages[Language].select.state}
                 </label>
                 <select id="state" ref={stateRef} onChange={showCities} className={styles.select}>
-                  {countryChange && <option value="">Select state</option>}
+                  {countryChange && <option value="">{languages[Language].select.stateOption}</option>}
                   {states &&
                     states.map((state) => {
                       return (
@@ -340,10 +347,10 @@ const CreateNewAccount = () => {
               <Spacer />
               <div className={styles.selectMenu}>
                 <label htmlFor="city" className={styles.selectLabel}>
-                  City
+                  {languages[Language].select.city}
                 </label>
                 <select id="city" ref={cityRef} className={styles.select} onChange={(e) => setCity(e.target.value)}>
-                  {stateChange && <option value="">Select city</option>}
+                  {stateChange && <option value="">{languages[Language].select.cityOption}</option>}
                   {cities &&
                     cities.map((city) => {
                       return (
@@ -366,12 +373,12 @@ const CreateNewAccount = () => {
           </SwiperSlide>
           <SwiperSlide className={styles.swiperSlide}>
             <Col className={styles.swiperColumn}>
-              <h3 className={styles.title}>We need more details about your address</h3>
+              <h3 className={styles.title}>{languages[Language].createNewAccount.fifthSlide.title}</h3>
               <Spacer />
               <Grid.Container gap={1}>
                 <Grid xs={12}>
                   <Input
-                    label="Street"
+                    label={languages[Language].userData.street}
                     placeholder="Fifth Avenue"
                     required
                     fullWidth
@@ -382,7 +389,7 @@ const CreateNewAccount = () => {
                 <Grid xs={6}>
                   <Input
                     type="number"
-                    label="Street number"
+                    label={languages[Language].userData.streetNumber}
                     placeholder="5"
                     required
                     fullWidth
@@ -392,7 +399,7 @@ const CreateNewAccount = () => {
                 </Grid>
                 <Grid xs={6}>
                   <Input
-                    label="Building"
+                    label={languages[Language].userData.building}
                     placeholder="23B"
                     required
                     fullWidth
@@ -402,7 +409,7 @@ const CreateNewAccount = () => {
                 </Grid>
                 <Grid xs={6}>
                   <Input
-                    label="Apartment"
+                    label={languages[Language].userData.apartment}
                     placeholder="14"
                     required
                     fullWidth
@@ -413,7 +420,7 @@ const CreateNewAccount = () => {
                 <Grid xs={6}>
                   <Input
                     type="number"
-                    label="Zipcode"
+                    label={languages[Language].userData.zipcode}
                     placeholder="10018"
                     required
                     fullWidth
@@ -444,9 +451,7 @@ const CreateNewAccount = () => {
           </SwiperSlide>
           <SwiperSlide className={styles.swiperSlide}>
             <Col className={styles.swiperColumn}>
-              <h3 className={styles.title}>
-                You have completed all the necessary information! All that remains to be done is to save the changes!
-              </h3>
+              <h3 className={styles.title}>{languages[Language].createNewAccount.lastSlide.title}</h3>
             </Col>
             <Grid.Container gap={1} className={styles.swiperBtns}>
               <Grid xs={12}>
@@ -470,7 +475,7 @@ const CreateNewAccount = () => {
         blur
       >
         <Modal.Header>
-          <h3>Error!</h3>
+          <h3>{languages[Language].modal.createNewAccount.error.title}</h3>
         </Modal.Header>
         <Modal.Body>
           <h6 style={{ textAlign: "center" }}>{error}</h6>
@@ -488,7 +493,7 @@ const CreateNewAccount = () => {
                 }}
                 css={{ width: "100%" }}
               >
-                Cancel
+                {languages[Language].modal.createNewAccount.error.close}
               </Button>
             </Grid>
           </Grid.Container>
@@ -505,10 +510,10 @@ const CreateNewAccount = () => {
         blur
       >
         <Modal.Header>
-          <h3>Changes were successfully saved !</h3>
+          <h3>{languages[Language].modal.createNewAccount.success.title}</h3>
         </Modal.Header>
         <Modal.Body>
-          <h6 style={{ textAlign: "center" }}>You can close this modal and start using the app!</h6>
+          <h6 style={{ textAlign: "center" }}>{languages[Language].modal.createNewAccount.success.body}</h6>
         </Modal.Body>
         <Modal.Footer>
           <Grid.Container gap={1}>
@@ -522,7 +527,7 @@ const CreateNewAccount = () => {
                 }}
                 css={{ width: "100%" }}
               >
-                Close this modal
+                {languages[Language].modal.createNewAccount.success.close}
               </Button>
             </Grid>
           </Grid.Container>
@@ -532,4 +537,4 @@ const CreateNewAccount = () => {
   );
 };
 
-export default CreateNewAccount;
+export default withProtected(CreateNewAccount);

@@ -1,33 +1,67 @@
 import { Row, Col, Grid, Card } from "@nextui-org/react";
 import { useState, useEffect } from "react";
-
+import languages from "../utilities/languages.json";
+import { useAuth } from "../context/AuthContext";
 import styles from "./styles/Card.module.scss";
 
 const AnnounceCard = ({ data }) => {
   const [difficulty, setDifficulty] = useState("");
+  const [category, setCategory] = useState("");
+  const { Language } = useAuth();
 
   useEffect(() => {
     switch (data.difficulty) {
       case "0":
-        setDifficulty("Easy");
+        setDifficulty(languages[Language].announces.easy);
         break;
       case "1":
-        setDifficulty("Medium");
+        setDifficulty(languages[Language].announces.medium);
         break;
       case "2":
-        setDifficulty("Hard");
+        setDifficulty(languages[Language].announces.hard);
         break;
       default:
         break;
     }
-  }, [data.difficulty]);
+
+    switch (data.category) {
+      case "Groceries":
+        setCategory(languages[Language].announces.groceries);
+        break;
+      case "School Meditations":
+        setCategory(languages[Language].announces.schoolMeditations);
+        break;
+      case "Shopping":
+        setCategory(languages[Language].announces.shopping);
+        break;
+      case "Cleaning":
+        setCategory(languages[Language].announces.cleaning);
+        break;
+      case "Walking":
+        setCategory(languages[Language].announces.walking);
+        break;
+      case "Cooking":
+        setCategory(languages[Language].announces.cooking);
+        break;
+      case "Paying of bills":
+        setCategory(languages[Language].announces.payingOfBills);
+        break;
+      case "Emotional support":
+        setCategory(languages[Language].announces.emotionalSupport);
+        break;
+      case "Physical labour":
+        setCategory(languages[Language].announces.physicalLabour);
+        break;
+      case "Hard work":
+        setCategory(languages[Language].announces.hardWork);
+        break;
+      default:
+        break;
+    }
+  }, [Language, data.category, data.difficulty]);
 
   return (
-    <Card
-      className={styles.card}
-      variant="flat"
-      css={{ height: "275px", background: "var(--nextui-colors-gradient)" }}
-    >
+    <Card className={styles.card} variant="flat" css={{ height: "275px", background: "var(--nextui-colors-gradient)" }}>
       <Card.Header>
         <h3>{data.name}</h3>
       </Card.Header>
@@ -52,9 +86,9 @@ const AnnounceCard = ({ data }) => {
           <Grid xs={8} css={{ fontWeight: "600" }}>
             <Row>
               <Col>
-                <Row>Category</Row>
+                <Row>{languages[Language].select.category}</Row>
                 <Row css={{ color: "var(--nextui-colors-cyan700)" }} className={styles.category}>
-                  {data.category}
+                  {category}
                 </Row>
               </Col>
             </Row>
@@ -62,7 +96,7 @@ const AnnounceCard = ({ data }) => {
           <Grid xs={4} css={{ fontWeight: "600" }}>
             <Row>
               <Col>
-                <Row>Difficulty</Row>
+                <Row>{languages[Language].select.difficulty}</Row>
                 <Row className={`${styles.difficulty} ${styles[difficulty]}`}>{difficulty}</Row>
               </Col>
             </Row>

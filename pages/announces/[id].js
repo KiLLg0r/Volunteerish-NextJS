@@ -7,6 +7,7 @@ import { useWindowSize } from "../../utilities/hooks";
 import { useState, useRef, useEffect } from "react";
 import { Country, State, City } from "country-state-city";
 import { useAuth } from "../../context/AuthContext";
+import languages from "../../utilities/languages.json";
 
 import styles from "../styles/Announces.module.scss";
 
@@ -14,7 +15,7 @@ const Announce = ({ id, data }) => {
   const router = useRouter();
   const announceData = JSON.parse(data);
   const size = useWindowSize();
-  const { userData, currentUser } = useAuth();
+  const { userData, currentUser, Language } = useAuth();
 
   const firstName = announceData.name.split(" ")[0];
   const lastName = announceData.name.split(" ")[1];
@@ -222,50 +223,50 @@ const Announce = ({ id, data }) => {
 
   const validateErrors = () => {
     if (categoryRef.current.value.length === 0 && difficultyRef.current.value.length === 0) {
-      setErrorModalMessage("You have to provide a category and a difficulty for the announcement!");
+      setErrorModalMessage(languages[Language].modal.addNewAnnounce.error.categoryAndDifficulty);
       setErrorModal(true);
       return 0;
     } else if (categoryRef.current.value.length === 0) {
-      setErrorModalMessage("You have to provide a category for the announcement!");
+      setErrorModalMessage(languages[Language].modal.addNewAnnounce.error.category);
       setErrorModal(true);
       return 0;
     } else if (difficultyRef.current.value.length === 0) {
-      setErrorModalMessage("You have to provide a difficulty for the announcement!");
+      setErrorModalMessage(languages[Language].modal.addNewAnnounce.error.difficulty);
       setErrorModal(true);
       return 0;
     }
 
     if (showAddress)
-      if (countryRef.current.value.length === 0) {
-        setErrorModalMessage("You have to set a country for the address!");
+      if (countryRef.current.value.length === "") {
+        setErrorModalMessage(languages[Language].modal.addNewAnnounce.error.country);
         setErrorModal(true);
         return 0;
-      } else if (stateRef.current.value.length === 0) {
-        setErrorModalMessage("You have to set a state for the address!");
+      } else if (stateRef.current.value.length === "") {
+        setErrorModalMessage(languages[Language].modal.addNewAnnounce.error.state);
         setErrorModal(true);
         return 0;
-      } else if (cityRef.current.value.length === 0) {
-        setErrorModalMessage("You have to set a city for the address!");
+      } else if (cityRef.current.value.length === "") {
+        setErrorModalMessage(languages[Language].modal.addNewAnnounce.error.city);
         setErrorModal(true);
         return 0;
-      } else if (streetRef.current.value.length === 0) {
-        setErrorModalMessage("You have to set a street for the address!");
+      } else if (street.current.value.length === 0) {
+        setErrorModalMessage(languages[Language].modal.addNewAnnounce.error.street);
         setErrorModal(true);
         return 0;
-      } else if (streetNumberRef.current.value.length === 0) {
-        setErrorModalMessage("You have to set a street number for the address!");
+      } else if (streetNumber.current.value.length === 0) {
+        setErrorModalMessage(languages[Language].modal.addNewAnnounce.error.streetNumber);
         setErrorModal(true);
         return 0;
-      } else if (buildingRef.current.value.length === 0) {
-        setErrorModalMessage("You have to set a building for the address!");
+      } else if (building.current.value.length === 0) {
+        setErrorModalMessage(languages[Language].modal.addNewAnnounce.error.building);
         setErrorModal(true);
         return 0;
-      } else if (apartmentRef.current.value.length === 0) {
-        setErrorModalMessage("You have to set an apartment number for the address!");
+      } else if (apartment.current.value.length === 0) {
+        setErrorModalMessage(languages[Language].modal.addNewAnnounce.error.apartment);
         setErrorModal(true);
         return 0;
-      } else if (zipcodeRef.current.value.length === 0) {
-        setErrorModalMessage("You have to set a zipcode for the address!");
+      } else if (zipcode.current.value.length === 0) {
+        setErrorModalMessage(languages[Language].modal.addNewAnnounce.error.zipcode);
         setErrorModal(true);
         return 0;
       }
@@ -275,9 +276,7 @@ const Announce = ({ id, data }) => {
 
   const helpPerson = async () => {
     if (userData?.helpingAnnounceID) {
-      setErrorModalMessage(
-        "You already help someone. You cannot help other people until you finish with the one you help now!",
-      );
+      setErrorModalMessage(languages[Language].modal.announce.error.alreadyHelp);
       setErrorModal(true);
       return;
     }
@@ -291,7 +290,7 @@ const Announce = ({ id, data }) => {
     }).catch((error) => {
       console.log(error);
       setErrorModal(true);
-      setErrorModalMessage("Something went wrong. You can't help this person right now");
+      setErrorModalMessage(languages[Language].modal.announce.error.cantHelp);
     });
 
     await updateDoc(userDoc, {
@@ -299,10 +298,10 @@ const Announce = ({ id, data }) => {
     }).catch((error) => {
       console.log(error);
       setErrorModal(true);
-      setErrorModalMessage("Something went wrong. You can't help this person right now");
+      setErrorModalMessage(languages[Language].modal.announce.error.cantHelp);
     });
 
-    if (errorModalMessage.length === 0) router.reload();
+    if (errorModalMessage.length === 0) router.replace(router.asPath);
   };
 
   const saveChanges = async () => {
@@ -317,7 +316,7 @@ const Announce = ({ id, data }) => {
         points: calculatePoints(),
       }).catch((error) => {
         console.log(error);
-        setErrorModalMessage("Something went wrong. We couldn't update the new changes!");
+        setErrorModalMessage(languages[Language].modal.announce.error.cantUpdate);
         setErrorModal(true);
       });
 
@@ -335,12 +334,12 @@ const Announce = ({ id, data }) => {
         },
       }).catch((error) => {
         console.log(error);
-        setErrorModalMessage("Something went wrong. We couldn't update the new changes!");
+        setErrorModalMessage(languages[Language].modal.announce.error.cantUpdate);
         setErrorModal(true);
       });
     }
 
-    if (errorModalMessage.length === 0) router.reload();
+    if (errorModalMessage.length === 0) router.replace(router.asPath);
   };
 
   const closeAnnounce = async () => {
@@ -351,7 +350,7 @@ const Announce = ({ id, data }) => {
       status: "closed",
     }).catch((error) => {
       console.log(error);
-      setErrorModalMessage("Something went wrong. We couldn't close the announce!");
+      setErrorModalMessage(languages[Language].modal.announce.error.cantClose);
       setErrorModal(true);
     });
 
@@ -360,11 +359,11 @@ const Announce = ({ id, data }) => {
       temporaryAddress: deleteField(),
     }).catch((error) => {
       console.log(error);
-      setErrorModalMessage("Something went wrong. We couldn't close the announce!");
+      setErrorModalMessage(languages[Language].modal.announce.error.cantClose);
       setErrorModal(true);
     });
 
-    if (errorModalMessage.length === 0) router.reload();
+    if (errorModalMessage.length === 0) router.replace(router.asPath);
   };
 
   const finishAnnounce = async () => {
@@ -376,7 +375,7 @@ const Announce = ({ id, data }) => {
       status: "helped",
     }).catch((error) => {
       console.log(error);
-      setErrorModalMessage("Something went wrong. We couldn't finish the announce!");
+      setErrorModalMessage(languages[Language].modal.announce.error.cantFinish);
       setErrorModal(true);
     });
 
@@ -385,7 +384,7 @@ const Announce = ({ id, data }) => {
       announceID: "",
     }).catch((error) => {
       console.log(error);
-      setErrorModalMessage("Something went wrong. We couldn't finish the announce!");
+      setErrorModalMessage(languages[Language].modal.announce.error.cantFinish);
       setErrorModal(true);
     });
 
@@ -393,8 +392,6 @@ const Announce = ({ id, data }) => {
       console.log("I couldn't get the user's who help me data"),
     );
     const helpingUserData = helpingUserSnap.data();
-
-    console.log(helpingUserSnap.data());
 
     const points = helpingUserData.points + announceData.points;
     const helpedPeople = helpingUserData.helpedPeople + 1;
@@ -405,11 +402,11 @@ const Announce = ({ id, data }) => {
       helpingAnnounceID: "",
     }).catch((error) => {
       console.log(error);
-      setErrorModalMessage("Something went wrong. We couldn't finish the announce!");
+      setErrorModalMessage(languages[Language].modal.announce.error.cantFinish);
       setErrorModal(true);
     });
 
-    if (errorModalMessage.length === 0) router.reload();
+    if (errorModalMessage.length === 0) router.replace(router.asPath);
   };
 
   useEffect(() => {
@@ -430,7 +427,7 @@ const Announce = ({ id, data }) => {
             icon={<BsChevronLeft />}
             className={styles.announceHeader}
           >
-            Go back
+            {languages[Language].goBack}
           </Button>
         </Grid>
         <Grid xs={6}>
@@ -449,7 +446,7 @@ const Announce = ({ id, data }) => {
           <Grid.Container>
             <Grid xs={12}>
               <Input
-                label="First name"
+                label={languages[Language].userData.firstName}
                 initialValue={firstName}
                 fullWidth
                 readOnly={!edit}
@@ -459,7 +456,7 @@ const Announce = ({ id, data }) => {
             </Grid>
             <Grid xs={12}>
               <Input
-                label="Last name"
+                label={languages[Language].userData.lastName}
                 initialValue={lastName}
                 fullWidth
                 readOnly={!edit}
@@ -471,41 +468,40 @@ const Announce = ({ id, data }) => {
         </Grid>
         <Grid xs={12} sm={6}>
           <div className={styles.selectMenu}>
-            <label className={styles.selectLabel}>Category</label>
+            <label className={styles.selectLabel}>{languages[Language].select.category}</label>
             <select className={styles.select} disabled={!edit} defaultValue={announceData.category} ref={categoryRef}>
-              <option value={"Groceries"}>Groceries</option>
-              <option value={"School meditations"}>School meditations</option>
-              <option value={"Shopping"}>Shopping</option>
-              <option value={"Cleaning"}>Cleaning</option>
-              <option value={"Walking"}>Walking</option>
-              <option value={"Cooking"}>Cooking</option>
-              <option value={"Paying of bills"}>Paying of bills</option>
-              <option value={"Emotional support"}>Emotional support</option>
-              <option value={"Physical labour"}>Physical labour</option>
-              <option value={"Hard work"}>Hard work</option>
+              <option value={"Groceries"}>{languages[Language].announces.groceries}</option>
+              <option value={"School meditations"}>{languages[Language].announces.schoolMeditations}</option>
+              <option value={"Shopping"}>{languages[Language].announces.shopping}</option>
+              <option value={"Cleaning"}>{languages[Language].announces.cleaning}</option>
+              <option value={"Walking"}>{languages[Language].announces.walking}</option>
+              <option value={"Cooking"}>{languages[Language].announces.cooking}</option>
+              <option value={"Paying of bills"}>{languages[Language].announces.payingOfBills}</option>
+              <option value={"Emotional support"}>{languages[Language].announces.emotionalSupport}</option>
+              <option value={"Physical labour"}>{languages[Language].announces.physicalLabour}</option>
+              <option value={"Hard work"}>{languages[Language].announces.hardWork}</option>
             </select>
           </div>
         </Grid>
         <Grid xs={12} sm={6}>
           <div className={styles.selectMenu}>
-            <label className={styles.selectLabel}>Difficulty</label>
+            <label className={styles.selectLabel}>{languages[Language].select.difficulty}</label>
             <select
               className={styles.select}
               disabled={!edit}
               defaultValue={announceData.difficulty}
               ref={difficultyRef}
             >
-              <option value="">Select a difficulty</option>
-              <option value={"0"}>Easy</option>
-              <option value={"1"}>Medium</option>
-              <option value={"2"}>Hard</option>
+              <option value={"0"}>{languages[Language].announces.easy}</option>
+              <option value={"1"}>{languages[Language].announces.medium}</option>
+              <option value={"2"}>{languages[Language].announces.hard}</option>
             </select>
           </div>
         </Grid>
         <Grid xs={12}>
           <Textarea
             minRows={20}
-            label="Description"
+            label={languages[Language].announces.addNewAnnounce.description}
             initialValue={announceData.description}
             fullWidth
             size="lg"
@@ -526,18 +522,21 @@ const Announce = ({ id, data }) => {
                   if (!showAddress) getData();
                 }}
               >
-                {!showAddress ? "Show" : "Hide"} address and contact information
+                {!showAddress
+                  ? languages[Language].announces.announce.show
+                  : languages[Language].announces.announce.hide}{" "}
+                {languages[Language].announces.announce.address}
               </Button>
             </Grid>
           )}
         {showAddress && (
           <>
             <Grid xs={12}>
-              <Input size="lg" label="Email" fullWidth type="email" initialValue={email} readOnly />
+              <Input size="lg" label={languages[Language].email} fullWidth type="email" initialValue={email} readOnly />
             </Grid>
             <Grid xs={12}>
               <div className={styles.selectMenu}>
-                <label className={styles.selectLabel}>Country</label>
+                <label className={styles.selectLabel}>{languages[Language].select.country}</label>
                 <select
                   className={styles.select}
                   onChange={showStates}
@@ -545,7 +544,7 @@ const Announce = ({ id, data }) => {
                   defaultValue={address?.country}
                   disabled={!edit}
                 >
-                  <option value="">Select country</option>
+                  <option value="">{languages[Language].select.countryOption}</option>
                   {countries &&
                     countries.map((country) => {
                       return (
@@ -560,7 +559,7 @@ const Announce = ({ id, data }) => {
             <Grid xs={12}>
               <div className={styles.selectMenu}>
                 <label htmlFor="state" className={styles.selectLabel}>
-                  State
+                  {languages[Language].select.state}
                 </label>
                 <select
                   id="state"
@@ -570,7 +569,7 @@ const Announce = ({ id, data }) => {
                   defaultValue={address?.state}
                   disabled={!edit}
                 >
-                  {countryChange && <option value="">Select state</option>}
+                  {countryChange && <option value="">{languages[Language].select.stateOption}</option>}
                   {states &&
                     states.map((state) => {
                       return (
@@ -585,10 +584,10 @@ const Announce = ({ id, data }) => {
             <Grid xs={12}>
               <div className={styles.selectMenu}>
                 <label htmlFor="city" className={styles.selectLabel}>
-                  City
+                  {languages[Language].select.city}
                 </label>
                 <select id="city" className={styles.select} ref={cityRef} defaultValue={address?.city} disabled={!edit}>
-                  {stateChange && <option value="">Select city</option>}
+                  {stateChange && <option value="">{languages[Language].select.cityOption}</option>}
                   {cities &&
                     cities.map((city) => {
                       return (
@@ -603,7 +602,7 @@ const Announce = ({ id, data }) => {
             <Grid xs={12}>
               <Input
                 size="lg"
-                label="Street"
+                label={languages[Language].userData.street}
                 fullWidth
                 initialValue={address?.street}
                 readOnly={!edit}
@@ -614,7 +613,7 @@ const Announce = ({ id, data }) => {
             <Grid xs={6}>
               <Input
                 size="lg"
-                label="Street number"
+                label={languages[Language].userData.streetNumber}
                 fullWidth
                 type="number"
                 initialValue={address?.streetNumber}
@@ -626,7 +625,7 @@ const Announce = ({ id, data }) => {
             <Grid xs={6}>
               <Input
                 size="lg"
-                label="Building"
+                label={languages[Language].userData.building}
                 fullWidth
                 initialValue={address?.building}
                 readOnly={!edit}
@@ -637,7 +636,7 @@ const Announce = ({ id, data }) => {
             <Grid xs={12}>
               <Input
                 size="lg"
-                label="Apartment"
+                label={languages[Language].userData.apartment}
                 fullWidth
                 type="number"
                 initialValue={address?.apartment}
@@ -649,7 +648,7 @@ const Announce = ({ id, data }) => {
             <Grid xs={12}>
               <Input
                 size="lg"
-                label="Zipcode"
+                label={languages[Language].userData.zipcode}
                 fullWidth
                 type="number"
                 initialValue={address?.zipcode}
@@ -671,14 +670,14 @@ const Announce = ({ id, data }) => {
             {announceData.uid === currentUser.uid && (
               <Grid xs={12} sm={6}>
                 <Button color="error" onPress={() => setCancelEditModal(true)} css={{ width: "100%" }}>
-                  Cancel
+                  {languages[Language].announces.announce.buttons.cancel}
                 </Button>
               </Grid>
             )}
             {announceData.uid === currentUser.uid && (
               <Grid xs={12} sm={6}>
                 <Button color="success" onPress={() => setConfirmEditModal(true)} css={{ width: "100%" }}>
-                  Save changes
+                  {languages[Language].announces.announce.buttons.save}
                 </Button>
               </Grid>
             )}
@@ -691,7 +690,7 @@ const Announce = ({ id, data }) => {
                 {announceData.status !== "closed" && announceData.status !== "helped" && (
                   <Grid xs={12} sm={6}>
                     <Button color="success" onPress={() => setEdit(true)} css={{ width: "100%" }}>
-                      Edit announce
+                      {languages[Language].announces.announce.buttons.edit}
                     </Button>
                   </Grid>
                 )}
@@ -699,14 +698,14 @@ const Announce = ({ id, data }) => {
                 {announceData.status === "active" && (
                   <Grid xs={12} sm={6}>
                     <Button color="error" onPress={() => setCloseAnnounceModal(true)} css={{ width: "100%" }}>
-                      Close announce
+                      {languages[Language].announces.announce.buttons.close}
                     </Button>
                   </Grid>
                 )}
                 {announceData.status === "helping" && (
                   <Grid xs={12} sm={6}>
                     <Button color="error" onPress={() => setFinishAnnounceModal(true)} css={{ width: "100%" }}>
-                      Finish
+                      {languages[Language].announces.announce.buttons.finish}
                     </Button>
                   </Grid>
                 )}
@@ -715,7 +714,7 @@ const Announce = ({ id, data }) => {
             {announceData.helpedBy.length === 0 && announceData.uid != currentUser.uid && (
               <Grid xs={12}>
                 <Button color="success" onPress={() => setHelpModal(true)} css={{ width: "100%" }}>
-                  Help this person
+                  {languages[Language].announces.announce.buttons.help}
                 </Button>
               </Grid>
             )}
@@ -733,16 +732,16 @@ const Announce = ({ id, data }) => {
         css={{ backgroundColor: "var(--nextui-colors-background)" }}
       >
         <Modal.Header>
-          <h3>Save changes ?</h3>
+          <h3>{languages[Language].modal.announce.save.title}</h3>
         </Modal.Header>
         <Modal.Body>
-          <h5 style={{ textAlign: "center" }}>Are you sure you want to save the changes ?</h5>
+          <h5 style={{ textAlign: "center" }}>{languages[Language].modal.announce.save.body}</h5>
         </Modal.Body>
         <Modal.Footer>
           <Grid.Container gap={1} justify="center">
             <Grid xs>
               <Button auto flat ripple color="error" onPress={() => setConfirmEditModal(false)} css={{ width: "100%" }}>
-                Cancel
+                {languages[Language].modal.announce.save.button.cancel}
               </Button>
             </Grid>
             <Grid xs>
@@ -756,7 +755,7 @@ const Announce = ({ id, data }) => {
                 }}
                 css={{ width: "100%" }}
               >
-                Confirm changes
+                {languages[Language].modal.announce.save.buttons.confirm}
               </Button>
             </Grid>
           </Grid.Container>
@@ -771,16 +770,16 @@ const Announce = ({ id, data }) => {
         css={{ backgroundColor: "var(--nextui-colors-background)" }}
       >
         <Modal.Header>
-          <h3>Discard the changes ?</h3>
+          <h3>{languages[Language].modal.announce.discard.title}</h3>
         </Modal.Header>
         <Modal.Body>
-          <h5 style={{ textAlign: "center" }}>Are you sure you want to discard the changes ?</h5>
+          <h5 style={{ textAlign: "center" }}>{languages[Language].modal.announce.discard.body}</h5>
         </Modal.Body>
         <Modal.Footer>
           <Grid.Container gap={1} justify="center">
             <Grid xs>
               <Button auto light ripple color="error" onPress={() => setCancelEditModal(false)} css={{ width: "100%" }}>
-                Cancel
+                {languages[Language].modal.announce.discard.buttons.cancel}
               </Button>
             </Grid>
             <Grid xs>
@@ -794,7 +793,7 @@ const Announce = ({ id, data }) => {
                 }}
                 css={{ width: "100%" }}
               >
-                Discard changes
+                {languages[Language].modal.announce.discard.buttons.discard}
               </Button>
             </Grid>
           </Grid.Container>
@@ -809,10 +808,10 @@ const Announce = ({ id, data }) => {
         css={{ backgroundColor: "var(--nextui-colors-background)" }}
       >
         <Modal.Header>
-          <h3>Finish this announce ?</h3>
+          <h3>{languages[Language].modal.announce.finish.title}</h3>
         </Modal.Header>
         <Modal.Body>
-          <h5 style={{ textAlign: "center" }}>Are you sure you want to finish this announce ?</h5>
+          <h5 style={{ textAlign: "center" }}>{languages[Language].modal.announce.finish.body}</h5>
         </Modal.Body>
         <Modal.Footer>
           <Grid.Container gap={1} justify="center">
@@ -825,7 +824,7 @@ const Announce = ({ id, data }) => {
                 onPress={() => setFinishAnnounceModal(false)}
                 css={{ width: "100%" }}
               >
-                Cancel
+                {languages[Language].modal.announce.finish.buttons.cancel}
               </Button>
             </Grid>
             <Grid xs>
@@ -839,7 +838,7 @@ const Announce = ({ id, data }) => {
                 }}
                 css={{ width: "100%" }}
               >
-                Finish
+                {languages[Language].modal.announce.finish.buttons.finish}
               </Button>
             </Grid>
           </Grid.Container>
@@ -854,10 +853,10 @@ const Announce = ({ id, data }) => {
         css={{ backgroundColor: "var(--nextui-colors-background)" }}
       >
         <Modal.Header>
-          <h3>Close this announce ?</h3>
+          <h3>{languages[Language].modal.announce.close.title}</h3>
         </Modal.Header>
         <Modal.Body>
-          <h5 style={{ textAlign: "center" }}>Are you sure you want to close this announce ?</h5>
+          <h5 style={{ textAlign: "center" }}>{languages[Language].modal.announce.close.body}</h5>
         </Modal.Body>
         <Modal.Footer>
           <Grid.Container gap={1} justify="center">
@@ -870,7 +869,7 @@ const Announce = ({ id, data }) => {
                 onPress={() => setCloseAnnounceModal(false)}
                 css={{ width: "100%" }}
               >
-                Cancel
+                {languages[Language].modal.announce.close.buttons.cancel}
               </Button>
             </Grid>
             <Grid xs>
@@ -884,7 +883,7 @@ const Announce = ({ id, data }) => {
                 }}
                 css={{ width: "100%" }}
               >
-                Close
+                {languages[Language].modal.announce.close.buttons.close}
               </Button>
             </Grid>
           </Grid.Container>
@@ -899,16 +898,16 @@ const Announce = ({ id, data }) => {
         css={{ backgroundColor: "var(--nextui-colors-background)" }}
       >
         <Modal.Header>
-          <h3>Help this person ?</h3>
+          <h3>{languages[Language].modal.announce.help.title}</h3>
         </Modal.Header>
         <Modal.Body>
-          <h5 style={{ textAlign: "center" }}>Are you sure you want to help this person ?</h5>
+          <h5 style={{ textAlign: "center" }}>{languages[Language].modal.announce.help.body}</h5>
         </Modal.Body>
         <Modal.Footer>
           <Grid.Container gap={1} justify="center">
             <Grid xs>
               <Button auto flat ripple color="error" onPress={() => setHelpModal(false)} css={{ width: "100%" }}>
-                Cancel
+                {languages[Language].modal.announce.help.buttons.cancel}
               </Button>
             </Grid>
             <Grid xs>
@@ -922,7 +921,7 @@ const Announce = ({ id, data }) => {
                 }}
                 css={{ width: "100%" }}
               >
-                Help now
+                {languages[Language].modal.announce.help.buttons.help}
               </Button>
             </Grid>
           </Grid.Container>

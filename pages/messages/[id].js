@@ -118,7 +118,7 @@ const MessagesBody = ({ id }) => {
         sentBy: currentUser.uid,
       });
 
-      router.push(`/messages/${conversationRef.id}`);
+      router.replace(`/messages/${conversationRef.id}`);
     }
 
     anchorRef.current.scrollIntoView({ behavior: "smooth" });
@@ -196,6 +196,7 @@ const MessagesBody = ({ id }) => {
             onChange={(e) => {
               setMessage(e.target.value);
             }}
+            css={{ width: "100%" }}
             value={message}
             aria-label="Input field for message"
           />

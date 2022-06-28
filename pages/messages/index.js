@@ -10,29 +10,33 @@ import { BsPlusCircleFill } from "react-icons/bs";
 import { getDoc, doc } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import MessagesBody from "./[id]";
+import languages from "../../utilities/languages.json";
 
 import NoData from "../../public/svg/noData.svg";
+import StartConversation from "../../public/svg/startConversation.svg";
+import SendMessage from "../../public/svg/sendMessage.svg";
 import styles from "../styles/Messages.module.scss";
 
 const Conversation = ({ imgURL, name, lastMessage, lastMessageSent, id }) => {
   const size = useWindowSize();
+  const { Language } = useAuth();
 
   const processesTheDay = (day) => {
     switch (day) {
       case 0:
-        return "Sunday";
+        return languages[Language].messages.days.sunday;
       case 1:
-        return "Monday";
+        return languages[Language].messages.days.monday;
       case 2:
-        return "Tuesday";
+        return languages[Language].messages.days.tuesday;
       case 3:
-        return "Wednesday";
+        return languages[Language].messages.days.wednesday;
       case 4:
-        return "Thursday";
+        return languages[Language].messages.days.thursday;
       case 5:
-        return "Friday";
+        return languages[Language].messages.days.friday;
       case 6:
-        return "Saturday";
+        return languages[Language].messages.days.saturday;
       default:
         return "";
     }
@@ -123,7 +127,7 @@ const Messages = ({ initialConversations }) => {
   const conversations = JSON.parse(initialConversations);
   const [conversationID, setConversationID] = useState("");
   const [sendNewMessageModal, setSendNewMessageModal] = useState(false);
-  const { currentUser, userData } = useAuth();
+  const { currentUser, userData, Language } = useAuth();
   const [message, setMessage] = useState("");
   const [newSendMessageData, setNewSendMessageData] = useState({
     imgURL: "",
@@ -134,8 +138,9 @@ const Messages = ({ initialConversations }) => {
   const size = useWindowSize();
 
   const getNewConversations = async () => {
+    console.log(userData);
     if (!userData?.helpingAnnounceID) {
-      setMessage("Currently you have no one to send a new message");
+      setMessage(languages[Language].messages.sendNewMessage.noMessages);
       return;
     }
 
@@ -149,8 +154,11 @@ const Messages = ({ initialConversations }) => {
       return conversation.data.uid1 === userID || conversation.data.uid2 === userID;
     });
 
+    console.log(result);
+
     if (result.length === 0)
       setNewSendMessageData({ imgURL: announceData.imgURL, name: announceData.name, uid: announceData.uid });
+    else setMessage(languages[Language].messages.sendNewMessage.noMessages);
   };
 
   return (
@@ -159,10 +167,10 @@ const Messages = ({ initialConversations }) => {
         <Grid xs={12} sm={4}>
           <Col css={{ position: "relative" }}>
             <Row xs={12}>
-              <h2 className={styles.title}>Messages</h2>
+              <h2 className={styles.title}>{languages[Language].messages.title}</h2>
             </Row>
             <Col className={styles.conversationsList}>
-              {conversations &&
+              {conversations ? (
                 conversations.map((conversation) => {
                   return (
                     <Row
@@ -183,7 +191,14 @@ const Messages = ({ initialConversations }) => {
                       />
                     </Row>
                   );
-                })}
+                })
+              ) : (
+                <div className={styles.startConversation}>
+                  <StartConversation />
+                  <h4>{languages[Language].messages.startConversationTitle}</h4>
+                  <h6>{languages[Language].messages.startConversationSubtitle}</h6>
+                </div>
+              )}
             </Col>
             <div
               className={styles.sendNewMessage}
@@ -197,7 +212,14 @@ const Messages = ({ initialConversations }) => {
           </Col>
         </Grid>
         <Grid xs={0} sm={8}>
-          {conversationID && <MessagesBody id={conversationID} />}
+          {conversationID ? (
+            <MessagesBody id={conversationID} />
+          ) : (
+            <div className={styles.sendMessages}>
+              <SendMessage />
+              <h3 className={styles.title}>{languages[Language].messages.pickMessage}</h3>
+            </div>
+          )}
         </Grid>
       </Grid.Container>
       <Modal
@@ -209,18 +231,20 @@ const Messages = ({ initialConversations }) => {
         css={{ backgroundColor: "var(--nextui-colors-background)" }}
       >
         <Modal.Header>
-          <h3 style={{ color: "var(--nextui-colors-red500)" }}>Send new message</h3>
+          <h3 style={{ color: "var(--nextui-colors-red500)" }}>{languages[Language].messages.sendNewMessage.title}</h3>
         </Modal.Header>
         <Modal.Body>
           <h6 style={{ textAlign: "center" }}>
             {message.length > 0 ? (
               <div className={styles.noData}>
-                <NoData />
                 <span>{message}</span>
+                <NoData />
               </div>
             ) : (
               <Link
-                href={`/messages/newConversation?name=${newSendMessageData?.name}&imgURL=${encodeURI(newSendMessageData?.imgURL)}&uid=${newSendMessageData?.uid}`}
+                href={`/messages/newConversation?name=${newSendMessageData?.name}&imgURL=${encodeURI(
+                  newSendMessageData?.imgURL,
+                )}&uid=${newSendMessageData?.uid}`}
               >
                 <a>
                   <Conversation imgURL={newSendMessageData?.imgURL} name={newSendMessageData?.name} />
@@ -233,7 +257,7 @@ const Messages = ({ initialConversations }) => {
           <Grid.Container gap={1}>
             <Grid xs>
               <Button auto color="error" onPress={() => setSendNewMessageModal(false)} css={{ width: "100%" }}>
-                Close
+                {languages[Language].messages.sendNewMessage.close}
               </Button>
             </Grid>
           </Grid.Container>

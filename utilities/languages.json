@@ -1,47 +1,372 @@
 {
-    "en": {
-        "nav": {
-            "home": "Home",
-            "announces": "Announces",
-            "shop": "Shop",
-            "messages": "Messages",
-            "settings": "Settings"
+  "English": {
+    "nav": {
+      "home": "Home",
+      "announces": "Announces",
+      "shop": "Shop",
+      "messages": "Messages",
+      "settings": "Settings"
+    },
+    "settings": {
+      "title": "Settings",
+      "editProfile": "Edit profile",
+      "app": {
+        "title": "App settings",
+        "subtitle": "Settings on language, dark mode ..."
+      },
+      "account": {
+        "title": "Profile",
+        "subtitle": "Settings on name, email, address ..."
+      },
+      "about": {
+        "title": "About",
+        "subtitle": "Information about platform"
+      },
+      "help": {
+        "title": "Help & Support",
+        "subtitle": "FAQ and support information"
+      }
+    },
+    "appSettings": {
+      "title": "App settings",
+      "darkMode": "Dark mode",
+      "language": "Language",
+      "fontSize": {
+        "title": "Font size",
+        "small": "Small",
+        "normal": "Normal",
+        "big": "Big",
+        "veryBig": "Very big"
+      }
+    },
+    "profile": {
+      "title": "Edit profile",
+      "image": "Change profile image",
+      "statusEmail": "Status email",
+      "sendEmailLink": "Send email verification link",
+      "sendLink": "Send link",
+      "changeEmail": "Change email",
+      "discard": "Discard changes",
+      "save": "Save changes"
+    },
+    "helpSupport": {
+      "title": "Help & Support",
+      "Q1": {
+        "title": "How can i change my name / email / address / password ?",
+        "info": "To change one of these pieces of information, go to the settings tab, the account section and click on one of the pieces of information you want to change."
+      },
+      "Q2": {
+        "title": "How do I post announces?",
+        "info": "In order to post announces you have to go to the announces tab, complete all the fields and in the end press the 'Post announcement' button."
+      },
+      "Q3": {
+        "title": "How can i talk to the person who help me?",
+        "info": "In order to send a message to someone you help, you will have to go to the message tab, where you will be able to see the messages with all the people you are helping."
+      },
+      "Q4": {
+        "title": "How do i help a person?",
+        "info": "All you have to do is go to the announces tab and click on the announcement you want. Then you will be redirected to that announcement page where you click the green 'Help this person' at the end of the page."
+      },
+      "Q5": {
+        "title": "How can I get points for the shop?",
+        "info": "You can get points by helping people. The number of points obtained depends on the difficulty and duration of the activities you do."
+      },
+      "Q6": {
+        "title": "How the points system works?"
+      }
+    },
+    "home": {
+      "title": "Dashboard",
+      "stats": "Stats",
+      "peopleHelped": "People helped",
+      "points": "Points",
+      "announces": "Announces",
+      "activeAnnounce": "Active announce",
+      "helpingNow": "Helping now",
+      "helped": "Helped announces",
+      "closedAnnounces": "Closed announces",
+      "seeAllAnnounces": "See all announces"
+    },
+    "select": {
+      "category": "Category",
+      "categoryOption": "Select a category",
+      "difficulty": "Difficulty",
+      "difficultyOption": "Select a difficulty",
+      "country": "Country",
+      "countryOption": "Select country",
+      "state": "State",
+      "stateOption": "Select state",
+      "city": "City",
+      "cityOption": "Select city",
+      "orderBy": "Order by",
+      "orderByOption1": "The newest",
+      "orderByOption2": "The oldest"
+    },
+    "announces": {
+      "title": "Announces",
+      "loadMoreAnnounces": "Load more announces",
+      "noAnnounces": "No announces at the time!",
+      "filter": "Filter",
+      "groceries": "Groceries",
+      "schoolMeditations": "School meditations",
+      "shopping": "Shopping",
+      "cleaning": "Cleaning",
+      "walking": "Walking",
+      "cooking": "Cooking",
+      "payingOfBills": "Paying of bills",
+      "emotionalSupport": "Emotional support",
+      "physicalLabour": "Physical labour",
+      "hardWork": "Hard work",
+      "easy": "Easy",
+      "medium": "Medium",
+      "hard": "Hard",
+      "addNewAnnounce": {
+        "title": "Add a new announce",
+        "description": "Description",
+        "descriptionInfo": "Enter a thorough description of the announce",
+        "anotherAddress": "Use another address compared to the one from your account",
+        "addAnnounce": "Add announce"
+      },
+      "announce": {
+        "show": "Show",
+        "hide": "Hide",
+        "address": "address and contact information",
+        "buttons": {
+          "cancel": "Cancel",
+          "save": "Save changes",
+          "edit": "Edit announce",
+          "close": "Close announce",
+          "finish": "Finish",
+          "help": "Help this person"
+        }
+      }
+    },
+    "shop": {
+      "title": "Shop",
+      "addToCart": "Add to cart",
+      "points": "points",
+      "product": {
+        "productCode": "Product code",
+        "price": "Price",
+        "description": "Description",
+        "inStock": "In stock",
+        "notInStock": "Not in stock"
+      },
+      "cart": {
+        "title": "Shopping cart",
+        "order": "Order summary",
+        "totalProducts": "Total products",
+        "totalPrice": "Total price",
+        "pointsAvailable": "Points available",
+        "buyNow": "Buy now",
+        "notEnoughPoints": "Not enough points"
+      }
+    },
+    "messages": {
+      "title": "Messages",
+      "pickMessage": "Choose a conversation from the left and start talking",
+      "startConversationTitle": "You have no active conversation",
+      "startConversationSubtitle": "If you want to write to someone press plus and choose the person you want to talk to",
+      "sendNewMessage": {
+        "title": "Send new message",
+        "close": "Close",
+        "noMessages": "Currently you have no one to send a new message"
+      },
+      "days": {
+        "monday": "Monday",
+        "tuesday": "Tuesday",
+        "wednesday": "Wednesday",
+        "thursday": "Thursday",
+        "friday": "Friday",
+        "saturday": "Saturday",
+        "sunday": "Sunday"
+      }
+    },
+    "login": {
+      "title": "Log in",
+      "link": "Need an account?",
+      "link2": "Sign up"
+    },
+    "register": {
+      "title": "Create new account",
+      "link": "Already have an account?",
+      "link2": "Log in",
+      "notMatch": "Passwords do not match",
+      "emailPlaceholder": "Enter your email",
+      "passPlaceholder": "Enter your password",
+      "confirmPassPlaceholder": "Enter your password again"
+    },
+    "userData": {
+      "address": "Address",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "birth": "Birth date",
+      "country": "Country",
+      "state": "State",
+      "city": "City",
+      "street": "Street",
+      "streetNumber": "Street number",
+      "building": "Building",
+      "apartment": "Apartment",
+      "zipcode": "Zipcode"
+    },
+    "goBack": "Go back",
+    "logout": "Log out",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm password",
+    "defaultMessage": "Hi. I need your help. I cannot write about what I need but this announce contains the category and difficulty of the task. It can be connected with me by message or call. Thank you very much!",
+    "createNewAccount": {
+      "nextStep": "Next step",
+      "prevStep": "Previous step",
+      "complete": "Complete registration",
+      "firstSlide": {
+        "title": "Welcome",
+        "subtitle": "In order to complete registration we need more information about you"
+      },
+      "secondSlide": {
+        "title": "First, let's set your profile image",
+        "img": "Choose profile image"
+      },
+      "thirdSlide": {
+        "title": "Let's add your personal information"
+      },
+      "fourthSlide": {
+        "title": "Next, we need your address"
+      },
+      "fifthSlide": {
+        "title": "We need more details about your address"
+      },
+      "lastSlide": {
+        "title": "You have completed all the necessary information! All that remains to be done is to save the changes!"
+      }
+    },
+    "modal": {
+      "createNewAccount": {
+        "error": {
+          "title": "Error!",
+          "close": "Close",
+          "imgUploadError": "Failed to upload image!",
+          "imgUpdateError": "Failed to update image!"
         },
-        "settings": {
-            "settingsTitle": "Settings",
-            "app": {
-                "title": "App settings",
-                "subtitle": "Settings on language, dark mode ..."
-            },
-            "account": {
-                "title": "Account",
-                "subtitle": "Settings on name, email, address ..."
-            },
-            "about": {
-                "title": "About",
-                "subtitle": "Information about platform"
-            },
-            "help": {
-                "title": "Help and Support",
-                "subtitle": "FAQ and support information"
-            }
+        "success": {
+          "title": "Changes were successfully saved !",
+          "body": "You can close this modal and start using the app!",
+          "close": "Close this modal"
+        }
+      },
+      "addNewAnnounce": {
+        "error": {
+          "title": "Error!",
+          "close": "Close",
+          "address": "Failed to set address!",
+          "announceID": "Failed to set announceID",
+          "categoryAndDifficulty": "You have to provide a category and a difficulty for the announcement!",
+          "category": "You have to provide a category for the announcement!",
+          "difficulty": "You have to provide a difficulty for the announcement!",
+          "country": "You have to set a country for the address!",
+          "state": "You have to set a state for the address!",
+          "city": "You have to set a city for the address!",
+          "street": "You have to set a street for the address!",
+          "streetNumber": "You have to set a street number for the address!",
+          "building": "You have to set a building for the address!",
+          "apartment": "You have to set an apartment number for the address!",
+          "zipcode": "You have to set a zipcode for the address!"
+        }
+      },
+      "announce": {
+        "error": {
+          "alreadyHelp": "You already help someone. You cannot help other people until you finish with the one you help now!",
+          "cantHelp": "Something went wrong. You can't help this person right now",
+          "cantUpdate": "Something went wrong. We couldn't update the new changes!",
+          "cantClose": "Something went wrong. We couldn't close the announce!",
+          "cantFinish": "Something went wrong. We couldn't finish the announce!"
         },
-        "appSettings": {
-            "title": "App settings",
-            "darkMode": "Dark mode",
-            "fontSize": {
-                "small": "Small",
-                "normal": "Normal",
-                "big": "Big",
-                "veryBig": "Very big"
-            },
-            "language": {
-                "english": "English",
-                "romanian": "Romanian"
-            }
+        "save": {
+          "title": "Save changes ?",
+          "body": "Are you sure you want to save the changes ?",
+          "buttons": {
+            "cancel": "Cancel",
+            "confirm": "Confirm changes"
+          }
         },
-        "logout": "Log out",
-        "login": "Log in",
-        "register": "Register"
+        "discard": {
+          "title": "Discard the changes ?",
+          "body": "Are you sure you want to discard the changes ?",
+          "buttons": {
+            "cancel": "Cancel",
+            "discard": "Discard"
+          }
+        },
+        "finish": {
+          "title": "Finish this announce ?",
+          "body": "Are you sure you want to finish this announce ?",
+          "buttons": {
+            "cancel": "Cancel",
+            "finish": "Finish"
+          }
+        },
+        "close": {
+          "title": "Close this announce ?",
+          "body": "Are you sure you want to close this announce ?",
+          "buttons": {
+            "cancel": "Cancel",
+            "close": "Close"
+          }
+        },
+        "help": {
+          "title": "Help this person ?",
+          "body": "Are you sure you want to help this person ?",
+          "buttons": {
+            "cancel": "Cancel",
+            "help": "Help now"
+          }
+        }
+      },
+      "account": {
+        "emailLink": {
+          "title": "Email verification link",
+          "body": "Email verification link sent successfully!",
+          "close": "Close this modal"
+        },
+        "authenticate": {
+          "title": "Change email address",
+          "body": "In order to change the current email address you need to reauthenticate",
+          "buttons": {
+            "cancel": "Cancel",
+            "auth": "Authenticate"
+          }
+        },
+        "changeEmail": {
+          "title": "Change email address",
+          "body": "Enter your new email address",
+          "buttons": {
+            "cancel": "Cancel",
+            "change": "Change email"
+          }
+        },
+        "emailChanged": {
+          "title": "Your email was changed successfully!",
+          "body": "Your new email address is",
+          "close": "Close this modal"
+        },
+        "discard": {
+          "title": "Discard changes",
+          "body": "Are you sure you want to discard these changes?",
+          "buttons": {
+            "cancel": "Cancel",
+            "discard": "Discard changes"
+          }
+        },
+        "save": {
+          "title": "Save changes",
+          "body": "Are you sure you want to save these changes?",
+          "buttons": {
+            "cancel": "Cancel",
+            "save": "Save changes"
+          }
+        }
+      }
     }
+  }
 }

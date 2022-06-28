@@ -4,13 +4,13 @@ import { BsChevronBarRight } from "react-icons/bs";
 import { collection, query, where, getDocs, orderBy, limit } from "firebase/firestore";
 import nookies from "nookies";
 import { firebaseAdmin } from "../config/firebaseAdmin";
+import languages from "../utilities/languages.json";
 
 import Link from "next/link";
 
 import { db } from "../config/firebase";
 
 import AnnounceCard from "../components/Card";
-import Leaderboard from "../components/Leaderboards";
 
 import styles from "./styles/Home.module.scss";
 
@@ -25,7 +25,7 @@ function Index({
   initialUserClosedAnnounces,
   userClosedAnnouncesLastKey,
 }) {
-  const { userData } = auth;
+  const { userData, Language } = auth;
 
   const myAnnounces = JSON.parse(initialUserAnnounces);
   const myHelpingAnnounces = JSON.parse(initialUserHelpingAnnounces);
@@ -39,16 +39,16 @@ function Index({
 
   return (
     <section className={styles.dashboard}>
-      <h2 className={styles.title}>Dashboard</h2>
+      <h2 className={styles.title}>{languages[Language].home.title}</h2>
       <Grid.Container gap={2}>
         <Grid xs={12} sm={3}>
           <Col>
-            <h3 className={styles.subtitle}>Stats</h3>
+            <h3 className={styles.subtitle}>{languages[Language].home.stats}</h3>
 
             <Col css={{ fontSize: "1.25rem", fontWeight: "600" }}>
               <Container fluid className={styles.stats}>
                 <Row>
-                  <Col>People helped</Col>
+                  <Col>{languages[Language].home.peopleHelped}</Col>
                   <span style={{ color: "var(--nextui-colors-cyan600)" }}>
                     {userData?.helpedPeople ? userData.helpedPeople : "0"}
                   </span>
@@ -59,7 +59,7 @@ function Index({
 
               <Container fluid className={styles.stats}>
                 <Row>
-                  <Col>Points</Col>
+                  <Col>{languages[Language].home.points}</Col>
                   <span style={{ color: "var(--nextui-colors-yellow700)" }}>
                     {userData?.points ? userData.points : "0"}
                   </span>
@@ -67,8 +67,6 @@ function Index({
               </Container>
 
               <Spacer />
-
-              <Leaderboard />
             </Col>
 
             <Spacer />
@@ -76,10 +74,10 @@ function Index({
         </Grid>
         <Grid xs={12} sm={9}>
           <Col>
-            <h3 className={styles.subtitle}>Announces</h3>
+            <h3 className={styles.subtitle}>{languages[Language].home.announces}</h3>
 
             <Collapse.Group css={{ padding: "0" }}>
-              <Collapse title="Active announce">
+              <Collapse title={languages[Language].home.activeAnnounce}>
                 <div className={styles.horizontalScrollContainer}>
                   {myAnnounces &&
                     myAnnounces.map((announce) => {
@@ -98,12 +96,13 @@ function Index({
                       bordered
                       borderWeight={3}
                     >
-                      See all announces <BsChevronBarRight style={{ fontSize: "2rem" }} />
+                      {languages[Language].home.seeAllAnnounces}
+                      <BsChevronBarRight style={{ fontSize: "2rem" }} />
                     </Button>
                   )}
                 </div>
               </Collapse>
-              <Collapse title="Helping now" expanded>
+              <Collapse title={languages[Language].home.helpingNow} expanded>
                 <div className={styles.horizontalScrollContainer}>
                   {myHelpingAnnounces &&
                     myHelpingAnnounces.map((announce) => {
@@ -122,12 +121,13 @@ function Index({
                       bordered
                       borderWeight={3}
                     >
-                      See all announces <BsChevronBarRight style={{ fontSize: "2rem" }} />
+                      {languages[Language].home.seeAllAnnounces}
+                      <BsChevronBarRight style={{ fontSize: "2rem" }} />
                     </Button>
                   )}
                 </div>
               </Collapse>
-              <Collapse title="Helped">
+              <Collapse title={languages[Language].home.helped}>
                 <div className={styles.horizontalScrollContainer}>
                   {myHelpedAnnounces &&
                     myHelpedAnnounces.map((announce) => {
@@ -146,12 +146,13 @@ function Index({
                       bordered
                       borderWeight={3}
                     >
-                      See all announces <BsChevronBarRight style={{ fontSize: "2rem" }} />
+                      {languages[Language].home.seeAllAnnounces}
+                      <BsChevronBarRight style={{ fontSize: "2rem" }} />
                     </Button>
                   )}
                 </div>
               </Collapse>
-              <Collapse title="Closed announces">
+              <Collapse title={languages[Language].home.closedAnnounces}>
                 <div className={styles.horizontalScrollContainer}>
                   {myClosedAnnounces &&
                     myClosedAnnounces.map((announce) => {
@@ -170,7 +171,8 @@ function Index({
                       bordered
                       borderWeight={3}
                     >
-                      See all announces <BsChevronBarRight style={{ fontSize: "2rem" }} />
+                      {languages[Language].home.seeAllAnnounces}
+                      <BsChevronBarRight style={{ fontSize: "2rem" }} />
                     </Button>
                   )}
                 </div>
