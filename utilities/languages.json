@@ -185,7 +185,8 @@
     "login": {
       "title": "Log in",
       "link": "Need an account?",
-      "link2": "Sign up"
+      "link2": "Sign up",
+      "forgotPass": "Forgot password ?"
     },
     "register": {
       "title": "Create new account",
@@ -280,7 +281,9 @@
           "cantHelp": "Something went wrong. You can't help this person right now",
           "cantUpdate": "Something went wrong. We couldn't update the new changes!",
           "cantClose": "Something went wrong. We couldn't close the announce!",
-          "cantFinish": "Something went wrong. We couldn't finish the announce!"
+          "cantFinish": "Something went wrong. We couldn't finish the announce!",
+          "title": "Error!",
+          "close": "Close"
         },
         "save": {
           "title": "Save changes ?",
@@ -366,6 +369,14 @@
             "save": "Save changes"
           }
         }
+      },
+      "forgotPass": {
+        "title": "Forgot password?",
+        "body": "Enter your email and we will send you a password reset link",
+        "buttons": {
+          "cancel": "Cancel",
+          "send": "Send"
+        }
       }
     },
     "headTags": {
@@ -387,7 +398,15 @@
       "addNewAnnounce": "Add new announce",
       "announce": "Announce"
     },
-    "goHome": "Go home"
+    "goHome": "Go home",
+    "errorValidation": {
+      "invalidEmail": "Invalid email",
+      "alreadyInUse": "Email is already in use",
+      "weakPass": "Your password is too weak or is less than 6 characters long",
+      "userDisabled": "This user account has been disabled",
+      "notFound": "Email does not match any user",
+      "wrongPass": "Wrong password"
+    }
   },
   "ro": {
     "nav": {
@@ -520,7 +539,7 @@
       "announce": {
         "show": "Arată",
         "hide": "Ascunde",
-        "address": "adresă și informațiile de contact",
+        "address": "adresa și informațiile de contact",
         "buttons": {
           "cancel": "Anulare",
           "save": "Salvează modificările",
@@ -575,7 +594,8 @@
     "login": {
       "title": "Autentificare",
       "link": "Ai nevoie de un cont?",
-      "link2": "Înscrie-te"
+      "link2": "Înscrie-te",
+      "forgotPass": "Ai uitat parola?"
     },
     "register": {
       "title": "Inregistrează-te",
@@ -649,6 +669,7 @@
         "error": {
           "title": "Eroare!",
           "close": "Închide",
+          "activeAnnounce": "You already have an active announce. You cannot post another until you closed the previous one.",
           "address": "Nu s-a putut seta adresa!",
           "announceID": "Nu s-a putut seta ID-ul anunțului",
           "categoryAndDifficulty": "Trebuie să furnizați o categorie și o dificultate pentru anunț!",
@@ -670,7 +691,9 @@
           "cantHelp": "Ceva n-a mers bine. Nu poți ajuta această persoană acum",
           "cantUpdate": "Ceva n-a mers bine. Nu am putut actualiza noile modificări!",
           "cantClose": "Ceva n-a mers bine. Nu am putut închide anunțul!",
-          "cantFinish": "Ceva n-a mers bine. Nu am putut termina anunțul!"
+          "cantFinish": "Ceva n-a mers bine. Nu am putut termina anunțul!",
+          "title": "Eroare!",
+          "close": "Închide fereastra"
         },
         "save": {
           "title": "Salvează modificările?",
@@ -756,6 +779,14 @@
             "save": "Salvează modificările"
           }
         }
+      },
+      "forgotPass": {
+        "title": "Ai uitat parola?",
+        "body": "Introdu emailul tău și noi o să îți trimitem un link pentru resetarea parolei",
+        "buttons": {
+          "cancel": "Anulare",
+          "send": "Trimite"
+        }
       }
     },
     "headTags": {
@@ -776,6 +807,15 @@
       "profile": "Setările contului",
       "addNewAnnounce": "Adăugați un anunț nou",
       "announce": "Anunț"
+    },
+    "goHome": "Du-te acasă",
+    "errorValidation": {
+      "invalidEmail": "Email invalid",
+      "alreadyInUse": "Email deja folosit",
+      "weakPass": "Parola este prea slabă sau are mai puțin de 6 caractere",
+      "userDisabled": "Acest cont a fost dezactivat",
+      "notFound": "Emailul nu se potrivește cu niciun utilizator",
+      "wrongPass": "Parolă greșită"
     }
   }
 }

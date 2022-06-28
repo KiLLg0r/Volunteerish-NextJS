@@ -2,27 +2,27 @@ import { useRouter } from "next/router";
 import { Container, Grid, Button, Image, Input, Textarea, Spacer, Modal } from "@nextui-org/react";
 import { BsChevronLeft, BsPencilSquare } from "react-icons/bs";
 import { db } from "../../config/firebase";
-import { collection, getDoc, getDocs, doc, updateDoc, deleteField } from "firebase/firestore";
+import { getDoc, doc, updateDoc, deleteField } from "firebase/firestore";
 import { useWindowSize } from "../../utilities/hooks";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { Country, State, City } from "country-state-city";
 import { useAuth } from "../../context/AuthContext";
 import languages from "../../utilities/languages.json";
 import Head from "next/head";
 import styles from "../styles/Announces.module.scss";
+import { firebaseAdmin } from "../../config/firebaseAdmin";
 
-const Announce = ({ id, data }) => {
+const Announce = ({ id, data, rawEmail, rawAddress }) => {
   const router = useRouter();
   const announceData = JSON.parse(data);
+  const email = JSON.parse(rawEmail);
+  const [address, setAddress] = useState(JSON.parse(rawAddress));
   const size = useWindowSize();
-  const { userData, currentUser, Language } = useAuth();
+  const { currentUser, Language, userData } = useAuth();
 
   const firstName = announceData.name.split(" ")[0];
   const lastName = announceData.name.split(" ")[1];
 
-  const [email, setEmail] = useState("");
-
-  const [address, setAddress] = useState(null);
   const [showAddress, setShowAddress] = useState(false);
   const [edit, setEdit] = useState(false);
 
@@ -35,8 +35,8 @@ const Announce = ({ id, data }) => {
   const [errorModalMessage, setErrorModalMessage] = useState("");
 
   const countries = Country.getAllCountries();
-  const [states, setStates] = useState([]);
-  const [cities, setCities] = useState([]);
+  const [states, setStates] = useState(State.getStatesOfCountry(address?.country));
+  const [cities, setCities] = useState(City.getCitiesOfState(address?.country, address?.state));
 
   const [countryChange, setCountryChange] = useState(false);
   const [stateChange, setStateChange] = useState(false);
@@ -71,37 +71,6 @@ const Announce = ({ id, data }) => {
     setCities([]);
     setCities(City.getCitiesOfState(countryRef.current.value, stateRef.current.value));
     cityRef.current.selectedIndex = 0;
-  };
-
-  const getData = async () => {
-    const userRef = doc(db, "users", announceData.uid);
-    const userSnap = await getDoc(userRef);
-
-    if (userSnap.exists()) {
-      const userDocData = userSnap.data();
-      const data = userDocData.temporaryAddress;
-
-      setEmail(userDocData.email);
-
-      if (data) {
-        setAddress(data);
-        setStates(State.getStatesOfCountry(data?.country));
-        setCities(City.getCitiesOfState(data?.country, data?.state));
-      } else {
-        setAddress({
-          country: userDocData.country,
-          state: userDocData.state,
-          city: userDocData.city,
-          street: userDocData.street,
-          streetNumber: userDocData.streetNumber,
-          building: userDocData.building,
-          apartment: userDocData.apartment,
-          zipcode: userDocData.zipcode,
-        });
-        setStates(State.getStatesOfCountry(userDocData?.country));
-        setCities(City.getCitiesOfState(userDocData?.country, userDocData?.state));
-      }
-    }
   };
 
   const calculatePoints = () => {
@@ -249,23 +218,23 @@ const Announce = ({ id, data }) => {
         setErrorModalMessage(languages[Language].modal.addNewAnnounce.error.city);
         setErrorModal(true);
         return 0;
-      } else if (street.current.value.length === 0) {
+      } else if (streetRef.current.value.length === 0) {
         setErrorModalMessage(languages[Language].modal.addNewAnnounce.error.street);
         setErrorModal(true);
         return 0;
-      } else if (streetNumber.current.value.length === 0) {
+      } else if (streetNumberRef.current.value.length === 0) {
         setErrorModalMessage(languages[Language].modal.addNewAnnounce.error.streetNumber);
         setErrorModal(true);
         return 0;
-      } else if (building.current.value.length === 0) {
+      } else if (buildingRef.current.value.length === 0) {
         setErrorModalMessage(languages[Language].modal.addNewAnnounce.error.building);
         setErrorModal(true);
         return 0;
-      } else if (apartment.current.value.length === 0) {
+      } else if (apartmentRef.current.value.length === 0) {
         setErrorModalMessage(languages[Language].modal.addNewAnnounce.error.apartment);
         setErrorModal(true);
         return 0;
-      } else if (zipcode.current.value.length === 0) {
+      } else if (zipcodeRef.current.value.length === 0) {
         setErrorModalMessage(languages[Language].modal.addNewAnnounce.error.zipcode);
         setErrorModal(true);
         return 0;
@@ -300,8 +269,6 @@ const Announce = ({ id, data }) => {
       setErrorModal(true);
       setErrorModalMessage(languages[Language].modal.announce.error.cantHelp);
     });
-
-    if (errorModalMessage.length === 0) router.replace(router.asPath);
   };
 
   const saveChanges = async () => {
@@ -320,26 +287,36 @@ const Announce = ({ id, data }) => {
         setErrorModal(true);
       });
 
-    if (userData?.temporaryAddress) {
+    if (
+      userData?.temporaryAddress ||
+      countryRef.current.value !== address?.country ||
+      stateRef.current.value !== address?.state ||
+      cityRef.current.value !== address?.city ||
+      streetRef.current.value !== address?.street ||
+      streetNumberRef.current.value !== address?.streetNumber ||
+      buildingRef.current.value !== address?.building ||
+      apartmentRef.current.value !== address?.apartment ||
+      zipcodeRef.current.value !== address?.zipcode
+    ) {
+      const updateData = {
+        country: countryRef.current.value,
+        state: stateRef.current.value,
+        city: cityRef.current.value,
+        street: streetRef.current.value,
+        streetNumber: streetNumberRef.current.value,
+        building: buildingRef.current.value,
+        apartment: apartmentRef.current.value,
+        zipcode: zipcodeRef.current.value,
+      };
+      setAddress(updateData);
       await updateDoc(userDoc, {
-        temporaryAddress: {
-          country: countryRef.current.value,
-          state: stateRef.current.value,
-          city: cityRef.current.value,
-          street: streetRef.current.value,
-          streetNumber: streetNumberRef.current.value,
-          building: buildingRef.current.value,
-          apartment: apartmentRef.current.value,
-          zipcode: zipcodeRef.current.value,
-        },
+        temporaryAddress: updateData,
       }).catch((error) => {
         console.log(error);
         setErrorModalMessage(languages[Language].modal.announce.error.cantUpdate);
         setErrorModal(true);
       });
     }
-
-    if (errorModalMessage.length === 0) router.replace(router.asPath);
   };
 
   const closeAnnounce = async () => {
@@ -362,8 +339,6 @@ const Announce = ({ id, data }) => {
       setErrorModalMessage(languages[Language].modal.announce.error.cantClose);
       setErrorModal(true);
     });
-
-    if (errorModalMessage.length === 0) router.replace(router.asPath);
   };
 
   const finishAnnounce = async () => {
@@ -405,16 +380,23 @@ const Announce = ({ id, data }) => {
       setErrorModalMessage(languages[Language].modal.announce.error.cantFinish);
       setErrorModal(true);
     });
-
-    if (errorModalMessage.length === 0) router.replace(router.asPath);
   };
 
-  useEffect(() => {
-    if (announceData.uid === currentUser.uid) {
-      setStates(State.getStatesOfCountry(userData?.country));
-      setCities(City.getCitiesOfState(userData?.country, userData?.state));
+  const discardChanges = async () => {
+    firstNameRef.current.value = firstName;
+    lastNameRef.current.value = lastName;
+    categoryRef.current.value = announceData.category;
+    difficultyRef.current.value = announceData.difficulty;
+    if (showAddress) {
+      setCities(City.getCitiesOfState(address.country, address.state));
+      setStates(State.getStatesOfCountry(address.country));
+      streetRef.current.value = address?.street;
+      streetNumberRef.current.value = address?.streetNumber;
+      buildingRef.current.value = address?.building;
+      apartmentRef.current.value = address?.apartment;
+      zipcodeRef.current.value = address?.zipcode;
     }
-  }, [announceData.uid, currentUser.uid, userData?.country, userData?.state]);
+  };
 
   return (
     <Container xs css={{ paddingInline: "0" }}>
@@ -431,6 +413,7 @@ const Announce = ({ id, data }) => {
             light
             icon={<BsChevronLeft />}
             className={styles.announceHeader}
+            auto
           >
             {languages[Language].goBack}
           </Button>
@@ -524,7 +507,6 @@ const Announce = ({ id, data }) => {
                 color="gradient"
                 onPress={() => {
                   setShowAddress(!showAddress);
-                  if (!showAddress) getData();
                 }}
               >
                 {!showAddress
@@ -746,7 +728,7 @@ const Announce = ({ id, data }) => {
           <Grid.Container gap={1} justify="center">
             <Grid xs>
               <Button auto flat ripple color="error" onPress={() => setConfirmEditModal(false)} css={{ width: "100%" }}>
-                {languages[Language].modal.announce.save.button.cancel}
+                {languages[Language].modal.announce.save.buttons.cancel}
               </Button>
             </Grid>
             <Grid xs>
@@ -757,6 +739,7 @@ const Announce = ({ id, data }) => {
                 onPress={() => {
                   setConfirmEditModal(false);
                   saveChanges();
+                  setEdit(false);
                 }}
                 css={{ width: "100%" }}
               >
@@ -795,6 +778,7 @@ const Announce = ({ id, data }) => {
                 onPress={() => {
                   setCancelEditModal(false);
                   setEdit(false);
+                  discardChanges();
                 }}
                 css={{ width: "100%" }}
               >
@@ -944,7 +928,7 @@ const Announce = ({ id, data }) => {
         css={{ backgroundColor: "var(--nextui-colors-background)" }}
       >
         <Modal.Header>
-          <h3 style={{ color: "var(--nextui-colors-red500)" }}>Error!</h3>
+          <h3 style={{ color: "var(--nextui-colors-red500)" }}>{languages[Language].modal.announce.error.title}</h3>
         </Modal.Header>
         <Modal.Body>
           <h6 style={{ textAlign: "center" }}>{errorModalMessage}</h6>
@@ -961,7 +945,7 @@ const Announce = ({ id, data }) => {
                 }}
                 css={{ width: "100%" }}
               >
-                Close
+                {languages[Language].modal.announce.error.close}
               </Button>
             </Grid>
           </Grid.Container>
@@ -973,36 +957,28 @@ const Announce = ({ id, data }) => {
 
 export default Announce;
 
-export const getStaticPaths = async () => {
-  const announcesCollection = collection(db, "announces");
-  const announcesQuerySnapshot = await getDocs(announcesCollection);
-
-  let paths = [];
-
-  announcesQuerySnapshot.forEach((announce) => {
-    paths.push({
-      params: {
-        id: `${announce.id}`,
-      },
-    });
-  });
-
-  return {
-    paths,
-    fallback: false,
-  };
-};
-
-export const getStaticProps = async ({ params }) => {
+export const getServerSideProps = async ({ params }) => {
   const announceID = params.id;
   const announceDoc = doc(db, "announces", announceID);
 
   const announceSnap = await getDoc(announceDoc);
 
+  let userData = [];
+  let address = [];
+
+  const adminDB = firebaseAdmin.firestore();
+  await adminDB
+    .collection("users")
+    .doc(announceSnap.data().uid)
+    .get()
+    .then((doc) => (userData = doc.data()));
+
   return {
     props: {
       id: announceID,
       data: JSON.stringify(announceSnap.data()),
+      rawEmail: JSON.stringify(userData.email),
+      rawAddress: userData?.temporaryAddress ? JSON.stringify(userData.temporaryAddress) : JSON.stringify(userData),
     },
   };
 };

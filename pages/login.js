@@ -9,11 +9,11 @@ import styles from "./styles/Auth.module.scss";
 import { validateError } from "../utilities/functions";
 import { withPublic } from "../utilities/routes";
 import languages from "../utilities/languages.json";
-import { Button, Input, Spacer } from "@nextui-org/react";
+import { Button, Input, Row, Spacer, Modal, Grid } from "@nextui-org/react";
 import AuthContainer, { AuthLeftSide, AuthRightSide } from "../components/AuthContainer";
 
 const Login = ({ auth }) => {
-  const { login, Language } = auth;
+  const { login, Language, sendUserPasswordResetEmail } = auth;
   const [error, setError] = useState({
     email: "",
     password: "",
@@ -21,6 +21,8 @@ const Login = ({ auth }) => {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [forgotPassword, setForgotPassword] = useState(false);
+  const [forgotPasswordEmail, setForgotPasswordEmail] = useState("");
   const router = useRouter();
 
   async function handleSubmit(e) {
@@ -103,6 +105,12 @@ const Login = ({ auth }) => {
             helperColor={error.password.length > 0 && "error"}
             required
           />
+          <Spacer y={0.5} />
+          <Row justify="flex-end">
+            <Button color="error" light onPress={() => setForgotPassword(true)} auto>
+              {languages[Language].login.forgotPass}
+            </Button>
+          </Row>
           <Spacer y={error.password.length ? 3 : 2} />
           <Button disabled={loading} type="submit" css={{ width: "100%", backgroundColor: "$red500" }}>
             {languages[Language].login.title}
@@ -112,6 +120,49 @@ const Login = ({ auth }) => {
           {languages[Language].login.link} <Link href="/register">{languages[Language].login.link2}</Link>
         </div>
       </AuthRightSide>
+      <Modal
+        closeButton
+        aria-labelledby="Forgot password modal"
+        open={forgotPassword}
+        onClose={() => setForgotPassword(false)}
+        blur
+        css={{ backgroundColor: "var(--nextui-colors-background)" }}
+      >
+        <Modal.Header>
+          <h3 style={{ color: "var(--nextui-colors-red500)" }}>{languages[Language].modal.forgotPass.title}</h3>
+        </Modal.Header>
+        <Modal.Body>
+          <h6 style={{ textAlign: "center" }}>{languages[Language].modal.forgotPass.body}</h6>
+          <Input
+            type="email"
+            label={languages[Language].email}
+            placeholder={languages[Language].email}
+            onChange={(e) => setForgotPasswordEmail(e.target.value)}
+          />
+        </Modal.Body>
+        <Modal.Footer>
+          <Grid.Container gap={1}>
+            <Grid xs>
+              <Button auto flat color="error" onPress={() => setForgotPassword(false)} css={{ width: "100%" }}>
+                {languages[Language].modal.forgotPass.buttons.cancel}
+              </Button>
+            </Grid>
+            <Grid xs>
+              <Button
+                auto
+                color="success"
+                onPress={() => {
+                  setForgotPassword(false);
+                  sendUserPasswordResetEmail(forgotPasswordEmail);
+                }}
+                css={{ width: "100%" }}
+              >
+                {languages[Language].modal.forgotPass.buttons.send}
+              </Button>
+            </Grid>
+          </Grid.Container>
+        </Modal.Footer>
+      </Modal>
     </AuthContainer>
   );
 };

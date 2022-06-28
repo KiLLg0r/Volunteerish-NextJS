@@ -6,6 +6,7 @@ import styles from "./styles/Card.module.scss";
 
 const AnnounceCard = ({ data }) => {
   const [difficulty, setDifficulty] = useState("");
+  const [cssDifficulty, setCSSDifficulty] = useState("");
   const [category, setCategory] = useState("");
   const { Language } = useAuth();
 
@@ -13,12 +14,15 @@ const AnnounceCard = ({ data }) => {
     switch (data.difficulty) {
       case "0":
         setDifficulty(languages[Language].announces.easy);
+        setCSSDifficulty("Easy");
         break;
       case "1":
         setDifficulty(languages[Language].announces.medium);
+        setCSSDifficulty("Medium");
         break;
       case "2":
         setDifficulty(languages[Language].announces.hard);
+        setCSSDifficulty("Hard");
         break;
       default:
         break;
@@ -97,7 +101,7 @@ const AnnounceCard = ({ data }) => {
             <Row>
               <Col>
                 <Row>{languages[Language].select.difficulty}</Row>
-                <Row className={`${styles.difficulty} ${styles[difficulty]}`}>{difficulty}</Row>
+                <Row className={`${styles.difficulty} ${styles[cssDifficulty]}`}>{difficulty}</Row>
               </Col>
             </Row>
           </Grid>

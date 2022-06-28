@@ -1,37 +1,39 @@
 import { collection, query, where, getDocs, updateDoc, doc } from "firebase/firestore";
 import { db } from "../config/firebase";
+import languages from "./languages.json";
 
 export const validateError = (errorCode) => {
+  const language = localStorage.getItem("language");
   switch (errorCode) {
     case "auth/invalid-email":
       return {
         type: "email",
-        error: "Invalid email",
+        error: languages[language].errorValidation.invalidEmail,
       };
     case "auth/email-already-in-use":
       return {
         type: "email",
-        error: "Email is already in use",
+        error: languages[language].errorValidation.alreadyInUse,
       };
     case "auth/weak-password":
       return {
         type: "password",
-        error: "Your password is too weak or is less than 6 characters long",
+        error: languages[language].errorValidation.weakPass,
       };
     case "auth/user-disabled":
       return {
         type: "email",
-        error: "This user account has been disabled",
+        error: languages[language].errorValidation.userDisabled,
       };
     case "auth/user-not-found":
       return {
         type: "email",
-        error: "Email does not match any user",
+        error: languages[language].errorValidation.notFound,
       };
     case "auth/wrong-password":
       return {
         type: "password",
-        error: "Wrong password",
+        error: languages[language].errorValidation.wrongPass,
       };
     default:
       return "";
