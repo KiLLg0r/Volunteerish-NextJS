@@ -6,6 +6,7 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
 import { useAuth } from "../../context/AuthContext";
 import languages from "../../utilities/languages.json";
+import Head from "next/head";
 
 import { Navigation, Pagination } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -35,10 +36,15 @@ const Product = ({ id, rawData }) => {
 
   return (
     <section className={styles.productPage}>
+      <Head>
+        <title>
+          {data?.name} | {languages[Language].headTags.title}
+        </title>
+      </Head>
       <Grid.Container gap={1}>
         <Grid xs={12}>
           <Button
-            onPress={() => router.push("/shop")}
+            onPress={() => router.goBack()}
             color="error"
             light
             icon={<BsChevronLeft />}

@@ -8,7 +8,7 @@ import { useState, useRef, useEffect } from "react";
 import { Country, State, City } from "country-state-city";
 import { useAuth } from "../../context/AuthContext";
 import languages from "../../utilities/languages.json";
-
+import Head from "next/head";
 import styles from "../styles/Announces.module.scss";
 
 const Announce = ({ id, data }) => {
@@ -418,6 +418,11 @@ const Announce = ({ id, data }) => {
 
   return (
     <Container xs css={{ paddingInline: "0" }}>
+      <Head>
+        <title>
+          {languages[Language].headTags.announce}: {id} | {languages[Language].headTags.title}
+        </title>
+      </Head>
       <Grid.Container gap={1}>
         <Grid xs={12}>
           <Button

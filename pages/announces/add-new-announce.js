@@ -8,7 +8,7 @@ import { db } from "../../config/firebase";
 import { doc, updateDoc, collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { Country, State, City } from "country-state-city";
 import languages from "../../utilities/languages.json";
-
+import Head from "next/head";
 import styles from "../styles/Announces.module.scss";
 
 const AddNewAnnounce = () => {
@@ -305,6 +305,11 @@ const AddNewAnnounce = () => {
 
   return (
     <Container xs css={{ paddingInline: "0" }}>
+      <Head>
+        <title>
+          {languages[Language].headTags.addNewAnnounce} | {languages[Language].headTags.title}
+        </title>
+      </Head>
       <form>
         <Grid.Container gap={1.5}>
           <Grid xs={12}>

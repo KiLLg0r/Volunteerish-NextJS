@@ -10,7 +10,7 @@ import { App } from "./app";
 import { Account } from "./account";
 import { Help } from "../help";
 import { About } from "../about";
-
+import Head from "next/head";
 import styles from "../styles/Settings.module.scss";
 import { useAuth } from "../../context/AuthContext";
 import languages from "../../utilities/languages.json";
@@ -139,7 +139,16 @@ function Settings({ auth }) {
     );
   };
 
-  return <section className={styles.settings}>{size.width < 650 ? <MobileInterface /> : <DesktopInterface />}</section>;
+  return (
+    <section className={styles.settings}>
+      <Head>
+        <title>
+          {languages[Language].headTags.settings} | {languages[Language].headTags.title}
+        </title>
+      </Head>
+      {size.width < 650 ? <MobileInterface /> : <DesktopInterface />}
+    </section>
+  );
 }
 
 export default withProtected(withNavigation(Settings));

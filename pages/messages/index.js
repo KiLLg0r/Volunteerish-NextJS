@@ -11,7 +11,7 @@ import { getDoc, doc } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import MessagesBody from "./[id]";
 import languages from "../../utilities/languages.json";
-
+import Head from "next/head";
 import NoData from "../../public/svg/noData.svg";
 import StartConversation from "../../public/svg/startConversation.svg";
 import SendMessage from "../../public/svg/sendMessage.svg";
@@ -163,6 +163,11 @@ const Messages = ({ initialConversations }) => {
 
   return (
     <section className={styles.messages}>
+      <Head>
+        <title>
+          {languages[Language].headTags.messages} | {languages[Language].headTags.title}
+        </title>
+      </Head>
       <Grid.Container gap={size.width > 650 && 1} css={{ height: "calc(100vh - 5rem)" }}>
         <Grid xs={12} sm={4}>
           <Col css={{ position: "relative" }}>

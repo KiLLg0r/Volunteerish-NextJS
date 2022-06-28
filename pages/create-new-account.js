@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import languages from "../utilities/languages.json";
 import { withProtected } from "../utilities/routes";
+import Head from "next/head";
 
 import "swiper/css";
 import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
@@ -199,6 +200,11 @@ const CreateNewAccount = () => {
 
   return (
     <Container xs css={{ paddingInline: "0" }}>
+      <Head>
+        <title>
+          {languages[Language].headTags.createAccount} | {languages[Language].headTags.title}
+        </title>
+      </Head>
       <form onSubmit={submitForm}>
         <Swiper allowTouchMove={false} spaceBetween={30} className={styles.createNewAccountSwiper} preloadImages>
           <SwiperSlide className={styles.swiperSlide}>

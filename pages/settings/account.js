@@ -12,6 +12,7 @@ import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/
 import { EmailAuthProvider, reauthenticateWithCredential, updateProfile, updateEmail } from "firebase/auth";
 import { updateAllImages, updateAllNames } from "../../utilities/functions";
 import languages from "../../utilities/languages.json";
+import Head from "next/head";
 
 import styles from "../styles/Settings.module.scss";
 
@@ -225,6 +226,11 @@ export const Account = () => {
 
   return (
     <Container sm className={styles.account} key={discardChanges}>
+      <Head>
+        <title>
+          {languages[Language].headTags.profile} | {languages[Language].headTags.title}
+        </title>
+      </Head>
       {router.asPath === "/settings/account" && (
         <header className={styles.header} onClick={() => router.push("/")}>
           <BsChevronLeft />

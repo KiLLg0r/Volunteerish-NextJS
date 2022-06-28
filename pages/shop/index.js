@@ -9,6 +9,7 @@ import { useAuth } from "../../context/AuthContext";
 import languages from "../../utilities/languages.json";
 import styles from "../styles/Shop.module.scss";
 import { useRouter } from "next/router";
+import Head from "next/head";
 
 const Shop = ({ productsStringify }) => {
   const router = useRouter();
@@ -31,6 +32,11 @@ const Shop = ({ productsStringify }) => {
 
   return (
     <section>
+      <Head>
+        <title>
+          {languages[Language].headTags.shop} | {languages[Language].headTags.title}
+        </title>
+      </Head>
       <h2 className={styles.title}>{languages[Language].shop.title}</h2>
       <Grid.Container gap={2}>
         {products &&

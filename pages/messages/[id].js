@@ -19,7 +19,6 @@ import { useState, useRef, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { BiSend } from "react-icons/bi";
 import { useOnScreen } from "../../utilities/hooks";
-
 import styles from "../styles/Messages.module.scss";
 
 const MessagesBody = ({ id }) => {

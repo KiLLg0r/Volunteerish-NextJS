@@ -5,7 +5,7 @@ import { collection, query, where, getDocs, orderBy, limit } from "firebase/fire
 import nookies from "nookies";
 import { firebaseAdmin } from "../config/firebaseAdmin";
 import languages from "../utilities/languages.json";
-
+import Head from "next/head";
 import Link from "next/link";
 
 import { db } from "../config/firebase";
@@ -39,6 +39,11 @@ function Index({
 
   return (
     <section className={styles.dashboard}>
+      <Head>
+        <title>
+          {languages[Language].headTags.home} | {languages[Language].headTags.title}
+        </title>
+      </Head>
       <h2 className={styles.title}>{languages[Language].home.title}</h2>
       <Grid.Container gap={2}>
         <Grid xs={12} sm={3}>

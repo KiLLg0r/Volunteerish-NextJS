@@ -2,15 +2,16 @@ import Head from "next/head";
 import { Container } from "@nextui-org/react";
 import { useAuth } from "../context/AuthContext";
 import { useRouter } from "next/router";
+import languages from "../utilities/languages.json";
 
 const Layout = ({ children }) => {
-  const { currentUser } = useAuth();
+  const { currentUser, Language } = useAuth();
   const router = useRouter();
 
   return (
     <>
       <Head>
-        <title>Volunteerish - We always help and helping everyone</title>
+        <title>{languages[Language]?.headTags?.title}</title>
         <meta
           name="description"
           content="Volunteerish is a web application that connects directly, without intermediaries, people who need help with those who are willing to do good."

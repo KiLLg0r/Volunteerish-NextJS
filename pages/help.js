@@ -3,7 +3,7 @@ import { BsChevronLeft } from "react-icons/bs";
 import { Grid, Collapse, Row, Col, Spacer, Table, Container } from "@nextui-org/react";
 import languages from "../utilities/languages.json";
 import FaqSVG from "../public/svg/faq.svg";
-
+import Head from "next/head";
 import styles from "./styles/Help.module.scss";
 import { useAuth } from "../context/AuthContext";
 
@@ -13,6 +13,11 @@ export const Help = () => {
 
   return (
     <Container sm className={styles.helpAndSupport}>
+      <Head>
+        <title>
+          {languages[Language].headTags.help} | {languages[Language].headTags.title}
+        </title>
+      </Head>
       {router.asPath === "/help" && (
         <header className={styles.header} onClick={() => router.push("/")}>
           <BsChevronLeft />

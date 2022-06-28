@@ -3,7 +3,7 @@ import LoginSvg from "../public/svg/login.svg";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
-
+import Head from "next/head";
 import styles from "./styles/Auth.module.scss";
 
 import { validateError } from "../utilities/functions";
@@ -52,6 +52,11 @@ const Login = ({ auth }) => {
 
   return (
     <AuthContainer>
+      <Head>
+        <title>
+          {languages[Language].headTags.login} | {languages[Language].headTags.title}
+        </title>
+      </Head>
       <AuthLeftSide>
         <div className={styles.authLeftContainer}>
           <h1 className={`${styles.title} ${styles.appName} `}>Volunteerish</h1>

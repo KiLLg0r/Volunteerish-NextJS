@@ -4,7 +4,7 @@ import { useTheme, Switch, Spacer, Row, Container, Dropdown, Col } from "@nextui
 import { BsFillSunFill, BsMoonFill } from "react-icons/bs";
 import { useEffect, useMemo } from "react";
 import { useAuth } from "../../context/AuthContext";
-
+import Head from "next/head";
 import EN from "../../public/svg/flags/us.svg";
 import RO from "../../public/svg/flags/ro.svg";
 import languages from "../../utilities/languages.json";
@@ -28,6 +28,11 @@ export const App = () => {
 
   return (
     <Container sm className={styles.appSettings}>
+      <Head>
+        <title>
+          {languages[Language].headTags.appSettings} | {languages[Language].headTags.title}
+        </title>
+      </Head>
       <h2 className={styles.title}>{languages[Language].appSettings.title}</h2>
       <Row align="center" className={styles.darkMode}>
         <span>{languages[Language].appSettings.darkMode}: </span>

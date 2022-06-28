@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 import { useWindowSize } from "../../utilities/hooks";
 import { abbreviateNumber } from "../../utilities/functions";
 import languages from "../../utilities/languages.json";
+import Head from "next/head";
 
 import styles from "../styles/Shop.module.scss";
 
@@ -92,6 +93,11 @@ const Cart = () => {
 
   return (
     <section>
+      <Head>
+        <title>
+          {languages[Language].headTags.cart} | {languages[Language].headTags.title}
+        </title>
+      </Head>
       <Grid.Container gap={2}>
         <Grid xs={12}>
           <Button

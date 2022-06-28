@@ -13,7 +13,7 @@ import { BsPlusCircleFill } from "react-icons/bs";
 import Link from "next/link";
 import languages from "../../utilities/languages.json";
 import { useAuth } from "../../context/AuthContext";
-
+import Head from "next/head";
 import NoAnnounces from "../../public/svg/no_announces.svg";
 import styles from "../styles/Announces.module.scss";
 
@@ -58,6 +58,11 @@ const Announces = ({ initialAnnounces, initialLastKey }) => {
 
   return (
     <Grid.Container gap={2} css={{ position: "relative" }}>
+      <Head>
+        <title>
+          {languages[Language].headTags.announces} | {languages[Language].headTags.title}
+        </title>
+      </Head>
       <Grid xs={12}>
         <h2 className={styles.title}>{languages[Language].announces.title}</h2>
       </Grid>

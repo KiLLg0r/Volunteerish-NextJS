@@ -11,6 +11,7 @@ import languages from "../utilities/languages.json";
 import styles from "./styles/Auth.module.scss";
 import { Button, Input, Spacer } from "@nextui-org/react";
 import AuthContainer, { AuthLeftSide, AuthRightSide } from "../components/AuthContainer";
+import Head from "next/head";
 
 const Register = () => {
   const { register, Language } = useAuth();
@@ -65,6 +66,11 @@ const Register = () => {
 
   return (
     <AuthContainer>
+      <Head>
+        <title>
+          {languages[Language].headTags.register} | {languages[Language].headTags.title}
+        </title>
+      </Head>
       <AuthLeftSide>
         <div className={styles.authLeftContainer}>
           <h1 className={`${styles.title} ${styles.appName} `}>Volunteerish</h1>
