@@ -21,7 +21,7 @@ export function AuthProvider({ children, initialUserData }) {
   const [loading, setLoading] = useState(false);
   const [userData, setUserData] = useState(initialUserData);
   const [FontSize, setFontSize] = useState(new Set(["16px"]));
-  const [Language, setLanguage] = useState(new Set(["English"]));
+  const [Language, setLanguage] = useState(new Set(["en"]));
 
   function register(email, password) {
     return createUserWithEmailAndPassword(auth, email, password);
@@ -56,12 +56,12 @@ export function AuthProvider({ children, initialUserData }) {
   }
 
   useEffect(() => {
-    if (localStorage.getItem("fontSize") === null || localStorage.getItem("fontSize") === "undefined")
+    if (localStorage.getItem("fontSize") === null || localStorage.getItem("fontSize") === undefined)
       localStorage.setItem("fontSize", "16px");
     else setFontSize(localStorage.getItem("fontSize"));
 
-    if (localStorage.getItem("language") === null || localStorage.getItem("language") === "undefined")
-      localStorage.setItem("language", "English");
+    if (localStorage.getItem("language") === null || localStorage.getItem("language") === undefined)
+      localStorage.setItem("language", "en");
     else setLanguage(localStorage.getItem("language"));
 
     if (FontSize.length > 0) document.documentElement.style.fontSize = FontSize;

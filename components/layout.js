@@ -17,6 +17,7 @@ const Layout = ({ children }) => {
           content="Volunteerish is a web application that connects directly, without intermediaries, people who need help with those who are willing to do good."
         />
         <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+        <meta charset="UTF-8" />
       </Head>
       <Container
         lg

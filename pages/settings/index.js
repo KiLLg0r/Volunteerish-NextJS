@@ -72,7 +72,7 @@ function Settings({ auth }) {
 
     return (
       <Grid.Container>
-        <Grid sm={2}>
+        <Grid sm={3}>
           <Col>
             <Row
               align="center"
@@ -125,7 +125,7 @@ function Settings({ auth }) {
             </Row>
           </Col>
         </Grid>
-        <Grid sm={10}>
+        <Grid sm={9}>
           <Col>
             <Row>
               <RenderAppSettings />

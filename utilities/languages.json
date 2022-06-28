@@ -1,5 +1,5 @@
 {
-  "English": {
+  "en": {
     "nav": {
       "home": "Home",
       "announces": "Announces",
@@ -389,7 +389,7 @@
     },
     "goHome": "Go home"
   },
-  "Română": {
+  "ro": {
     "nav": {
       "home": "Acasă",
       "announces": "Anunțuri",
@@ -432,8 +432,8 @@
     "profile": {
       "title": "Editează profilul",
       "image": "Schimbați imaginea de profil",
-      "statusEmail": "E-mail de stare",
-      "sendEmailLink": "Trimiteți linkul de verificare prin e-mail",
+      "statusEmail": "Statusul email-ului",
+      "sendEmailLink": "Trimiteți linkul de verificare pentru e-mail",
       "sendLink": "Trimite linkul",
       "changeEmail": "Schimbă e-mail",
       "discard": "Renunță la modificări",
