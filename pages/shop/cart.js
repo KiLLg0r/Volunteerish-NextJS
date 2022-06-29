@@ -203,12 +203,12 @@ const Cart = () => {
                                 <Row>
                                   <Link href={`/shop/${product.id}`}>
                                     <a>
-                                      <h4 style={{ cursor: "pointer", margin: "0" }}>{product.data?.name}</h4>
+                                      <h4 style={{ cursor: "pointer", margin: "0" }}>{product.data?.name[Language]}</h4>
                                     </a>
                                   </Link>
                                 </Row>
                                 {size.width > 960 && (
-                                  <Row className={styles.productDescription}>{product.data?.description}</Row>
+                                  <Row className={styles.productDescription}>{product.data?.description[Language]}</Row>
                                 )}
                               </Col>
                             </Row>
