@@ -25,8 +25,8 @@ const Layout = ({ children }) => {
           backgroundColor: "$background",
           minHeight: "100vh",
           paddingTop: currentUser && "1rem",
-          paddingBottom: (router.asPath === "/create-new-account" || router.query.id) && "1rem",
           paddingBottom: currentUser && "5rem",
+          paddingBottom: router.query.id && "0",
 
           "@xs": {
             paddingTop: currentUser ? "5rem" : "1rem",
@@ -39,8 +39,8 @@ const Layout = ({ children }) => {
               router.query.id
                 ? "1rem"
                 : "5rem",
-            paddingBlock: router.asPath === "/create-new-account" && "1rem",
             paddingBottom: "0",
+            paddingBlock: router.asPath === "/create-new-account" && "1rem",
           },
         }}
       >

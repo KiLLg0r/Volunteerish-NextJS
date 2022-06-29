@@ -49,6 +49,7 @@ const Product = ({ id, rawData }) => {
             light
             icon={<BsChevronLeft />}
             className={styles.productHeader}
+            auto
           >
             {languages[Language].goBack}
           </Button>
@@ -125,7 +126,7 @@ const Product = ({ id, rawData }) => {
           </Grid.Container>
         </Grid>
         <Grid xs={12}>
-          <Collapse.Group css={{ width: "100%", padding: "1rem" }}>
+          <Collapse.Group css={{ width: "100%" }}>
             <Collapse shadow title={languages[Language].shop.product.description}>
               {data?.description}
             </Collapse>

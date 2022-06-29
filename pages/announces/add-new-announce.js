@@ -317,6 +317,7 @@ const AddNewAnnounce = () => {
               light
               icon={<BsChevronLeft />}
               className={styles.newAnnounceHeader}
+              auto
             >
               {languages[Language].goBack}
             </Button>
@@ -340,7 +341,7 @@ const AddNewAnnounce = () => {
             <Grid.Container>
               <Grid xs={12}>
                 <Input
-                  label={languages[Language].announces.addNewAnnounce.firstName}
+                  label={languages[Language].userData.firstName}
                   initialValue={firstName}
                   fullWidth
                   onChange={(e) => setFName(e.target.value)}
@@ -348,7 +349,7 @@ const AddNewAnnounce = () => {
               </Grid>
               <Grid xs={12}>
                 <Input
-                  label={languages[Language].announces.addNewAnnounce.lastName}
+                  label={languages[Language].userData.lastName}
                   initialValue={lastName}
                   fullWidth
                   onChange={(e) => setLName(e.target.value)}

@@ -11,6 +11,7 @@ import languages from "../../utilities/languages.json";
 import Head from "next/head";
 import styles from "../styles/Announces.module.scss";
 import { firebaseAdmin } from "../../config/firebaseAdmin";
+import { withProtected } from "../../utilities/routes";
 
 const Announce = ({ id, data, rawEmail, rawAddress }) => {
   const router = useRouter();
@@ -339,6 +340,8 @@ const Announce = ({ id, data, rawEmail, rawAddress }) => {
       setErrorModalMessage(languages[Language].modal.announce.error.cantClose);
       setErrorModal(true);
     });
+
+    if (errorModalMessage.length === 0) router.reload();
   };
 
   const finishAnnounce = async () => {
@@ -363,9 +366,7 @@ const Announce = ({ id, data, rawEmail, rawAddress }) => {
       setErrorModal(true);
     });
 
-    const helpingUserSnap = await getDoc(helpingUserDoc).catch((error) =>
-      console.log("I couldn't get the user's who help me data"),
-    );
+    const helpingUserSnap = await getDoc(helpingUserDoc);
     const helpingUserData = helpingUserSnap.data();
 
     const points = helpingUserData.points + announceData.points;
@@ -380,6 +381,8 @@ const Announce = ({ id, data, rawEmail, rawAddress }) => {
       setErrorModalMessage(languages[Language].modal.announce.error.cantFinish);
       setErrorModal(true);
     });
+
+    if (errorModalMessage.length === 0) router.reload();
   };
 
   const discardChanges = async () => {
@@ -955,7 +958,7 @@ const Announce = ({ id, data, rawEmail, rawAddress }) => {
   );
 };
 
-export default Announce;
+export default withProtected(Announce);
 
 export const getServerSideProps = async ({ params }) => {
   const announceID = params.id;
@@ -964,7 +967,6 @@ export const getServerSideProps = async ({ params }) => {
   const announceSnap = await getDoc(announceDoc);
 
   let userData = [];
-  let address = [];
 
   const adminDB = firebaseAdmin.firestore();
   await adminDB

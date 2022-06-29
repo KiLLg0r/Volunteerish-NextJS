@@ -13,6 +13,7 @@ import { db } from "../config/firebase";
 import AnnounceCard from "../components/Card";
 
 import styles from "./styles/Home.module.scss";
+import { useWindowSize } from "../utilities/hooks";
 
 function Index({
   auth,
@@ -26,6 +27,7 @@ function Index({
   userClosedAnnouncesLastKey,
 }) {
   const { userData, Language } = auth;
+  const size = useWindowSize();
 
   const myAnnounces = JSON.parse(initialUserAnnounces);
   const myHelpingAnnounces = JSON.parse(initialUserHelpingAnnounces);
@@ -38,7 +40,7 @@ function Index({
   const myClosedAnnouncesLastKey = userClosedAnnouncesLastKey ? JSON.parse(userClosedAnnouncesLastKey) : "";
 
   return (
-    <section className={styles.dashboard}>
+    <section className={styles.dashboard} style={{ paddingBottom: size.width < 650 && "4rem" }}>
       <Head>
         <title>
           {languages[Language].headTags.home} | {languages[Language].headTags.title}
