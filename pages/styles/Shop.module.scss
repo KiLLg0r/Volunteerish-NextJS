@@ -11,6 +11,10 @@
   }
 }
 
+.order {
+  padding: 1rem;
+}
+
 .title {
   color: var(--nextui-colors-red500);
   margin-block: 0.5rem;
@@ -18,7 +22,8 @@
 }
 
 .userProduct,
-.rightMenu {
+.rightMenu,
+.order {
   background-color: var(--nextui-colors-backgroundSecondary);
   border-radius: 0.875rem;
   &:not(:last-child) {

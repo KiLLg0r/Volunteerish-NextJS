@@ -40,23 +40,17 @@ export const validateError = (errorCode) => {
   }
 };
 
-export function abbreviateNumber(value) {
-  var newValue = value;
-  if (value >= 1000) {
-    var suffixes = ["", "k", "m", "b", "t"];
-    var suffixNum = Math.floor(("" + value).length / 3);
-    var shortValue = "";
-    for (var precision = 2; precision >= 1; precision--) {
-      shortValue = parseFloat((suffixNum != 0 ? value / Math.pow(1000, suffixNum) : value).toPrecision(precision));
-      var dotLessShortValue = (shortValue + "").replace(/[^a-zA-Z 0-9]+/g, "");
-      if (dotLessShortValue.length <= 2) {
-        break;
-      }
-    }
-    if (shortValue % 1 != 0) shortValue = shortValue.toFixed(1);
-    newValue = shortValue + suffixes[suffixNum];
-  }
-  return newValue;
+export function abbreviateNumber(number) {
+  var s = ["", "K", "M", "B", "T", "P", "E"];
+  const tier = (Math.log10(number) / 3) | 0;
+
+  if (tier == 0) return number;
+
+  const suffix = s[tier];
+  const scale = Math.pow(10, tier * 3);
+  const scaled = number / scale;
+
+  return scaled.toFixed(1) + suffix;
 }
 
 export const updateAllImages = async (uid, newURL) => {

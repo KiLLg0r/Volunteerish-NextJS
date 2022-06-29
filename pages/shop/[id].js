@@ -44,7 +44,7 @@ const Product = ({ id, rawData }) => {
       <Grid.Container gap={1}>
         <Grid xs={12}>
           <Button
-            onPress={() => router.goBack()}
+            onPress={() => router.back()}
             color="error"
             light
             icon={<BsChevronLeft />}

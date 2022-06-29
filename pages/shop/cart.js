@@ -1,17 +1,27 @@
 import { useAuth } from "../../context/AuthContext";
 import { withProtected, withNavigation } from "../../utilities/routes";
-import { Row, Grid, Col, Button, Image } from "@nextui-org/react";
-import { getDoc, doc, updateDoc } from "firebase/firestore";
+import { Row, Grid, Col, Button, Image, Modal } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { db } from "../../config/firebase";
-import { BsChevronLeft } from "react-icons/bs";
+import { BsChevronLeft, BsFillTrashFill } from "react-icons/bs";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useWindowSize } from "../../utilities/hooks";
 import { abbreviateNumber } from "../../utilities/functions";
 import languages from "../../utilities/languages.json";
 import Head from "next/head";
-
+import {
+  collection,
+  doc,
+  onSnapshot,
+  query,
+  orderBy,
+  limit,
+  getDoc,
+  addDoc,
+  serverTimestamp,
+  updateDoc,
+} from "firebase/firestore";
 import styles from "../styles/Shop.module.scss";
 
 const Cart = () => {
@@ -21,6 +31,8 @@ const Cart = () => {
   const [totalProducts, setTotalProducts] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
   const size = useWindowSize();
+  const [error, setError] = useState("");
+  const [errorModal, setErrorModal] = useState(false);
 
   const decrease = async (id) => {
     const quantity = userData?.shop[id];
@@ -33,6 +45,18 @@ const Cart = () => {
       delete shop[id];
       setProducts(products.filter((product) => product.id !== id));
     } else shop[id] = newQuantity;
+
+    await updateDoc(userRef, {
+      shop: shop,
+    });
+  };
+
+  const deleteProduct = async (id) => {
+    const shop = userData?.shop;
+    const userRef = doc(db, "users", currentUser.uid);
+
+    delete shop[id];
+    setProducts(products.filter((product) => product.id !== id));
 
     await updateDoc(userRef, {
       shop: shop,
@@ -82,7 +106,7 @@ const Cart = () => {
 
   useEffect(() => {
     let numberOfProducts = 0;
-    if (products) {
+    if (products.length > 0) {
       products.forEach((product) => {
         const productNumbers = userData?.shop[product.id];
         numberOfProducts = numberOfProducts + productNumbers;
@@ -90,6 +114,45 @@ const Cart = () => {
       if (numberOfProducts > 0) setTotalProducts(numberOfProducts);
     }
   }, [products, userData]);
+
+  const checkQuantity = () => {
+    let enoughQuantity = true;
+
+    products.forEach((product) => {
+      const quantity = userData?.shop[product.id];
+      const availableQuantity = product?.data?.quantity;
+      if (quantity > availableQuantity) enoughQuantity = false;
+    });
+
+    return enoughQuantity;
+  };
+
+  const buyNow = async () => {
+    const userRef = doc(db, "users", currentUser.uid);
+    const purchasesRef = collection(userRef, "purchases");
+
+    if (checkQuantity()) {
+      await addDoc(purchasesRef, {
+        time: serverTimestamp(),
+        totalPrice: totalPrice,
+        totalProducts: totalProducts,
+        products: userData?.shop,
+      });
+      products.forEach(async (product) => {
+        const productRef = doc(db, "shop", product.id);
+        await updateDoc(productRef, {
+          quantity: product.data().quantity - userData?.shop[product.id],
+        });
+      });
+      await updateDoc(userRef, {
+        shop: {},
+      });
+      router.push("/purchases");
+    } else {
+      setError(languages[Language].modal.cart.body);
+      setErrorModal(true);
+    }
+  };
 
   return (
     <section>
@@ -106,6 +169,7 @@ const Cart = () => {
             light
             icon={<BsChevronLeft />}
             className={styles.cartHeader}
+            auto
           >
             {languages[Language].goBack}
           </Button>
@@ -118,7 +182,7 @@ const Cart = () => {
             {products &&
               products.map((product) => {
                 return (
-                  <Row key={product.id} gap={1} justify="flex-start" align="center" className={styles.userProduct}>
+                  <Row key={product.id} align="center" className={styles.userProduct}>
                     <Grid.Container gap={1}>
                       <Grid xs={4} sm={2}>
                         <Image
@@ -139,7 +203,7 @@ const Cart = () => {
                                 <Row>
                                   <Link href={`/shop/${product.id}`}>
                                     <a>
-                                      <h4 style={{ cursor: "pointer" }}>{product.data?.name}</h4>
+                                      <h4 style={{ cursor: "pointer", margin: "0" }}>{product.data?.name}</h4>
                                     </a>
                                   </Link>
                                 </Row>
@@ -187,6 +251,19 @@ const Cart = () => {
                           </Grid>
                         </Grid.Container>
                       </Grid>
+                      <Grid xs={12}>
+                        <Row justify="flex-end">
+                          <Button
+                            color="error"
+                            light
+                            icon={<BsFillTrashFill />}
+                            auto
+                            onPress={() => deleteProduct(product.id)}
+                          >
+                            {languages[Language].shop.cart.deleteFromCart}
+                          </Button>
+                        </Row>
+                      </Grid>
                     </Grid.Container>
                   </Row>
                 );
@@ -216,7 +293,13 @@ const Cart = () => {
                 </h5>
               </Grid>
               <Grid xs={12}>
-                <Button color="error" auto css={{ width: "100%" }} disabled={userData?.points < totalPrice}>
+                <Button
+                  color="error"
+                  auto
+                  css={{ width: "100%" }}
+                  disabled={userData?.points < totalPrice}
+                  onPress={buyNow}
+                >
                   {userData?.points < totalPrice
                     ? languages[Language].shop.cart.notEnoughPoints
                     : languages[Language].shop.cart.buyNow}
@@ -226,6 +309,30 @@ const Cart = () => {
           </div>
         </Grid>
       </Grid.Container>
+      <Modal
+        closeButton
+        aria-labelledby="Not enough quantity"
+        open={errorModal}
+        onClose={() => setErrorModal(false)}
+        blur
+        css={{ backgroundColor: "var(--nextui-colors-background)" }}
+      >
+        <Modal.Header>
+          <h3 style={{ color: "var(--nextui-colors-red500)" }}>{error}</h3>
+        </Modal.Header>
+        <Modal.Body>
+          <h4 style={{ textAlign: "center" }}>{languages[Language].modal.cart.body2}</h4>
+        </Modal.Body>
+        <Modal.Footer>
+          <Grid.Container gap={1}>
+            <Grid xs>
+              <Button auto color="error" onPress={() => setErrorModal(false)} css={{ width: "100%" }}>
+                {languages[Language].modal.cart.cancel}
+              </Button>
+            </Grid>
+          </Grid.Container>
+        </Modal.Footer>
+      </Modal>
     </section>
   );
 };

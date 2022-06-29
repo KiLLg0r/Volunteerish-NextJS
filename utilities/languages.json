@@ -159,7 +159,8 @@
         "totalPrice": "Total price",
         "pointsAvailable": "Points available",
         "buyNow": "Buy now",
-        "notEnoughPoints": "Not enough points"
+        "notEnoughPoints": "Not enough points",
+        "deleteFromCart": "Delete from cart"
       }
     },
     "messages": {
@@ -377,6 +378,12 @@
           "cancel": "Cancel",
           "send": "Send"
         }
+      },
+      "cart": {
+        "title": "We don't have enough quantity",
+        "body": "You have added more products to the cart than we have in stock",
+        "body2": "Please reduce the quantity or remove the products from the cart",
+        "cancel": "Cancel"
       }
     },
     "headTags": {
@@ -406,6 +413,32 @@
       "userDisabled": "This user account has been disabled",
       "notFound": "Email does not match any user",
       "wrongPass": "Wrong password"
+    },
+    "closedAnnounces": "Closed announces",
+    "helpedAnnounces": "Helped announces",
+    "orders": {
+      "title": "Orders",
+      "orderTitle": "Order with ID",
+      "placed": "Placed at",
+      "viewMore": "Order details",
+      "piece": "piece",
+      "pieces": "pieces",
+      "totalPrice": "Total price",
+      "totalProducts": "Total products"
+    },
+    "months": {
+      "january": "January",
+      "february": "February",
+      "march": "March",
+      "april": "April",
+      "may": "May",
+      "june": "June",
+      "july": "July",
+      "august": "August",
+      "september": "September",
+      "october": "October",
+      "november": "November",
+      "december": "December"
     }
   },
   "ro": {
@@ -568,7 +601,8 @@
         "totalPrice": "Prețul total",
         "pointsAvailable": "Puncte disponibile",
         "buyNow": "Cumpără acum",
-        "notEnoughPoints": "Nu sunt suficiente puncte"
+        "notEnoughPoints": "Nu sunt suficiente puncte",
+        "deleteFromCart": "Șterge din coș"
       }
     },
     "messages": {
@@ -787,6 +821,12 @@
           "cancel": "Anulare",
           "send": "Trimite"
         }
+      },
+      "cart": {
+        "title": "Nu avem destulă cantitate",
+        "body": "Ai adăugat mai multe produse în coș decât avem noi în stock",
+        "body2": "Te rugăm să reduci din cantitate sau să elimini produsele din coș",
+        "cancel": "Anulare"
       }
     },
     "headTags": {
@@ -816,6 +856,32 @@
       "userDisabled": "Acest cont a fost dezactivat",
       "notFound": "Emailul nu se potrivește cu niciun utilizator",
       "wrongPass": "Parolă greșită"
+    },
+    "closedAnnounces": "Anunțuri închise",
+    "helpedAnnounces": "Anunțuri ajutate",
+    "orders": {
+      "title": "Comenzi",
+      "orderTitle": "Comanda cu ID-ul",
+      "placed": "Plasată la",
+      "viewMore": "Vezi comanda",
+      "piece": "bucată",
+      "pieces": "bucăți",
+      "totalPrice": "Preț total",
+      "totalProducts": "Total produse"
+    },
+    "months": {
+      "january": "Ianuarie",
+      "february": "Feburarie",
+      "march": "Martie",
+      "april": "Aprilie",
+      "may": "Mai",
+      "june": "Iunie",
+      "july": "Iulie",
+      "august": "August",
+      "september": "Septembrie",
+      "october": "Octombrie",
+      "november": "Noiembrie",
+      "december": "Decembrie"
     }
   }
 }

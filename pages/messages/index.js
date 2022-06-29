@@ -168,7 +168,7 @@ const Messages = ({ initialConversations }) => {
           {languages[Language].headTags.messages} | {languages[Language].headTags.title}
         </title>
       </Head>
-      <Grid.Container gap={size.width > 650 && 1} css={{ height: "calc(100vh - 5rem)" }}>
+      <Grid.Container gap={size.width > 650 && 2} css={{ height: "calc(100vh - 5rem)" }}>
         <Grid xs={12} sm={4}>
           <Col css={{ position: "relative" }}>
             <Row xs={12}>

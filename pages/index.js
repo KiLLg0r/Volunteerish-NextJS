@@ -13,34 +13,28 @@ import { db } from "../config/firebase";
 import AnnounceCard from "../components/Card";
 
 import styles from "./styles/Home.module.scss";
-import { useWindowSize } from "../utilities/hooks";
 
 function Index({
   auth,
   initialUserAnnounces,
-  userAnnouncesLastKey,
   initialUserHelpingAnnounces,
-  userHelpingAnnouncesLastKey,
   initialUserHelpedAnnounces,
   userHelpedAnnouncesLastKey,
   initialUserClosedAnnounces,
   userClosedAnnouncesLastKey,
 }) {
   const { userData, Language } = auth;
-  const size = useWindowSize();
 
   const myAnnounces = JSON.parse(initialUserAnnounces);
   const myHelpingAnnounces = JSON.parse(initialUserHelpingAnnounces);
   const myHelpedAnnounces = JSON.parse(initialUserHelpedAnnounces);
   const myClosedAnnounces = JSON.parse(initialUserClosedAnnounces);
 
-  const myAnnouncesLastKey = userAnnouncesLastKey ? JSON.parse(userAnnouncesLastKey) : "";
-  const myHelpingAnnouncesLastKey = userHelpingAnnouncesLastKey ? JSON.parse(userHelpingAnnouncesLastKey) : "";
-  const myHelpedAnnouncesLastKey = userHelpedAnnouncesLastKey ? JSON.parse(userHelpedAnnouncesLastKey) : "";
-  const myClosedAnnouncesLastKey = userClosedAnnouncesLastKey ? JSON.parse(userClosedAnnouncesLastKey) : "";
+  const myHelpedAnnouncesLastKey = JSON.parse(userHelpedAnnouncesLastKey);
+  const myClosedAnnouncesLastKey = JSON.parse(userClosedAnnouncesLastKey);
 
   return (
-    <section className={styles.dashboard} style={{ paddingBottom: size.width < 650 && "4rem" }}>
+    <section className={styles.dashboard}>
       <Head>
         <title>
           {languages[Language].headTags.home} | {languages[Language].headTags.title}
@@ -96,17 +90,6 @@ function Index({
                         </Link>
                       );
                     })}
-                  {myAnnouncesLastKey && (
-                    <Button
-                      color="error"
-                      css={{ height: "275px", fontSize: "1.25rem", color: "$red500", borderColor: "$red500" }}
-                      bordered
-                      borderWeight={3}
-                    >
-                      {languages[Language].home.seeAllAnnounces}
-                      <BsChevronBarRight style={{ fontSize: "2rem" }} />
-                    </Button>
-                  )}
                 </div>
               </Collapse>
               <Collapse title={languages[Language].home.helpingNow} expanded>
@@ -121,17 +104,6 @@ function Index({
                         </Link>
                       );
                     })}
-                  {myHelpingAnnouncesLastKey && (
-                    <Button
-                      color="error"
-                      css={{ height: "275px", fontSize: "1.25rem", color: "$red500", borderColor: "$red500" }}
-                      bordered
-                      borderWeight={3}
-                    >
-                      {languages[Language].home.seeAllAnnounces}
-                      <BsChevronBarRight style={{ fontSize: "2rem" }} />
-                    </Button>
-                  )}
                 </div>
               </Collapse>
               <Collapse title={languages[Language].home.helped}>
@@ -147,15 +119,17 @@ function Index({
                       );
                     })}
                   {myHelpedAnnouncesLastKey && (
-                    <Button
-                      color="error"
-                      css={{ height: "275px", fontSize: "1.25rem", color: "$red500", borderColor: "$red500" }}
-                      bordered
-                      borderWeight={3}
-                    >
-                      {languages[Language].home.seeAllAnnounces}
-                      <BsChevronBarRight style={{ fontSize: "2rem" }} />
-                    </Button>
+                    <Link href="/announces/helped-announces">
+                      <Button
+                        color="error"
+                        css={{ height: "275px", fontSize: "1.25rem", color: "$red500", borderColor: "$red500" }}
+                        bordered
+                        borderWeight={3}
+                      >
+                        {languages[Language].home.seeAllAnnounces}
+                        <BsChevronBarRight style={{ fontSize: "2rem" }} />
+                      </Button>
+                    </Link>
                   )}
                 </div>
               </Collapse>
@@ -172,15 +146,17 @@ function Index({
                       );
                     })}
                   {myClosedAnnouncesLastKey && (
-                    <Button
-                      color="error"
-                      css={{ height: "275px", fontSize: "1.25rem", color: "$red500", borderColor: "$red500" }}
-                      bordered
-                      borderWeight={3}
-                    >
-                      {languages[Language].home.seeAllAnnounces}
-                      <BsChevronBarRight style={{ fontSize: "2rem" }} />
-                    </Button>
+                    <Link href="/announces/closed-announces">
+                      <Button
+                        color="error"
+                        css={{ height: "275px", fontSize: "1.25rem", color: "$red500", borderColor: "$red500" }}
+                        bordered
+                        borderWeight={3}
+                      >
+                        {languages[Language].home.seeAllAnnounces}
+                        <BsChevronBarRight style={{ fontSize: "2rem" }} />
+                      </Button>
+                    </Link>
                   )}
                 </div>
               </Collapse>
@@ -231,7 +207,7 @@ export const getServerSideProps = async (ctx) => {
 
     const userClosedAnnouncesQuery = query(
       collection(db, "announces"),
-      where("status", "==", "closed"),
+      where("status", "in", ["closed", "helped"]),
       where("uid", "==", uid),
       orderBy("posted", "desc"),
       limit(5),
@@ -243,19 +219,13 @@ export const getServerSideProps = async (ctx) => {
     const userClosedAnnouncesSnapshot = await getDocs(userClosedAnnouncesQuery);
 
     let rawUserAnnounces = [];
-    let rawUserAnnouncesLastKey = "";
-    let userAnnouncesNumber = 0;
 
     let rawUserHelpingAnnounces = [];
-    let rawUserHelpingAnnouncesLastKey = "";
-    let userHelpingAnnouncesNumber = 0;
 
     let rawUserHelpedAnnounces = [];
-    let rawUserHelpedAnnouncesLastKey = "";
     let userHelpedAnnouncesNumber = 0;
 
     let rawUserClosedAnnounces = [];
-    let rawUserClosedAnnouncesLastKey = "";
     let userClosedAnnouncesNumber = 0;
 
     userAnnouncesSnapshot.forEach((announce) => {
@@ -263,8 +233,6 @@ export const getServerSideProps = async (ctx) => {
         id: announce.id,
         data: announce.data(),
       });
-      rawUserAnnouncesLastKey = announce.data().posted;
-      userAnnouncesNumber++;
     });
 
     userHelpingAnnouncesSnapshot.forEach((announce) => {
@@ -272,8 +240,6 @@ export const getServerSideProps = async (ctx) => {
         id: announce.id,
         data: announce.data(),
       });
-      rawUserHelpingAnnouncesLastKey = announce.data().posted;
-      userHelpingAnnouncesNumber++;
     });
 
     userHelpedAnnouncesSnapshot.forEach((announce) => {
@@ -281,7 +247,6 @@ export const getServerSideProps = async (ctx) => {
         id: announce.id,
         data: announce.data(),
       });
-      rawUserHelpedAnnouncesLastKey = announce.data().posted;
       userHelpedAnnouncesNumber++;
     });
 
@@ -290,7 +255,6 @@ export const getServerSideProps = async (ctx) => {
         id: announce.id,
         data: announce.data(),
       });
-      rawUserClosedAnnouncesLastKey = announce.data().posted;
       userClosedAnnouncesNumber++;
     });
 
@@ -299,20 +263,13 @@ export const getServerSideProps = async (ctx) => {
     const initialUserHelpedAnnounces = JSON.stringify(rawUserHelpedAnnounces);
     const initialUserClosedAnnounces = JSON.stringify(rawUserClosedAnnounces);
 
-    const userAnnouncesLastKey = userAnnouncesNumber > 5 ? JSON.stringify(rawUserAnnouncesLastKey) : "";
-    const userHelpingAnnouncesLastKey =
-      userHelpingAnnouncesNumber > 5 ? JSON.stringify(rawUserHelpingAnnouncesLastKey) : "";
-    const userHelpedAnnouncesLastKey =
-      userHelpedAnnouncesNumber > 5 ? JSON.stringify(rawUserHelpedAnnouncesLastKey) : "";
-    const userClosedAnnouncesLastKey =
-      userClosedAnnouncesNumber > 5 ? JSON.stringify(rawUserClosedAnnouncesLastKey) : "";
+    const userHelpedAnnouncesLastKey = userHelpedAnnouncesNumber >= 5 ? JSON.stringify(true) : JSON.stringify(false);
+    const userClosedAnnouncesLastKey = userClosedAnnouncesNumber >= 5 ? JSON.stringify(true) : JSON.stringify(false);
 
     return {
       props: {
         initialUserAnnounces,
-        userAnnouncesLastKey,
         initialUserHelpingAnnounces,
-        userHelpingAnnouncesLastKey,
         initialUserHelpedAnnounces,
         userHelpedAnnouncesLastKey,
         initialUserClosedAnnounces,

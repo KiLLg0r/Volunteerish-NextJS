@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { BsChevronLeft } from "react-icons/bs";
-import { Grid, Collapse, Row, Col, Spacer, Table, Container } from "@nextui-org/react";
+import { Grid, Collapse, Button, Table, Container } from "@nextui-org/react";
 import languages from "../utilities/languages.json";
 import FaqSVG from "../public/svg/faq.svg";
 import Head from "next/head";
@@ -12,17 +12,23 @@ export const Help = () => {
   const { Language } = useAuth();
 
   return (
-    <Container sm className={styles.helpAndSupport}>
+    <Container className={styles.helpAndSupport}>
       <Head>
         <title>
           {languages[Language].headTags.help} | {languages[Language].headTags.title}
         </title>
       </Head>
       {router.asPath === "/help" && (
-        <header className={styles.header} onClick={() => router.push("/")}>
-          <BsChevronLeft />
+        <Button
+          onPress={() => router.back()}
+          color="error"
+          light
+          icon={<BsChevronLeft />}
+          className={styles.header}
+          auto
+        >
           {languages[Language].goBack}
-        </header>
+        </Button>
       )}
       <h2 className={styles.title}>{languages[Language].helpSupport.title}</h2>
       <Grid.Container className={styles.FAQ}>

@@ -232,10 +232,16 @@ export const Account = () => {
         </title>
       </Head>
       {router.asPath === "/settings/account" && (
-        <header className={styles.header} onClick={() => router.push("/")}>
-          <BsChevronLeft />
+        <Button
+          onPress={() => router.back()}
+          color="error"
+          light
+          icon={<BsChevronLeft />}
+          className={styles.header}
+          auto
+        >
           {languages[Language].goBack}
-        </header>
+        </Button>
       )}
       <form onSubmit={handleSubmit}>
         <h2 className={styles.title}>{languages[Language].profile.title}</h2>

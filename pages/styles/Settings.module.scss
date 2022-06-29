@@ -98,19 +98,6 @@
   }
 }
 
-.header {
-  font-size: 2rem;
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-  width: fit-content;
-  cursor: pointer;
-
-  svg {
-    font-size: 2.5rem;
-  }
-}
-
 .imageEdit {
   position: relative;
   margin-inline: auto;
@@ -177,6 +164,9 @@
     margin-bottom: var(--nextui-space-3);
     padding: 0 0 0 var(--nextui-space-2);
   }
+}
+.header {
+  font-size: 1.5rem;
 }
 
 .languageSelect,

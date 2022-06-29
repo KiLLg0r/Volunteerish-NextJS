@@ -1,18 +1,19 @@
 import { withNavigation, withProtected } from "../../utilities/routes";
 import { useTheme as useNextTheme } from "next-themes";
-import { useTheme, Switch, Spacer, Row, Container, Dropdown, Col, Image } from "@nextui-org/react";
+import { useTheme, Switch, Spacer, Row, Container, Button } from "@nextui-org/react";
 import { BsFillSunFill, BsMoonFill } from "react-icons/bs";
-import { useEffect, useMemo } from "react";
+import { BsChevronLeft } from "react-icons/bs";
 import { useAuth } from "../../context/AuthContext";
 import Head from "next/head";
 import languages from "../../utilities/languages.json";
 
 import styles from "../styles/Settings.module.scss";
+import { useRouter } from "next/router";
 
 export const App = () => {
   const { setTheme } = useNextTheme();
   const { isDark } = useTheme();
-
+  const router = useRouter();
   const { setFontSize, FontSize, setLanguage, Language } = useAuth();
 
   return (
@@ -22,6 +23,18 @@ export const App = () => {
           {languages[Language].headTags.appSettings} | {languages[Language].headTags.title}
         </title>
       </Head>
+      {router.asPath === "/settings/app" && (
+        <Button
+          onPress={() => router.back()}
+          color="error"
+          light
+          icon={<BsChevronLeft />}
+          className={styles.header}
+          auto
+        >
+          {languages[Language].goBack}
+        </Button>
+      )}
       <h2 className={styles.title}>{languages[Language].appSettings.title}</h2>
       <Row align="center" className={styles.darkMode}>
         <span>{languages[Language].appSettings.darkMode}: </span>

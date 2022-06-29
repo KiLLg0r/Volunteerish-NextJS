@@ -111,6 +111,9 @@ const AddNewAnnounce = () => {
       status: "active",
       points: calculatePoints(),
       posted: serverTimestamp(),
+      country: otherAddress ? countryRef.current.value : userData?.country,
+      state: otherAddress ? stateRef.current.value : userData?.state,
+      city: otherAddress ? cityRef.current.value : userData?.city,
     });
 
     console.log(announceRef.id);
@@ -312,7 +315,7 @@ const AddNewAnnounce = () => {
         <Grid.Container gap={1.5}>
           <Grid xs={12}>
             <Button
-              onPress={() => router.push("/announces")}
+              onPress={() => router.back()}
               color="error"
               light
               icon={<BsChevronLeft />}

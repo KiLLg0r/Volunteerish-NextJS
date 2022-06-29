@@ -2,7 +2,7 @@ import { withProtected, withNavigation } from "../../utilities/routes";
 import AnnounceCard from "../../components/Card";
 import { useState, useRef, useEffect } from "react";
 import { Collapse, Grid, Col, Row, Button } from "@nextui-org/react";
-import { query, collection, getDocs, orderBy, where, limit } from "firebase/firestore";
+import { query, collection, getDocs, orderBy, where, limit, startAfter, startAt } from "firebase/firestore";
 import { Country, State, City } from "country-state-city";
 import { useRouter } from "next/router";
 import { useWindowSize } from "../../utilities/hooks";
@@ -17,10 +17,11 @@ import Head from "next/head";
 import NoAnnounces from "../../public/svg/no_announces.svg";
 import styles from "../styles/Announces.module.scss";
 
-const Announces = ({ initialAnnounces, initialLastKey }) => {
-  const { Language } = useAuth();
+const Announces = ({ initialAnnounces, initialLastDocument }) => {
+  const { Language, currentUser } = useAuth();
   const announces = JSON.parse(initialAnnounces);
-  const lastKey = initialLastKey ? JSON.parse(initialLastKey) : "";
+  const [moreAnnounces, setMoreAnnounces] = useState([]);
+  const [lastDocument, setLastDocument] = useState(initialLastDocument ? JSON.parse(initialLastDocument) : "");
   const router = useRouter();
   const queryURL = router.query;
   const size = useWindowSize();
@@ -49,12 +50,49 @@ const Announces = ({ initialAnnounces, initialLastKey }) => {
       },
     });
 
+  const loadMoreAnnounces = async (lastDocument) => {
+    const QueryItems = getAnnounces(queryURL);
+
+    const q = query(
+      collection(db, "announces"),
+      where("status", "==", "active"),
+      where("uid", "!=", currentUser.uid),
+      orderBy("uid", "desc"),
+      ...QueryItems,
+      startAfter(lastDocument),
+      limit(10),
+    );
+
+    const moreAnnouncesSnapshot = await getDocs(q);
+
+    let moreAnnouncesQuery = [];
+    let moreAnnouncesNumber = 0;
+
+    moreAnnouncesSnapshot.forEach((announce) => {
+      moreAnnouncesQuery.push({
+        id: announce.id,
+        data: announce.data(),
+      });
+      moreAnnouncesNumber = moreAnnouncesNumber + 1;
+    });
+
+    if (moreAnnouncesQuery.length > 0) setMoreAnnounces((moreAnnounces) => [...moreAnnounces, ...moreAnnouncesQuery]);
+    if (moreAnnouncesNumber >= 10) setLastDocument(moreAnnouncesSnapshot.docs[moreAnnouncesSnapshot.docs.length - 1]);
+    else setLastDocument(null);
+  };
+
   useEffect(() => {
     if (queryURL) {
-      setStates(State.getStatesOfCountry(queryURL?.country));
-      setCities(City.getCitiesOfState(queryURL?.country, queryURL?.state));
+      if (queryURL?.country) {
+        setStates(State.getStatesOfCountry(queryURL.country));
+        if (queryURL?.state) setCities(City.getCitiesOfState(queryURL?.country, queryURL?.state));
+      } else {
+        countryRef.current.selectedIndex = 0;
+        setStates([]);
+        setCities([]);
+      }
     }
-  }, [announces, queryURL]);
+  }, [queryURL]);
 
   return (
     <Grid.Container gap={2} css={{ position: "relative" }}>
@@ -197,9 +235,21 @@ const Announces = ({ initialAnnounces, initialLastKey }) => {
                 </Grid>
               );
             })}
-          {lastKey?.length > 0 && (
+          {moreAnnounces &&
+            moreAnnounces.map((announce) => {
+              return (
+                <Grid xs={12} sm={6} key={announce.id} css={{ height: "fit-content" }}>
+                  <Link href={`/announces/${announce.id}`}>
+                    <a>
+                      <AnnounceCard key={announce.id} data={announce.data} />
+                    </a>
+                  </Link>
+                </Grid>
+              );
+            })}
+          {lastDocument && typeof lastDocument !== undefined && lastDocument !== null && (
             <Grid xs={12} justify="center">
-              <Button color="error" bordered>
+              <Button color="error" bordered onPress={() => loadMoreAnnounces(lastDocument)}>
                 {languages[Language].announces.loadMoreAnnounces}
               </Button>
             </Grid>
@@ -227,6 +277,25 @@ const Announces = ({ initialAnnounces, initialLastKey }) => {
 
 export default withProtected(withNavigation(Announces));
 
+const getAnnounces = (URLQuery) => {
+  let URLQueryItems = [];
+
+  if (URLQuery?.country) URLQueryItems.push(where("country", "==", URLQuery.country));
+  if (URLQuery?.state) URLQueryItems.push(where("state", "==", URLQuery.state));
+  if (URLQuery?.city) URLQueryItems.push(where("city", "==", URLQuery.city));
+  if (URLQuery?.category) URLQueryItems.push(where("category", "==", URLQuery.category));
+  if (URLQuery?.difficulty)
+    if (URLQuery.difficulty === "easy") URLQueryItems.push(where("difficulty", "==", "0"));
+    else if (URLQuery.difficulty === "medium") URLQueryItems.push(where("difficulty", "==", "1"));
+    else if (URLQuery.difficulty === "hard") URLQueryItems.push(where("difficulty", "==", "2"));
+  if (URLQuery?.orderBy) {
+    if (URLQuery.orderBy === "recent") URLQueryItems.push(orderBy("posted", "desc"));
+    else if (URLQuery.orderBy === "latest") URLQueryItems.push(orderBy("posted", "asc"));
+  } else URLQueryItems.push(orderBy("posted", "desc"));
+
+  return URLQueryItems;
+};
+
 export const getServerSideProps = async (ctx) => {
   try {
     const cookies = nookies.get(ctx);
@@ -236,20 +305,7 @@ export const getServerSideProps = async (ctx) => {
 
     const URLQuery = ctx.query;
 
-    let URLQueryItems = [];
-
-    if (URLQuery?.country) URLQueryItems.push(where("country", "==", URLQuery.country));
-    if (URLQuery?.state) URLQueryItems.push(where("state", "==", URLQuery.state));
-    if (URLQuery?.city) URLQueryItems.push(where("city", "==", URLQuery.city));
-    if (URLQuery?.category) URLQueryItems.push(where("category", "==", URLQuery.category));
-    if (URLQuery?.difficulty)
-      if (URLQuery.difficulty === "easy") URLQueryItems.push(where("difficulty", "==", "0"));
-      else if (URLQuery.difficulty === "medium") URLQueryItems.push(where("difficulty", "==", "1"));
-      else if (URLQuery.difficulty === "hard") URLQueryItems.push(where("difficulty", "==", "2"));
-    if (URLQuery?.orderBy) {
-      if (URLQuery.orderBy === "recent") URLQueryItems.push(orderBy("posted", "desc"));
-      else if (URLQuery.orderBy === "latest") URLQueryItems.push(orderBy("posted", "asc"));
-    } else URLQueryItems.push(orderBy("posted", "desc"));
+    const URLQueryItems = getAnnounces(URLQuery);
 
     const q = query(
       collection(db, "announces"),
@@ -257,13 +313,12 @@ export const getServerSideProps = async (ctx) => {
       where("uid", "!=", uid),
       orderBy("uid", "desc"),
       ...URLQueryItems,
-      limit(15),
+      limit(10),
     );
 
     const announcesSnapshot = await getDocs(q);
 
     let rawAnnounces = [];
-    let rawLastKey = [];
     let announcesNumber = 0;
 
     announcesSnapshot.forEach((announce) => {
@@ -271,17 +326,17 @@ export const getServerSideProps = async (ctx) => {
         id: announce.id,
         data: announce.data(),
       });
-      rawLastKey = announce.data().posted;
       announcesNumber++;
     });
 
     const initialAnnounces = JSON.stringify(rawAnnounces);
-    const initialLastKey = announcesNumber > 15 ? JSON.stringify(rawLastKey) : "";
+    const initialLastDocument =
+      announcesNumber >= 10 ? JSON.stringify(announcesSnapshot.docs[announcesSnapshot.docs.length - 1]) : "";
 
     return {
       props: {
         initialAnnounces,
-        initialLastKey,
+        initialLastDocument,
       },
     };
   } catch (error) {

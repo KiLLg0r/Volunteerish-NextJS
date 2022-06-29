@@ -32,7 +32,7 @@ const AnnounceCard = ({ data }) => {
       case "Groceries":
         setCategory(languages[Language].announces.groceries);
         break;
-      case "School Meditations":
+      case "School meditations":
         setCategory(languages[Language].announces.schoolMeditations);
         break;
       case "Shopping":
