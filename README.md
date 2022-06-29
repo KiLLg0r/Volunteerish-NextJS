@@ -4,6 +4,10 @@
 
 [![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/colored.png)]()
 
+## Lanuages
+
+[Romanian](https://github.com/KiLLg0r/Volunteerish-NextJS/blob/main/README.ro.md)
+
 # Volunteerish
 
 Volunteerish is a NextJS web application, build using Firebase for authentication and database, that connects directly, without intermediaries, people who need help with those who are willing to do good.
