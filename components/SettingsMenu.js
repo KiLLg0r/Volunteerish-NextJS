@@ -5,6 +5,7 @@ import {
   BsFillFilePersonFill,
   BsFillInfoCircleFill,
   BsFillQuestionCircleFill,
+  BsFillCartFill,
 } from "react-icons/bs";
 import languages from "../utilities/languages.json";
 
@@ -67,6 +68,12 @@ const SettingsMenu = () => {
         />
       )}
       <SettingRow
+        icon={<BsFillCartFill className={styles.settingSVG} />}
+        title={languages[Language].settings.purchases.title}
+        subtitle={languages[Language].settings.purchases.subtitle}
+        href="/purchases/"
+      />
+      <SettingRow
         icon={<BsFillInfoCircleFill className={styles.settingSVG} />}
         title={languages[Language].settings.about.title}
         subtitle={languages[Language].settings.about.subtitle}
@@ -79,7 +86,7 @@ const SettingsMenu = () => {
         href="/help"
       />
       <Button onPress={logout} color="error" bordered css={{ width: "100%" }} size="lg">
-        Log out
+        {languages[Language].logout}
       </Button>
     </>
   );

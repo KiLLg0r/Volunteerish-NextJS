@@ -7,6 +7,7 @@ import { firebaseAdmin } from "../config/firebaseAdmin";
 import languages from "../utilities/languages.json";
 import Head from "next/head";
 import Link from "next/link";
+import { abbreviateNumber } from "../utilities/functions";
 
 import { db } from "../config/firebase";
 
@@ -62,7 +63,7 @@ function Index({
                 <Row>
                   <Col>{languages[Language].home.points}</Col>
                   <span style={{ color: "var(--nextui-colors-yellow700)" }}>
-                    {userData?.points ? userData.points : "0"}
+                    {userData?.points ? abbreviateNumber(userData.points) : "0"}
                   </span>
                 </Row>
               </Container>

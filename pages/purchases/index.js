@@ -11,7 +11,7 @@ import { collection, doc, getDocs } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import Link from "next/link";
 
-const Order = ({ order }) => {
+export const Order = ({ order }) => {
   const { Language } = useAuth();
   const time = new Date(order.time.seconds * 1000);
   const [minutes, hour, day, month, year] = [
@@ -56,7 +56,7 @@ const Order = ({ order }) => {
             </Row>
           </Col>
         </Grid>
-        <Grid xs={12} sm={3} lg={2}>
+        <Grid xs={12} sm={3}>
           <Link href={`/purchases/${order.id}`}>
             <Button color="error">{languages[Language].orders.viewMore}</Button>
           </Link>
@@ -66,7 +66,7 @@ const Order = ({ order }) => {
   );
 };
 
-const Purchases = () => {
+export const Purchases = () => {
   const router = useRouter();
   const { currentUser, Language } = useAuth();
   const [orders, setOrders] = useState([]);
@@ -93,19 +93,21 @@ const Purchases = () => {
   }, [currentUser, orders]);
 
   return (
-    <Grid.Container>
-      <Grid xs={12}>
-        <Button
-          onPress={() => router.back()}
-          color="error"
-          light
-          icon={<BsChevronLeft />}
-          className={styles.cartHeader}
-          auto
-        >
-          {languages[Language].goBack}
-        </Button>
-      </Grid>
+    <Grid.Container css={{ padding: "1rem" }}>
+      {router.asPath === "/purchases" && (
+        <Grid xs={12}>
+          <Button
+            onPress={() => router.back()}
+            color="error"
+            light
+            icon={<BsChevronLeft />}
+            className={styles.cartHeader}
+            auto
+          >
+            {languages[Language].goBack}
+          </Button>
+        </Grid>
+      )}
       <Grid xs={12}>
         <h2 className={styles.title}>{languages[Language].orders.title}</h2>
       </Grid>

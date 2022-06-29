@@ -38,7 +38,7 @@ const Product = ({ id, rawData }) => {
     <section className={styles.productPage}>
       <Head>
         <title>
-          {data?.name} | {languages[Language].headTags.title}
+          {data?.name[Language]} | {languages[Language].headTags.title}
         </title>
       </Head>
       <Grid.Container gap={1}>
@@ -55,7 +55,7 @@ const Product = ({ id, rawData }) => {
           </Button>
         </Grid>
         <Grid xs={12}>
-          <h2>{data?.name}</h2>
+          <h2>{data?.name[Language]}</h2>
         </Grid>
         <Grid xs={12}>
           <h5 className={styles.productCode}>
@@ -128,7 +128,7 @@ const Product = ({ id, rawData }) => {
         <Grid xs={12}>
           <Collapse.Group css={{ width: "100%" }}>
             <Collapse shadow title={languages[Language].shop.product.description}>
-              {data?.description}
+              {data?.description[Language]}
             </Collapse>
           </Collapse.Group>
         </Grid>

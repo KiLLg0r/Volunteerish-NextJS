@@ -9,7 +9,7 @@ import { useState } from "react";
 import { App } from "./app";
 import { Account } from "./account";
 import { Help } from "../help";
-import { About } from "../about";
+import { Purchases } from "../purchases/index";
 import Head from "next/head";
 import styles from "../styles/Settings.module.scss";
 import { useAuth } from "../../context/AuthContext";
@@ -62,12 +62,12 @@ function Settings({ auth }) {
       return open[1] ? <Account /> : null;
     };
 
-    const RenderHelp = () => {
-      return open[2] ? <Help /> : null;
+    const RenderPurchases = () => {
+      return open[2] ? <Purchases /> : null;
     };
 
-    const RenderAbout = () => {
-      return open[3] ? <About /> : null;
+    const RenderHelp = () => {
+      return open[3] ? <Help /> : null;
     };
 
     return (
@@ -104,7 +104,7 @@ function Settings({ auth }) {
                 localStorage.setItem("settingsPage", JSON.stringify([false, false, true, false]));
               }}
             >
-              <Col>{languages[Language].settings.help.title}</Col>
+              <Col>{languages[Language].settings.purchases.title}</Col>
               <BsChevronRight />
             </Row>
             <Row
@@ -115,7 +115,7 @@ function Settings({ auth }) {
                 localStorage.setItem("settingsPage", JSON.stringify([false, false, false, true]));
               }}
             >
-              <Col>{languages[Language].settings.about.title}</Col>
+              <Col>{languages[Language].settings.help.title}</Col>
               <BsChevronRight />
             </Row>
             <Row>
@@ -130,8 +130,8 @@ function Settings({ auth }) {
             <Row>
               <RenderAppSettings />
               <RenderProfile />
+              <RenderPurchases />
               <RenderHelp />
-              <RenderAbout />
             </Row>
           </Col>
         </Grid>

@@ -52,7 +52,7 @@ const Shop = ({ productsStringify }) => {
                           objectFit="cover"
                           width="100%"
                           height={140}
-                          alt={product?.name}
+                          alt={product?.name[Language]}
                         />
                       </a>
                     </Link>
@@ -61,7 +61,7 @@ const Shop = ({ productsStringify }) => {
                     <Col>
                       <Row>
                         <Text b css={{ height: "3rem", overflow: "hidden" }}>
-                          {product?.name}
+                          {product?.name[Language]}
                         </Text>
                       </Row>
                       <Row justify="flex-end">

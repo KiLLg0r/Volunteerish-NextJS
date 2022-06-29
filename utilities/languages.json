@@ -25,6 +25,10 @@
       "help": {
         "title": "Help & Support",
         "subtitle": "FAQ and support information"
+      },
+      "purchases": {
+        "title": "Purchases",
+        "subtitle": "View all your purchases"
       }
     },
     "appSettings": {
@@ -467,6 +471,10 @@
       "help": {
         "title": "Ajutor și asistență",
         "subtitle": "Întrebări frecvente și informații de asistență"
+      },
+      "purchases": {
+        "title": "Comenzi",
+        "subtitle": "Vezi toate comenzile tale"
       }
     },
     "appSettings": {
