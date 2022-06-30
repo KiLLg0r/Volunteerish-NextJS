@@ -162,6 +162,8 @@ Nimeni nu are acces la document cu datele personale ale unui utilizator decât d
  - [Undraw](https://undraw.co/) - Toate SVG -urile din aplicație au fost preluate de pe acest site.
  - [Printful](https://www.printful.com/) - Am folosit platforma lor pentru a crea produse personalizate pentru magazin. Produsele au fost luate împreună cu pozele și descrierile lor.
  - [SVGR](https://react-svgr.com/) - Folosit pentru a utiliza direct SVG -uri în React.
+ - [Nookies](https://github.com/maticzav/nookies) - Folosit pentru a gestiona cookie-urile pentru autentificare în NextJS.
+ - [React-Icons](https://github.com/react-icons/react-icons) - Folosit pentru toate iconițele prezente pe platformă (navigație, butoane, link-uri).
  - [Country State City](https://github.com/harpreetkhalsagtbit/country-state-city) - Baza de date pentru gestionarea locației precisă și actualizată a utilizatorilor (țară, stat și oraș).
  - [Numbers abbreviation](https://gist.github.com/hanipcode/f1a6b172c37187e5d41b735f14db5278) - Am folosit acest gist pentru o prelucrearea numerelor mari
 
