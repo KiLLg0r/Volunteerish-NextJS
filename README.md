@@ -162,12 +162,14 @@ Nobody has access to the document with a user's personal data unless he holds th
 - [NextJS](https://nextjs.org/) - I used NextJS due to its much better performance than React, through SSR that allows me to do request at the server database, reducing the time the user awaits for the data to be delivered
 - [NextUI](https://nextui.org/) - Component library used to make the design and the responsiveness of the app.
 - [SwiperJS](https://swiperjs.com/) - I used this JS framework to create the "Create new account" menu that assumes the user to go through 6 slides, and on the page of a product, where I used to create the carousel for pictures.
-- [Firebase](https://firebase.google.com/) - For authentication, storage of files, messages and user data
-- [Undraw](https://undraw.co/) - All SVGs in the application have been taken from this site
-- [Printful](https://www.printful.com/) - I used their platform to create customized products for shop. The products were taken together with their mockups and descriptions
-- [SVGR](https://react-svgr.com/) - Used to directly use SVGs in React
-- [Country State City](https://github.com/harpreetkhalsagtbit/country-state-city) - Database for precise and upadated location management of users (country, state, and city)
-- [Numbers abbreviation](https://gist.github.com/hanipcode/f1a6b172c37187e5d41b735f14db5278) - I used this gist for very large numbers abbreviation
+- [Firebase](https://firebase.google.com/) - For authentication, storage of files, messages and user data.
+- [Undraw](https://undraw.co/) - All SVGs in the application have been taken from this site.
+- [Printful](https://www.printful.com/) - I used their platform to create customized products for shop. The products were taken together with their mockups and descriptions.
+- [SVGR](https://react-svgr.com/) - Used to directly use SVGs in React.
+- [Nookies](https://github.com/maticzav/nookies) - Used to manage cookies in NextJS for user authentication.
+- [React-Icons](https://github.com/react-icons/react-icons) - Used to get all icons present on plaform.
+- [Country State City](https://github.com/harpreetkhalsagtbit/country-state-city) - Database for precise and upadated location management of users (country, state, and city).
+- [Numbers abbreviation](https://gist.github.com/hanipcode/f1a6b172c37187e5d41b735f14db5278) - I used this gist for very large numbers abbreviation.
 
 ### Javascript (React)
 
