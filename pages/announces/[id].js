@@ -270,6 +270,8 @@ const Announce = ({ id, data, rawEmail, rawAddress }) => {
       setErrorModal(true);
       setErrorModalMessage(languages[Language].modal.announce.error.cantHelp);
     });
+
+    if (errorModalMessage.length === 0) router.reload();
   };
 
   const saveChanges = async () => {
