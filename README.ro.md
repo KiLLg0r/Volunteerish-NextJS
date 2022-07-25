@@ -4,7 +4,7 @@
 
 [![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/colored.png)]()
 
-#  Volunteerish
+#  Volunteerish 
 
 Volunteerish este o aplicație web NextJS, construită folosind Firebase pentru autentificare și baza de date, care conectează direct, fără intermediari, oamenii care au nevoie de ajutor cu cei care sunt dispuși să facă să ajute.[![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/colored.png)]()
 
