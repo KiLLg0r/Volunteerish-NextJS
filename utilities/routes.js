@@ -28,7 +28,7 @@ export const withProtected = (Component) => {
       return <Loading />;
     }
 
-    else if (auth.currentUser.displayName === null) {
+    else if (router.asPath !== '/create-new-account' && auth.currentUser.displayName === null) {
       router.replace("/create-new-account");
       return <Loading />;
     }
