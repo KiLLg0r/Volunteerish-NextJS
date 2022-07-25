@@ -28,12 +28,12 @@ export const withProtected = (Component) => {
       return <Loading />;
     }
 
-    if (auth.currentUser.displayName === null) {
+    else if (auth.currentUser.displayName === null) {
       router.replace("/create-new-account");
       return <Loading />;
     }
 
-    if (auth.currentUser.displayName && router.asPath === "/create-new-account") {
+    else if (auth.currentUser.displayName && router.asPath === "/create-new-account") {
       router.replace("/");
       return <Loading />;
     }
@@ -53,20 +53,6 @@ export const withNavigation = (Component) => {
           <Component {...props} />
         </>
       );
-    }
-
-    return <Component {...props} />;
-  };
-};
-
-export const closeLinkOnDesktop = (Component) => {
-  return function CloseLinkOnDesktop(props) {
-    const size = useWindowSize();
-    const router = useRouter();
-
-    if (size.width >= 650) {
-      router.push("/");
-      return <Loading />;
     }
 
     return <Component {...props} />;
