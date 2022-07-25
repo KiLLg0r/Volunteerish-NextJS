@@ -543,4 +543,4 @@ const CreateNewAccount = () => {
   );
 };
 
-export default withProtected(CreateNewAccount);
+export default CreateNewAccount;
